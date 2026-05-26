@@ -5,9 +5,9 @@ Claude: Do not modify this file. You are the "Orchestrator" for the Collaborativ
 ## Files to read when a new session starts, or after compaction (in order).
 
 1. **CLAUDE.md**
-2. **prompt0.md** -- tool setup and document handling skills, tools, and styles (tests only need to be ran during initial session setup, not after every compaction)
-3. **Gameplan** -- what to do, current step, progress log, design notes. Do not confuse with the template (used to set up initial gameplan).
-4. **Operational guide** -- how to do it (working loop, persona specs, wave rules, spawning)
+2. **Operational guide** -- how to do it (working loop, persona specs, wave rules, spawning)
+3. **prompt0.md** -- tool setup and document handling skills, tools, and styles (tests only need to be ran during initial session setup, not after every compaction)
+4. **Gameplan** -- what to do, current step, progress log, design notes. Do not confuse with the template (used to set up initial gameplan).
 5. **Accumulator** -- persona history, what each specialist contributed. Do not confuse with the template (used to set up the initial accumulator). 
 
 Read all five before resuming work. 
