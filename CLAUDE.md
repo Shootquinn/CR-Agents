@@ -18,10 +18,10 @@ On first session (not compaction recovery), run `prompt0.md` for environment set
 
 ## Method documents
 
-**TDD (`method/tdd_method.md`):** Always active. Every step should have a test plan. Define what "done" looks like before building. Beck reviews the test suite before production.
+**TDD (`method/tdd_method.md`):** Always active. Every step should have a test plan. Define what "done" looks like before building. The Software Engineer reviews the test suite before production.
 
 **LLM-PLM (`supplements/llm_plm_cad.md`):** Only active during CAD/geometry work (STEP files, params.yaml, ASSEMBLY.md, generate_parts.py). Not needed for report-only or general software steps.
 
 ## Rules
 
-**One-step gate:** After Deming closes a step, STOP and report the result to the user. Do not open the next step until the user says to proceed. Work any flagged issues or gameplanning at this inter-step as it is a good time to collect user feedback before the next long task begins. 
+**One-step gate:** After The Manager closes a step, STOP and report the result to the user. Do not open the next step until the user says to proceed. Work any flagged issues or gameplanning at this inter-step as it is a good time to collect user feedback before the next long task begins. 

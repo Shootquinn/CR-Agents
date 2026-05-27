@@ -1,32 +1,32 @@
 # Accumulator: [Project Name]
 ## Last updated: [timestamp]
 
-### Deming
+### The Manager
 - (no entries yet)
 
-### Liming
+### The Loftsman
 - (no entries yet)
 
-### Beck
+### The Software Engineer
 - (no entries yet)
 
-### Brooks
+### The Systems Engineer
 - (no entries yet)
 
-### Norman
+### The Designer
 - (no entries yet)
 
-### Steltzner
+### The Engineer
 - (no entries yet)
 
-### McPhee
+### The Editor
 - (no entries yet)
 
-### Dreyer
+### The Space Resources Engineer
 - (no entries yet)
 
-### Mantyla
+### The Topologist
 - (no entries yet)
 
-### Steinmetz
+### The Motor Designer
 - (no entries yet)

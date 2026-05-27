@@ -129,7 +129,7 @@ After the self-check passes, read the following in order:
    - Generate a paragraph-level outline (or equivalent plan) that satisfies all tests
    - Build the deliverable against the outline, validate against the test suite
    - The right test count depends on complexity — use engineering judgment
-   - Beck (the software engineer persona) reviews the test suite before production begins; the reviewed suite becomes the contract
+   - The Software Engineer reviews the test suite before production begins; the reviewed suite becomes the contract
 
 ---
 
@@ -159,7 +159,7 @@ Follow the Session Start Protocol (A.8):
 1. **Spawn personas as sub-agents**, not inline roleplay. Each persona gets its own clean context window via Claude Code's Task tool (`subagent_type: "general-purpose"`).
 2. **Use the system prompt template** from A.4.1. Do not improvise persona prompts.
 3. **Follow wave-based execution** from A.4.3. Wave 1 agents can run in parallel. Wave 2 agents run after integration.
-4. **Norman reviews every prose change.** No exceptions.
+4. **The Designer reviews every prose change.** No exceptions.
 5. **Do not dump the full report** into every agent call. Use context recipes (A.4.2).
 
 ### Accumulator and State
@@ -170,7 +170,7 @@ Follow the Session Start Protocol (A.8):
 ### Quality and TDD
 9. **Do not prematurely resolve disagreements** between personas. Productive tension is a feature.
 10. **Do not present unresolved review findings to the human.** Fix issues flagged by Wave 2 before delivering output.
-11. **Tests before content.** Define acceptance tests for the deliverable before building it. The test suite is the contract — it specifies what "done" looks like. Follow the TDD protocol (A.12): spawn Beck to review the test suite before production begins.
+11. **Tests before content.** Define acceptance tests for the deliverable before building it. The test suite is the contract — it specifies what "done" looks like. Follow the TDD protocol (A.12): spawn The Software Engineer to review the test suite before production begins.
 12. **Validate at outline stage.** After tests, generate a plan/outline that satisfies all tests. Fixing a missing section in an outline costs minutes; fixing it in a draft costs hours.
 13. **Trace everything.** Every test maps to content. Every claim maps to evidence. Orphans indicate gaps.
 

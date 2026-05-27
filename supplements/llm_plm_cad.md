@@ -256,7 +256,7 @@ A work order introduces new parts or assemblies into the project. The work order
 1. Engineer provides the work order document.
 2. Orchestrator reads ASSEMBLY.md (if project exists) to understand the current product tree.
 3. CR team (via working loop) defines the test suite for new parts/assemblies, **including functional validity tests and interference checks** (Sections 7.1, 7.4).
-4. CR team creates `params.yaml` for each new part. **Norman reviews for functional validity and shape representativeness** (Section 8.4a).
+4. CR team creates `params.yaml` for each new part. **The Designer reviews for functional validity and shape representativeness** (Section 8.4a).
 5. **CR team runs sketching study with interference check on sketch geometry. Resolve Design Critique items and interference failures before proceeding** (Section 8.4).
 6. CR team writes FreeCAD build scripts, validates against test suite.
 7. CR team writes or updates `assemble.py` to integrate new parts.
@@ -443,7 +443,7 @@ The TDD method (see method/tdd_method.md) applies to CAD work with adaptations f
 For a work order:
 1. Read the work order requirements.
 2. Write the test suite covering part-level, assembly-level, and workflow-level criteria.
-3. Review the test suite (Beck persona, via CR working loop).
+3. Review the test suite (The Software Engineer persona, via CR working loop).
 4. Generate geometry that passes the tests.
 
 For a change order:
@@ -481,7 +481,7 @@ Interference checking is a mandatory automated gate — not a best-effort recomm
 
 1. **Placement audit.** After assembly creation, verify every link placement programmatically. For assemblies where parts are built at absolute coordinates, all link placements should be identity (position 0,0,0, rotation 0°). Any non-identity placement is suspect.
 
-2. **Visual verification.** Generate a turntable MP4 or multi-view PNG render of the assembled model. Norman (or equivalent design reviewer) must confirm "this looks like the design." Comparing against a 2D cross-section plot is insufficient — the 2D plot validates geometry, not assembly placement. The 3D render validates both.
+2. **Visual verification.** Generate a turntable MP4 or multi-view PNG render of the assembled model. The Designer (or equivalent design reviewer) must confirm "this looks like the design." Comparing against a 2D cross-section plot is insufficient — the 2D plot validates geometry, not assembly placement. The 3D render validates both.
 
 3. **Include in test suite.** At minimum, add a test that checks all assembly link placements are within tolerance of their expected positions. This catches the case where a constraint solver or face-matching algorithm silently moves parts.
 
@@ -495,11 +495,11 @@ CAD geometry is built in two passes within each step. This is not optional.
 
 The exploratory build produces *data*: interference findings, clearance measurements, axial stack-up verification, mass estimates, and a list of design issues discovered during construction. This data informs the production pass.
 
-**Norman gates the exploratory build on completeness:** "Can we learn from this? Are there features we intended to include but didn't, creating blind spots?" A part missing a functional feature fails the exploratory gate. It is not a draft. It is an incomplete experiment. A part with all features present but geometrically simplified passes.
+**The Designer gates the exploratory build on completeness:** "Can we learn from this? Are there features we intended to include but didn't, creating blind spots?" A part missing a functional feature fails the exploratory gate. It is not a draft. It is an incomplete experiment. A part with all features present but geometrically simplified passes.
 
 **Pass 2: Production build.** The production build refines every feature to deployment-ready quality, informed by the findings from Pass 1. Counterbores replace plain holes. Retention features get proper dimensions. Fits and tolerances are specified. Chamfers and fillets are added where they serve function (assembly guidance, stress relief). The production build is not "add the stuff we skipped." It is "fix what the prototype taught us."
 
-**Norman gates the production build on quality:** "Would you build this? Would a machinist or printer operator produce a functional part from this geometry?" This is the pride test applied to individual parts, not just the assembly.
+**The Designer gates the production build on quality:** "Would you build this? Would a machinist or printer operator produce a functional part from this geometry?" This is the pride test applied to individual parts, not just the assembly.
 
 **What "deployment-ready" means for a part:**
 - Every interface to another part is geometrically defined (bolt holes, register bosses, press fits, snap rings, keyways, splines)
@@ -521,60 +521,60 @@ This section describes how the CR team's personas map to LLM-PLM work.
 
 | Persona | CAD/PLM Role |
 |---|---|
-| **Deming** | Opens/closes each cycle. Scopes the work, evaluates output readiness. |
-| **Steltzner** | Primary executor. Builds FreeCAD PartDesign parts, runs build scripts, reports results. Validates FCStd and STEP output empirically. |
-| **Liming** | Geometric reasoning. Reviews placement math, thread engagement geometry, surface definitions. Validates that parametric dependencies in ASSEMBLY.md correctly represent the geometric relationships. |
-| **Beck** | Test suite design and review. Ensures tests validate the right things. Flags ceremony. |
-| **Norman** | Design critic for both physical products and documentation. Reviews params.yaml for functional validity and shape representativeness before geometry exists — "will these parameters produce parts that belong in a world-class product?" Reviews sketch and production geometry for the pride test: would this part look at home in a product catalog from a top design house? Reviews ASSEMBLY.md, change orders, and all prose for consistency. Norman catches lazy placeholders, non-functional geometry, and design shortcuts (see functional validity tests, Section 7.1). Every update that touches documentation or physical design. |
-| **Brooks** | Architecture-level review. Product tree structure, method coherence, scalability of the assembly approach. |
+| **The Manager** | Opens/closes each cycle. Scopes the work, evaluates output readiness. |
+| **The Engineer** | Primary executor. Builds FreeCAD PartDesign parts, runs build scripts, reports results. Validates FCStd and STEP output empirically. |
+| **The Loftsman** | Geometric reasoning. Reviews placement math, thread engagement geometry, surface definitions. Validates that parametric dependencies in ASSEMBLY.md correctly represent the geometric relationships. |
+| **The Software Engineer** | Test suite design and review. Ensures tests validate the right things. Flags ceremony. |
+| **The Designer** | Design critic for both physical products and documentation. Reviews params.yaml for functional validity and shape representativeness before geometry exists — "will these parameters produce parts that belong in a world-class product?" Reviews sketch and production geometry for the pride test: would this part look at home in a product catalog from a top design house? Reviews ASSEMBLY.md, change orders, and all prose for consistency. The Designer catches lazy placeholders, non-functional geometry, and design shortcuts (see functional validity tests, Section 7.1). Every update that touches documentation or physical design. |
+| **The Systems Engineer** | Architecture-level review. Product tree structure, method coherence, scalability of the assembly approach. |
 
 ### 8.2 Wave Assignments
 
 **Wave 1 (technical, parallel):**
-- Steltzner: builds/modifies FreeCAD PartDesign parts, runs build scripts, generates FCStd and STEP
-- Liming: reviews geometry math, placement calculations, constraint definitions
-- Beck: reviews/updates test suite
-- Norman: reviews params.yaml for functional validity, shape representativeness, and pride test (params-level review — lightweight, non-blocking, findings feed into Wave 1 scripts)
+- The Engineer: builds/modifies FreeCAD PartDesign parts, runs build scripts, generates FCStd and STEP
+- The Loftsman: reviews geometry math, placement calculations, constraint definitions
+- The Software Engineer: reviews/updates test suite
+- The Designer: reviews params.yaml for functional validity, shape representativeness, and pride test (params-level review — lightweight, non-blocking, findings feed into Wave 1 scripts)
 
 **Wave 2 (review, after integration):**
-- Norman: reviews sketch/production geometry for pride test and functional validity; reviews interference check results (Section 7.4); reviews all documentation changes (ASSEMBLY.md, change orders, changelogs)
-- Brooks: reviews product tree architecture, method-level concerns
+- The Designer: reviews sketch/production geometry for pride test and functional validity; reviews interference check results (Section 7.4); reviews all documentation changes (ASSEMBLY.md, change orders, changelogs)
+- The Systems Engineer: reviews product tree architecture, method-level concerns
 
-### 8.3 Recruiter (Dolly Singh)
+### 8.3 Recruiter
 
-If a work order involves domain expertise outside the standing roster — e.g., GD&T for tolerance analysis, materials science for thermal properties, electrical engineering for PCB-mechanical interfaces — spawn the recruiter to identify and spec a temporary team member.
+If a work order involves domain expertise outside the standing roster — e.g., GD&T for tolerance analysis, materials science for thermal properties, electrical engineering for PCB-mechanical interfaces — spawn The Recruiter to identify and spec a temporary team member.
 
 ### 8.4 Sketching Phase (Visual Design Exploration)
 
 Before the first production geometry step — or at any point where the team has parameters but no visual confirmation of design intent — run a sketching study cycle. This is a lightweight cycle that produces fast geometry for visual validation before committing to detailed scripts. The sketching phase is where design problems are cheapest to fix and where the team's design standards are first enforced.
 
-**Why:** Parametric definitions (params.yaml, ASSEMBLY.md) describe a design numerically, but nobody can evaluate proportions, spatial relationships, or whether a part "looks right" from a spreadsheet of dimensions. The gap between parameter definition and production geometry is where design mistakes hide. A sketching study fills this gap cheaply — and with the addition of Norman's params review and Design Critique, it also catches functional validity failures (Section 7.1) before any geometry investment.
+**Why:** Parametric definitions (params.yaml, ASSEMBLY.md) describe a design numerically, but nobody can evaluate proportions, spatial relationships, or whether a part "looks right" from a spreadsheet of dimensions. The gap between parameter definition and production geometry is where design mistakes hide. A sketching study fills this gap cheaply — and with the addition of The Designer's params review and Design Critique, it also catches functional validity failures (Section 7.1) before any geometry investment.
 
 **Cycle structure (3 personas):**
 
-1. **Norman (designer) — three sub-roles:**
+1. **The Designer — three sub-roles:**
 
-   **a. Params review (before geometry):** Norman reviews each part's params.yaml entry before any sketch geometry is generated. The question is not "are the numbers right?" — Beck handles that. Norman's question is: "Will these parameters produce a part I'd show to a client? Does this parameter set describe a real part or a lazy placeholder? Are functional features described with enough specificity to generate representative geometry?" A parameter set that describes a pressure plate as "flat ring, OD × ID × thickness" without mentioning fingers, deflection, or spring rate is already a design failure at the params level. Norman catches it here, before a single line of geometry code is written. This review is lightweight and non-blocking — findings feed directly into the sketch scripts.
+   **a. Params review (before geometry):** The Designer reviews each part's params.yaml entry before any sketch geometry is generated. The question is not "are the numbers right?" — The Software Engineer handles that. The Designer's question is: "Will these parameters produce a part I'd show to a client? Does this parameter set describe a real part or a lazy placeholder? Are functional features described with enough specificity to generate representative geometry?" A parameter set that describes a pressure plate as "flat ring, OD × ID × thickness" without mentioning fingers, deflection, or spring rate is already a design failure at the params level. The Designer catches it here, before a single line of geometry code is written. This review is lightweight and non-blocking — findings feed directly into the sketch scripts.
 
-   **b. Sketch production (representative shapes):** For each part, Norman writes a quick script that represents the part as a simplified but *representative* shape. Not arbitrary boxes. A woodruff key sketch is a half-moon. A pressure plate finger sketch is a cantilevered beam. A drive dog sketch has a realistic engagement profile. The sketch should make someone say "I can see what this part does" — not "what is this rectangle?" Simplification means no fillets, no bolt holes, no cosmetic features — it does not mean stripping away the functional character of the part. Norman also describes the design intent in natural language: what each part should look like, how parts relate visually, what the overall proportions should convey. Norman's output is both geometry (quick STEP files) and prose (design notes).
+   **b. Sketch production (representative shapes):** For each part, The Designer writes a quick script that represents the part as a simplified but *representative* shape. Not arbitrary boxes. A woodruff key sketch is a half-moon. A pressure plate finger sketch is a cantilevered beam. A drive dog sketch has a realistic engagement profile. The sketch should make someone say "I can see what this part does" — not "what is this rectangle?" Simplification means no fillets, no bolt holes, no cosmetic features — it does not mean stripping away the functional character of the part. The Designer also describes the design intent in natural language: what each part should look like, how parts relate visually, what the overall proportions should convey. The Designer's output is both geometry (quick STEP files) and prose (design notes).
 
-   **c. Design Critique (after sketch assembly):** After the sketch assembly is built and interference checks have run (Section 7.4), Norman produces a Design Critique document — the "this doesn't look right" mechanism. This is the feedback that real design teams give in sketch reviews: spatial concerns, functional concerns, pride test failures, and aesthetic issues captured as actionable items. Examples: "These pressure plate fingers need to be cantilevered beams, not flat plates, or they cannot produce spring force." "The drive dog profile should have draft angles for engagement/disengagement." "The woodruff key is a rectangle — it should be a half-moon shape that a machinist would recognize." Without Design Critique, problems hide until production geometry is complete and expensive to fix.
+   **c. Design Critique (after sketch assembly):** After the sketch assembly is built and interference checks have run (Section 7.4), The Designer produces a Design Critique document — the "this doesn't look right" mechanism. This is the feedback that real design teams give in sketch reviews: spatial concerns, functional concerns, pride test failures, and aesthetic issues captured as actionable items. Examples: "These pressure plate fingers need to be cantilevered beams, not flat plates, or they cannot produce spring force." "The drive dog profile should have draft angles for engagement/disengagement." "The woodruff key is a rectangle — it should be a half-moon shape that a machinist would recognize." Without Design Critique, problems hide until production geometry is complete and expensive to fix.
 
-2. **Steltzner (engineer):** Reviews Norman's sketching study for engineering feasibility. Runs interference checks on the sketch assembly (Section 7.4). Flags any visual concepts that conflict with mechanical requirements, material constraints, or assembly sequence. Provides engineering feedback before the study goes to the human. This is a collaborative exchange, not a gate — Norman and Steltzner iterate until the concept is both visually sound and mechanically feasible.
+2. **The Engineer:** Reviews The Designer's sketching study for engineering feasibility. Runs interference checks on the sketch assembly (Section 7.4). Flags any visual concepts that conflict with mechanical requirements, material constraints, or assembly sequence. Provides engineering feedback before the study goes to the human. This is a collaborative exchange, not a gate — The Designer and The Engineer iterate until the concept is both visually sound and mechanically feasible.
 
-3. **Deming (manager):** Reviews the Norman-Steltzner output, evaluates whether it is ready for the human, and presents the sketching study at the gate.
+3. **The Manager:** Reviews The Designer and Engineer output, evaluates whether it is ready for the human, and presents the sketching study at the gate.
 
 **Output:**
-- Norman's params review findings (per-part functional validity assessment)
+- The Designer's params review findings (per-part functional validity assessment)
 - One assembly STEP file with all parts as simplified but representative shapes in their assembly positions
 - PNG render + MP4 turntable of the sketch assembly
 - Optional: 2D matplotlib section plots (XZ side view, XY plan view) showing part outlines
-- Norman's design notes with natural language descriptions of each part's visual intent
-- Norman's Design Critique document (actionable items from sketch review)
-- Steltzner's engineering feedback
+- The Designer's design notes with natural language descriptions of each part's visual intent
+- The Designer's Design Critique document (actionable items from sketch review)
+- The Engineer's engineering feedback
 - Interference check results on sketch geometry (Section 7.4)
 
-**Gate:** Norman's Design Critique items and interference check failures must be resolved — by parameter change, placement change, or explicit deferral with rationale — before proceeding to production geometry. The human reviews the sketch renders, Norman's descriptions, the Design Critique, and the interference report. Feedback shapes the detailed geometry that follows. The sketching study is fast enough (~30 minutes) that multiple iterations are practical.
+**Gate:** The Designer's Design Critique items and interference check failures must be resolved — by parameter change, placement change, or explicit deferral with rationale — before proceeding to production geometry. The human reviews the sketch renders, The Designer's descriptions, the Design Critique, and the interference report. Feedback shapes the detailed geometry that follows. The sketching study is fast enough (~30 minutes) that multiple iterations are practical.
 
 **When to use:**
 - Before the first production geometry step of any multi-part assembly project
@@ -734,4 +734,4 @@ These are the limits of this method. Do not pretend they don't exist.
 
 6. **Partial automated cross-part validation.** `validate_params()` enforces scalar-computable cross-part constraints (clearance ranges, pitch matching) at generation time. Non-scalar constraints (coaxiality, thread form compatibility, assembly sequence) are checked by LLM analysis and human review, not by code. Full automated enforcement of non-scalar constraints would require a constraint solver and formal schema that do not exist yet.
 
-7. **Functional validity is a judgment call, not fully automatable.** A reviewing persona must correctly identify non-functional geometry — there is no algorithm for "does this look like a real part." The defense-in-depth: (1) Norman's params review catches placeholder descriptions before geometry exists (Section 8.4a), (2) Norman's Design Critique catches non-representative shapes after the sketch assembly (Section 8.4c), (3) functional validity tests define "representative" per part type with specific criteria (Section 7.1), (4) human review at the step gate catches what the LLM missed. This layered approach acknowledges that no single check is sufficient. The standard is not "does this pass a test?" but "would this part look at home in a product from a world-class design house?"
+7. **Functional validity is a judgment call, not fully automatable.** A reviewing persona must correctly identify non-functional geometry — there is no algorithm for "does this look like a real part." The defense-in-depth: (1) The Designer's params review catches placeholder descriptions before geometry exists (Section 8.4a), (2) The Designer's Design Critique catches non-representative shapes after the sketch assembly (Section 8.4c), (3) functional validity tests define "representative" per part type with specific criteria (Section 7.1), (4) human review at the step gate catches what the LLM missed. This layered approach acknowledges that no single check is sufficient. The standard is not "does this pass a test?" but "would this part look at home in a product from a world-class design house?"

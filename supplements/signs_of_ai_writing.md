@@ -7,7 +7,7 @@
 **Shortcuts:** WP:AISIGNS, WP:AITELLS, WP:LLMSIGNS
 **Origin:** WikiProject AI Cleanup (advice page, community-curated)
 **Retrieved:** 2026-03-09
-**Purpose in this project:** Working reference for McPhee persona when auditing ChatGPT-generated text. Organized by detection category with specific markers, diagnostic questions, and examples.
+**Purpose in this project:** Working reference for The Editor persona when auditing ChatGPT-generated text. Organized by detection category with specific markers, diagnostic questions, and examples.
 
 **Important caveat from the source:** This list is descriptive, not prescriptive. No single marker proves AI authorship. Markers co-occur — where there is one, there are likely others. The strongest signal is density: many markers appearing together across a document.
 
@@ -334,4 +334,4 @@ Buzzwords substituted for specific engineering claims. No numbers, no evidence, 
 
 **Key diagnostic:** Does the document make specific, testable engineering claims with evidence, or does it make significance assertions decorated with buzzwords? The former wins proposals. The latter loses them.
 
-**McPhee's operating modes:** In editing mode, McPhee receives a content-stable draft and improves sentence-level clarity without changing technical meaning. In audit mode, McPhee catalogues AI writing patterns by category and severity, estimates density per section, and produces structured findings. The findings identify which patterns appear, where they cluster, and which ones most damage credibility with expert readers. See the operational guide (A.3.10) for full persona specification.
+**The Editor's operating modes:** In editing mode, The Editor receives a content-stable draft and improves sentence-level clarity without changing technical meaning. In audit mode, The Editor catalogues AI writing patterns by category and severity, estimates density per section, and produces structured findings. The findings identify which patterns appear, where they cluster, and which ones most damage credibility with expert readers. See the operational guide (A.3.10) for full persona specification.

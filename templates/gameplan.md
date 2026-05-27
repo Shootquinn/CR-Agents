@@ -8,7 +8,7 @@
 **Current step:** 1
 **Quick mode:** standard — per-step flags below
 **lit_review:** no
-*Set to yes if the project involves technical claims that should be validated against primary sources. When active, Beck's test suite review requires any test asserting a quantitative or technical fact to name the primary source it will be validated against.*
+*Set to yes if the project involves technical claims that should be validated against primary sources. When active, The Software Engineer's test suite review requires any test asserting a quantitative or technical fact to name the primary source it will be validated against.*
 
 ---
 

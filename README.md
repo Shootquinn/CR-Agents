@@ -37,26 +37,26 @@ Claude Code arrives relatively unskilled compared to browser Claude. It cannot o
 
 ## The Team
 
-Ten named historical personas form the standing roster. Each runs as a spawned sub-agent with its own clean context window, receiving only the material relevant to their review task.
+Ten personas anchored to biographical reference material form the standing roster. Each runs as a spawned sub-agent with its own clean context window, receiving only the material relevant to their review task. The biographical anchors are the mechanism: a persona grounded in a specific practitioner's published work and documented approach activates that domain knowledge with precision.
 
 | Persona | Role | Wave |
 |---------|------|------|
-| W. Edwards Deming | Manager. Opens and closes every cycle. Scope, accountability, process quality. | Bookends |
-| Roy Liming | Mathematician. Analytical lofting, conic geometry, surface definition. | 1 (technical) |
-| Kent Beck | Software engineer. Test-driven workflow, test suite design, practical methodology. | 1 (technical) |
-| Adam Steltzner | Engineer. Code implementation, hardware interfaces, empirical verification. | 1 (technical) |
-| Martti Mantyla | Topologist. B-rep topology, Euler operators, topological consistency verification. | 1 (technical) |
-| Charles Proteus Steinmetz | Motor designer. Electromagnetic design, magnetic circuits, winding, loss analysis. | 1 (technical) |
-| Christopher Dreyer | Space resources engineer. ISRU domain accuracy, TRL assessment, evidence gates. | 1 (technical) |
-| John McPhee | Editor. AI-ism detection and removal, sentence revision, prose tightening. | Editing (between W1 and W2) |
-| Donald Norman | Designer. Document design, echo-site tracking, compliance maps. Reviews every change. | 2 (review) |
-| Frederick Brooks | Systems engineer. Conceptual integrity, architecture coherence, revision integrity. | 2 (review) |
+| The Manager | Scope discipline and deliverable accountability. Manages by enabling, not directing. The people closest to the work understand it best. | Bookends |
+| The Loftsman | Mathematician. Analytical lofting, conic geometry, surface definition. | 1 (technical) |
+| The Software Engineer | Software engineer. Test-driven workflow, test suite design, practical methodology. | 1 (technical) |
+| The Engineer | Engineer. Code implementation, hardware interfaces, empirical verification. | 1 (technical) |
+| The Topologist | Topologist. B-rep topology, Euler operators, topological consistency verification. | 1 (technical) |
+| The Motor Designer | Motor designer. Electromagnetic design, magnetic circuits, winding, loss analysis. | 1 (technical) |
+| The Space Resources Engineer | Space resources engineer. ISRU domain accuracy, TRL assessment, evidence gates. | 1 (technical) |
+| The Editor | Editor. AI-ism detection and removal, sentence revision, prose tightening. | Editing (between W1 and W2) |
+| The Designer | Designer. Document design, echo-site tracking, compliance maps. Reviews every change. | 2 (review) |
+| The Systems Engineer | Systems engineer. Conceptual integrity, architecture coherence, revision integrity. | 2 (review) |
 
-Wave 1 agents run in parallel on technical work. Wave 2 agents run sequentially after integration. Deming bookends the cycle.
+Wave 1 agents run in parallel on technical work. Wave 2 agents run sequentially after integration. The Manager bookends the cycle.
 
-Five productive tensions are structural: Beck vs. Brooks, Liming vs. Steltzner, Liming vs. Mantyla, Steinmetz vs. Steltzner, McPhee vs. Norman. Do not resolve these. Disagreement between tension pairs is information.
+Five productive tensions are structural: The Software Engineer vs. The Systems Engineer, The Loftsman vs. The Engineer, The Loftsman vs. The Topologist, The Motor Designer vs. The Engineer, The Editor vs. The Designer. Do not resolve these. Disagreement between tension pairs is information.
 
-**Dolly Singh, The Recruiter.** Spawned when a task requires expertise outside the standing roster. Singh identifies a historical figure whose published work covers the capability gap and produces a persona specification for human approval.
+**The Recruiter.** Spawned when a task requires expertise outside the standing roster. The Recruiter identifies a historical figure whose published work covers the capability gap and produces a persona specification for human approval.
 
 ---
 
@@ -75,13 +75,13 @@ Work Order / Change Order / Ask
    Gameplan -----------> Created BEFORE execution; user reviews
         |
         v
-   Test Suite ---------> Pass/fail criteria; Beck reviews before production
+   Test Suite ---------> Pass/fail criteria; The Software Engineer reviews before production
         |
         v
    Execution ----------> Wave 1 technical, integration, Wave 2 review
         |
         v
-   Inter-Step Gate ----> Deming closes; user approves before next step
+   Inter-Step Gate ----> The Manager closes; user approves before next step
         |
         v
    Delivery
@@ -101,7 +101,7 @@ Every step produces reviewable documents on disk. The accumulator preserves pers
 | `method/technical_note.md` | Method architecture and rationale. For human readers who want to understand why. |
 | `method/tdd_method.md` | Test-driven documentation. Defines how test suites are built and used. |
 | `supplements/llm_plm_cad.md` | CAD/geometry supplement. Active only during parametric modeling work. |
-| `supplements/signs_of_ai_writing.md` | AI writing detection. 7 categories, severity ratings. Loaded into every McPhee spawn. |
+| `supplements/signs_of_ai_writing.md` | AI writing detection. 7 categories, severity ratings. Loaded into every Editor spawn. |
 | `supplements/freecad_api_reference.md` | FreeCAD headless scripting. Project-specific; swap in your own for other CAD tools. |
 | `templates/gameplan.md` | Blank gameplan. Objectives, steps, progress log, design notes. |
 | `templates/accumulator.md` | Blank accumulator. Per-persona contribution history. |
@@ -129,6 +129,6 @@ The human is a team member, not a director. Your job is creative origination, ev
 
 Gameplans are created before execution and may take a couple iterations to get right. This is normal and cheap. Fixing a missing section in a gameplan costs minutes; fixing it in a draft costs hours.
 
-The one-step gate is enforced: after Deming closes a step, Claude Code stops and reports. It does not open the next step until you say so. Use this time to provide feedback, adjust the gameplan, or flag issues.
+The one-step gate is enforced: after The Manager closes a step, Claude Code stops and reports. It does not open the next step until you say so. Use this time to provide feedback, adjust the gameplan, or flag issues.
 
 Work orders can be drafted in Claude web chat using `templates/work_order_drafter.md` before handing them to Claude Code for execution.
