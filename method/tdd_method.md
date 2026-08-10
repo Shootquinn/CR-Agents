@@ -168,6 +168,40 @@ specific facts.
 
 ---
 
+## The Literature Corpus
+
+This section sits last on the page but belongs early in the document's own process: the corpus is built during Prompt 1, before the suite is accepted as the contract Principle 7 already requires source claims checked against.
+
+**Why a corpus.** Some documents make claims that need to trace to an outside source — a regulatory threshold, a measured result, a finding from someone else's study. Principle 8 asks for the primary source behind every factual claim. This section is how that source material becomes something a later test can cite directly, rather than something a later writer has to re-locate and re-read from scratch each time a claim needs checking.
+
+**One document, one summary.** Source material is processed one document at a time, each producing one comprehensive summary as its own standalone file — never folded into a shared multi-source document. A later verification step can then check a single claim against one file rather than searching the whole corpus.
+
+**Work from the source itself.** Work proceeds only from the source document's own text, never the open web. An uncertain citation detail — title, author, publication date — is confirmed against the source itself or left as an open question. Never guessed.
+
+**Location.** The corpus lives at `context/literature/`, flat, one summary file per source. This is the directory a spawn's context recipe points at when it needs matched summaries rather than the whole corpus.
+
+**Naming.** Each summary file is named from the first author's surname, the publication year, and a two-to-four-word slug (e.g., `smith-2024-thermal-runaway-analysis.md`), so a corpus of dozens of files stays sortable and referenceable by eye.
+
+**Structure.** Every summary opens with a citation block — a full APA 7 reference ending at the DOI where one exists, or a stable publisher URL where it does not, with that URL repeated on its own line — followed by a laconic abstract written like a function's docstring: a synopsis, not a narrative, stating what the source establishes, over what scope, and by what method. The comprehensive summary beneath the abstract carries five subsections, always in the same order:
+
+1. **Background and objective**
+2. **Methods and scope**
+3. **Key findings** — the source's actual figures, never the direction of travel alone. A finding stripped of its number is a finding a later verification step cannot confirm or refute.
+4. **Limitations**
+5. **Topic mapping**
+
+Summary length targets 250 to 350 lines, scaled to how substantial the source actually is — wide enough that a thin source is not padded and a dense one is not trimmed to fit.
+
+**Report findings, not verdicts.** A summary states what its source found and never whether that finding helps or hurts an argument, in the abstract and the comprehensive summary alike. Conclusions are drawn later, when summaries are read together as a set. A corpus written to support a thesis cannot then be used to test one.
+
+**Original wording throughout.** Data itself carries no copyright and is reported directly, but a source's own prose is not pasted in. Direct quotation is rare — under fifteen words, at most once per source — because the line between a reported fact and a reproduced expression is exactly where copyright draws it.
+
+**Figures that carry a finding the text doesn't state.** These require visual analysis. Route the figure to a model with stronger visual reasoning, which produces a figure-analysis file the composing model finishes the summary from. Where no such model is available, the composing model performs the analysis itself, notes the limitation, and proceeds — a solo reader without a second tool should not have the workflow stall on them.
+
+**This section specifies the method; it does not perform a review.** The workflow it describes is exercised for the first time only when it runs against real source material under a real review, not by the act of writing the method down.
+
+---
+
 ## That's It
 
 Define what "done" looks like. Ask Claude to build it. Validate against your definition.

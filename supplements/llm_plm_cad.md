@@ -664,7 +664,7 @@ Assembly instructions and print guides require more than turntable renders. They
 
 ### 9.4 Render Tooling in the Project
 
-`render_step.py` should be present in the project repository or accessible from the working directory. The prompt0 self-check verifies its availability. If it is not present:
+`render_step.py` should be present in the project repository or accessible from the working directory. Its availability is not part of the prompt0 self-check -- verify it directly before relying on it. If it is not present:
 
 1. Check if it exists in a sibling project or shared tools directory.
 2. If not found, write a minimal VTK rendering script that loads a STEP file via OCCT, converts to VTK polydata, and renders to PNG. The core logic is approximately 50 lines of Python using `OCP` for STEP loading and `vtk` for rendering.

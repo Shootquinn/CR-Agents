@@ -21,7 +21,7 @@ Or more simply:
 Read CLAUDE.md. Work through prompt0. Today we're going to design an airplane.
 ```
 
-That is the entire entry point. CLAUDE.md bootstraps the session: it tells the orchestrator where to find the operational guide, the gameplan, and the accumulator. prompt0 verifies tools, loads the method documents, and establishes session capabilities. The team assembles, builds a gameplan for your review, writes a test suite, and begins executing. You approve each step before the next one starts.
+That is the entire entry point. CLAUDE.md bootstraps the session: it tells the orchestrator where to find the operational guide, the gameplan, and the accumulator. prompt0 verifies the environment and tools and loads the document-production toolkit when needed. The team assembles, builds a gameplan for your review, writes a test suite, and begins executing. You approve each step before the next one starts.
 
 After compaction or a new session, the recovery incantation is the same: "Read CLAUDE.md, work through prompt0, and read the gameplan."
 
@@ -31,13 +31,13 @@ LLM-PLM (Product Lifecycle Management performed by the LLM) activates when CAD/g
 
 ## Why prompt0 Exists
 
-Claude Code arrives relatively unskilled compared to browser Claude. It cannot open PDFs without help, does not know your formatting rules, and has no document production skills out of the box. It relies on web-fetches for capabilities that browser Claude has built in. prompt0 bridges this gap by locating the method documents, verifying tool availability (Python, Node.js, Pandoc, LibreOffice), loading the document production toolkit, and establishing the session. Without it, you spend the first 15 minutes of every session watching Claude Code fumble with basic file operations.
+Claude Code arrives relatively unskilled compared to browser Claude. It cannot open PDFs without help, does not know your formatting rules, and has no document production skills out of the box. It relies on web-fetches for capabilities that browser Claude has built in. prompt0 bridges this gap: it verifies tool availability (Python, Node.js, Pandoc, LibreOffice) and loads the document production toolkit. Without it, you spend the first 15 minutes of every session watching Claude Code fumble with basic file operations.
 
 ---
 
 ## The Team
 
-Ten personas anchored to biographical reference material form the standing roster. Each runs as a spawned sub-agent with its own clean context window, receiving only the material relevant to their review task. The biographical anchors are the mechanism: a persona grounded in a specific practitioner's published work and documented approach activates that domain knowledge with precision.
+Twelve personas anchored to biographical reference material form the standing roster. Each runs as a spawned sub-agent with its own clean context window, receiving only the material relevant to their review task. The biographical anchors are the mechanism: a persona grounded in a specific practitioner's published work and documented approach activates that domain knowledge with precision.
 
 | Persona | Role | Wave |
 |---------|------|------|
@@ -48,15 +48,19 @@ Ten personas anchored to biographical reference material form the standing roste
 | The Topologist | Topologist. B-rep topology, Euler operators, topological consistency verification. | 1 (technical) |
 | The Motor Designer | Motor designer. Electromagnetic design, magnetic circuits, winding, loss analysis. | 1 (technical) |
 | The Space Resources Engineer | Space resources engineer. ISRU domain accuracy, TRL assessment, evidence gates. | 1 (technical) |
-| The Editor | Editor. AI-ism detection and removal, sentence revision, prose tightening. | Editing (between W1 and W2) |
+| The Writer | Manuscript composer. Renders reporting copy into readable prose (composition mode); audits the project's own record for fidelity (steward mode). | Writing wave (1st pass); steward mode at step close and session end |
+| The Editor | Editor. AI-ism detection and removal, sentence revision, prose tightening. | Writing wave (2nd pass) / Wave 1 audit mode |
 | The Designer | Designer. Document design, echo-site tracking, compliance maps. Reviews every change. | 2 (review) |
 | The Systems Engineer | Systems engineer. Conceptual integrity, architecture coherence, revision integrity. | 2 (review) |
+| The Fact-Checker | Fact-checker. Traces every factual claim to a primary source; catches confabulation invisible to every other persona. | 2 (review) |
 
 Wave 1 agents run in parallel on technical work. Wave 2 agents run sequentially after integration. The Manager bookends the cycle.
 
-Five productive tensions are structural: The Software Engineer vs. The Systems Engineer, The Loftsman vs. The Engineer, The Loftsman vs. The Topologist, The Motor Designer vs. The Engineer, The Editor vs. The Designer. Do not resolve these. Disagreement between tension pairs is information.
+Productive tensions are structural, spanning both domain pairings and process-level pairings specific to the complement protocol — full list at `method/operational_guide.md` A.8. Do not resolve these. Disagreement between tension pairs is information.
 
 **The Recruiter.** Spawned when a task requires expertise outside the standing roster. The Recruiter identifies a historical figure whose published work covers the capability gap and produces a persona specification for human approval.
+
+**The complement protocol.** A conditional fifth wave (`method/operational_guide.md` A.14): before a step's work begins, a criteria agent writes down what bad output on this step would look like. After the work is done, four checkers — error, coherence, tradeoff, horizon — converge on that criteria file, not on the work itself, each in a clean context with no accumulator and no view of the build's own reasoning. Error and coherence findings block the step's close until fixed or ruled; tradeoff and horizon findings write straight into the gameplan's record and block nothing.
 
 ---
 
@@ -69,7 +73,7 @@ Work Order / Change Order / Ask
    CLAUDE.md ---------> Bootstraps session, pointers to all files
         |
         v
-   prompt0.md --------> Environment setup, tool checks, method docs
+   prompt0.md --------> Environment setup, tool checks, document toolkit
         |
         v
    Gameplan -----------> Created BEFORE execution; user reviews
@@ -78,8 +82,11 @@ Work Order / Change Order / Ask
    Test Suite ---------> Pass/fail criteria; The Software Engineer reviews before production
         |
         v
-   Execution ----------> Wave 1 technical, integration, Wave 2 review
+   Execution ----------> Wave 1 technical, integration, writing wave, Wave 2 review
         |
+        v
+   Complement Wave ----> (conditional) four checkers converge on a pre-written criteria
+        |                file, not the work itself; error/coherence block close
         v
    Inter-Step Gate ----> The Manager closes; user approves before next step
         |
@@ -96,9 +103,8 @@ Every step produces reviewable documents on disk. The accumulator preserves pers
 | File | Purpose |
 |------|---------|
 | `CLAUDE.md` | Bootstrap. Read first. File pointers, process rules, recovery protocol. |
-| `prompt0.md` | Environment setup. Tool checks, method document discovery, session init. |
-| `method/operational_guide.md` | How to run the method. Standing roster, spawn templates, working loop, wave rules. |
-| `method/technical_note.md` | Method architecture and rationale. For human readers who want to understand why. |
+| `prompt0.md` | Environment setup. Tool checks, document-production toolkit. |
+| `method/operational_guide.md` | The method, in full: standing roster (quick reference and full specifications), spawn templates, working loop, wave rules, complement protocol. |
 | `method/tdd_method.md` | Test-driven documentation. Defines how test suites are built and used. |
 | `supplements/llm_plm_cad.md` | CAD/geometry supplement. Active only during parametric modeling work. |
 | `supplements/signs_of_ai_writing.md` | AI writing detection. 7 categories, severity ratings. Loaded into every Editor spawn. |
