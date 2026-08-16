@@ -21,7 +21,7 @@ Or more simply:
 Read CLAUDE.md. Work through prompt0. Today we're going to design an airplane.
 ```
 
-That is the entire entry point. CLAUDE.md bootstraps the session: it tells the orchestrator where to find the operational guide, the gameplan, and the accumulator. prompt0 verifies tools, loads the method documents, and establishes session capabilities. The team assembles, builds a gameplan for your review, writes a test suite, and begins executing. You approve each step before the next one starts.
+That is the entire entry point. CLAUDE.md bootstraps the session: it tells the orchestrator where to find the operational guide, the gameplan, and the accumulator. prompt0 verifies tools and establishes session capabilities. The team assembles, builds a gameplan for your review, writes a test suite, and begins executing. You approve each step before the next one starts.
 
 After compaction or a new session, the recovery incantation is the same: "Read CLAUDE.md, work through prompt0, and read the gameplan."
 
@@ -31,7 +31,7 @@ LLM-PLM (Product Lifecycle Management performed by the LLM) activates when CAD/g
 
 ## Why prompt0 Exists
 
-Claude Code arrives relatively unskilled compared to browser Claude. It cannot open PDFs without help, does not know your formatting rules, and has no document production skills out of the box. It relies on web-fetches for capabilities that browser Claude has built in. prompt0 bridges this gap by locating the method documents, verifying tool availability (Python, Node.js, Pandoc, LibreOffice), loading the document production toolkit, and establishing the session. Without it, you spend the first 15 minutes of every session watching Claude Code fumble with basic file operations.
+Claude Code arrives relatively unskilled compared to browser Claude. It cannot open PDFs without help, does not know your formatting rules, and has no document production skills out of the box. It relies on web-fetches for capabilities that browser Claude has built in. prompt0 bridges this gap by verifying tool availability (Python, Node.js, Pandoc, LibreOffice), loading the document production toolkit, and confirming the method documents are present. Without it, you spend the first 15 minutes of every session watching Claude Code fumble with basic file operations.
 
 ---
 
@@ -96,9 +96,9 @@ Every step produces reviewable documents on disk. The accumulator preserves pers
 | File | Purpose |
 |------|---------|
 | `CLAUDE.md` | Bootstrap. Read first. File pointers, process rules, recovery protocol. |
-| `prompt0.md` | Environment setup. Tool checks, method document discovery, session init. |
+| `prompt0.md` | Environment setup. Windows/encoding rules, tool checks, document toolkit. |
 | `method/operational_guide.md` | How to run the method. Standing roster, spawn templates, working loop, wave rules. |
-| `method/technical_note.md` | Method architecture and rationale. For human readers who want to understand why. |
+| `docs/technical_note.md` | Method architecture and rationale. For human readers who want to understand why. Not read by the orchestrator. |
 | `method/tdd_method.md` | Test-driven documentation. Defines how test suites are built and used. |
 | `supplements/llm_plm_cad.md` | CAD/geometry supplement. Active only during parametric modeling work. |
 | `supplements/signs_of_ai_writing.md` | AI writing detection. 7 categories, severity ratings. Loaded into every Editor spawn. |

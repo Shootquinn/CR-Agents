@@ -31,11 +31,11 @@ The method relies on seven documents and persistent state mechanisms that serve 
 
 **Appendix A (operational guide).** Executable instructions for the orchestrator. Contains the standing roster persona specifications, prompt templates, context recipes, wave assignments, working loop checklist, accumulator file management, gameplan specification, session start and compaction recovery protocols, and the recruiter mechanism. This is the document that gets loaded into a Claude Code project folder. The orchestrator reads it at session start and follows it throughout the session.
 
-**Per-session gameplans.** Created fresh for each working session, either by the human in a web chat before firing up Claude Code or by the orchestrator at session start (Step 0 drafting variant, Appendix A.7.4) when the human arrives with a work order but no current gameplan. The gameplan lists the files the orchestrator should read, describes what needs to get done, and tracks progress. Appendix A (Section A.7) defines what every gameplan must contain. Each gameplan is an instance of that specification. Gameplans are archived when complete.
+**Per-session gameplans.** Created fresh for each working session, either by the human in a web chat before firing up Claude Code or by the orchestrator at session start (Step 0 drafting variant, Appendix A.6.4) when the human arrives with a work order but no current gameplan. The gameplan lists the files the orchestrator should read, describes what needs to get done, and tracks progress. Appendix A (Section A.6) defines what every gameplan must contain. Each gameplan is an instance of that specification. Gameplans are archived when complete.
 
-**Accumulator files.** Per-persona working history, stored as files on disk. The orchestrator writes to the accumulator after each working loop cycle; the accumulator content is loaded into persona spawn prompts to provide session history. Accumulators survive compaction, session boundaries, and project phases. See Section 4.4 for the architectural rationale and Appendix A, Section A.6 for file management instructions.
+**Accumulator files.** Per-persona working history, stored as files on disk. The orchestrator writes to the accumulator after each working loop cycle; the accumulator content is loaded into persona spawn prompts to provide session history. Accumulators survive compaction, session boundaries, and project phases. See Section 4.4 for the architectural rationale and Appendix A, Section A.5 for file management instructions.
 
-**CLAUDE.md (project bootstrap).** A version-controlled file in the project root that serves as the bootstrap document after compaction or session start. Contains the ordered read sequence for recovery (CLAUDE.md, gameplan, operational guide, accumulator), paths to all current project files, standing process rules that gate orchestrator behavior (e.g., the one-step gate), and activation conditions for companion method documents. Companion method documents are domain-specific references (e.g., a TDD method, a CAD/geometry method) that are conditionally loaded based on the current step's domain. CLAUDE.md specifies which companions are always active and which are conditional. Because CLAUDE.md is checked into version control, process rules are visible and auditable in the repository.
+**CLAUDE.md (project bootstrap).** A version-controlled file in the project root that serves as the bootstrap document after compaction or session start. Contains the ordered read sequence for recovery (CLAUDE.md, operational guide, prompt0, gameplan, accumulator), paths to all current project files, standing process rules that gate orchestrator behavior (e.g., the one-step gate), and activation conditions for companion method documents. Companion method documents are domain-specific references (e.g., a TDD method, a CAD/geometry method) that are conditionally loaded based on the current step's domain. CLAUDE.md specifies which companions are always active and which are conditional. Because CLAUDE.md is checked into version control, process rules are visible and auditable in the repository.
 
 **Claude Code memory.** Meta-level behavioral directives stored by Claude Code itself. Survives compaction and session boundaries automatically. Contains instructions to the orchestrator: paths to files, standing corrections, process notes. Claude Code memory and CLAUDE.md reinforce each other: memory provides the initial pointer after compaction ("read CLAUDE.md at [path]"), and CLAUDE.md provides the structured recovery protocol. Memory does not store persona histories or project state — that is the accumulator's job.
 
@@ -175,7 +175,7 @@ TASK:
 Respond in character. Be direct. If you see problems, say so.
 ```
 
-The biographical anchors are critical. Without them, persona identity drifts across spawns. "The Loftsman" without anchors might activate knowledge about any number of people. "The Loftsman, inspired by Roy A. Liming, North American Aviation, author of Practical Analytic Geometry with Applications to Aircraft (1944)" activates exactly the right knowledge region. For complete persona specifications ready to use in spawn prompts, see Appendix A, Section A.3.
+The biographical anchors are critical. Without them, persona identity drifts across spawns. "The Loftsman" without anchors might activate knowledge about any number of people. "The Loftsman, inspired by Roy A. Liming, North American Aviation, author of Practical Analytic Geometry with Applications to Aircraft (1944)" activates exactly the right knowledge region. For complete persona specifications ready to use in spawn prompts, see Appendix A, Section A.12.
 
 ### 4.2 Context Management
 
@@ -193,7 +193,7 @@ Each agent receives minimal context: only what it needs for the current task. Th
 
 The orchestrator never dumps the entire report into every agent call. This keeps each persona's attention focused on its domain rather than diluted across the full document.
 
-Agents that produce substantial output (reviews, analyses, findings lists) write directly to files on disk rather than returning through the orchestrator's context window. This conserves orchestrator context -- the scarcest resource in long sessions -- and creates an audit trail. See Appendix A, Section A.4.4 for the file handoff conventions.
+Agents that produce substantial output (reviews, analyses, findings lists) write directly to files on disk rather than returning through the orchestrator's context window. This conserves orchestrator context -- the scarcest resource in long sessions -- and creates an audit trail. See Appendix A, Section A.3.5 for the file handoff conventions.
 
 ### 4.3 Wave-Based Execution
 
@@ -295,7 +295,7 @@ This loop enforces a critical invariant: the human never sees unreviewed work. E
 
 **The inter-step gate.** After The Manager closes a step, the orchestrator stops and reports the result to the human. The next step does not begin until the human says to proceed. This pause is not a formality. It is the human's opportunity to collect feedback, work flagged issues, adjust the gameplan, or redirect the team's focus. The inter-step is productive time: The Manager reviews any items flagged for discussion with the human to ensure they are substantive and worth the human's attention, not ceremonial check-ins. The human is a team member (Section 3.3), and the inter-step gate is where they exercise evaluative judgment and reflective practice.
 
-For step-by-step operational instructions, see Appendix A, Section A.5.
+For step-by-step operational instructions, see Appendix A, Section A.4.
 
 ---
 
@@ -385,7 +385,7 @@ A post-hoc consistency sweep is mass inspection. An inline consistency reviewer,
 
 ### 7.5 The Test Suite as Specification
 
-When a TDD test suite is written before production begins, it functions as a specification document. Each section has explicit pass/fail criteria. The team checks work against concrete tests rather than subjective quality judgments. This makes review findings actionable and measurable. In multi-phase or revision projects, the test suite is a living document: it inherits from the prior phase, may be revised when a quality audit reveals coverage gaps, and the revised suite becomes the new contract. Test suite revision should be rare and high-impact -- triggered by structural changes in the work product, not by routine findings. The suite itself benefits from the method's own review process: The Systems Engineer reviewing The Software Engineer's test design catches architectural gaps that domain-focused test design may miss. See Section 6.3 for evidence from the PyPM case study, and Appendix A, Section A.12 for the operational protocol.
+When a TDD test suite is written before production begins, it functions as a specification document. Each section has explicit pass/fail criteria. The team checks work against concrete tests rather than subjective quality judgments. This makes review findings actionable and measurable. In multi-phase or revision projects, the test suite is a living document: it inherits from the prior phase, may be revised when a quality audit reveals coverage gaps, and the revised suite becomes the new contract. Test suite revision should be rare and high-impact -- triggered by structural changes in the work product, not by routine findings. The suite itself benefits from the method's own review process: The Systems Engineer reviewing The Software Engineer's test design catches architectural gaps that domain-focused test design may miss. See Section 6.3 for evidence from the PyPM case study, and Appendix A, Section A.10 for the operational protocol.
 
 ### 7.6 Team Composition Is a Living Decision
 

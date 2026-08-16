@@ -302,6 +302,63 @@ Buzzwords substituted for specific engineering claims. No numbers, no evidence, 
 
 ---
 
+## Category 8: Performative Epistemics (Epistemic Theater)
+**WP:EPISTEMICTHEATER**
+
+This pattern is grammatically clean. The sentence's only job is to perform about the document's own rigor. It is a song and a dance instead of good faith rigor or a testable claim.
+
+**The test:** delete the sentence. If nothing is lost but word count, it was performative — cut it. If deleting it would let a false or unsupported claim stand, it was a real caveat — keep it.
+
+### 8.1 Self-Narrating Honesty
+The document asserts its own good faith instead of making a claim.
+Examples: "and now heavier than the last draft admitted, because burying
+a correction that hurts us would defeat the purpose of publishing at
+all." / "That is an honest cost to our position." / "The consequences
+are real and we state them rather than waiting to be told."
+
+### 8.2 Restated Conclusions
+A sentence repeats a number or finding just given, dressed as insight.
+Example: "...which is to say that at the heaviest fixed-site sizing case
+the three prospecting cells sit essentially ON that boundary" immediately
+after the margin was already stated as 1.02.
+**Fix:** Cut the second statement. Keep the number.
+
+### 8.3 Throat-Clearing Before the Point
+A clause announces that a point is coming, or frames why it matters,
+before making it — where the fact itself, stated first, would have done
+both jobs.
+Example: "the mast is a storage-reduction device, not structural
+overhead, and this is why elevation matters more than it looks" used as
+a section's opening sentence.
+**Fix:** Cut the throat-clearing clause. Keep the fact.
+
+### 8.4 Meta-Commentary About the Argument Itself
+The document coaches the reader on how to argue with it, instead of
+making the argument.
+Examples: "which a critic will likely go to first," "Attack the duty
+cycle first," staging an "Invitation to comment" section as "Push
+first... Push second... Push third."
+**Fix:** Delete the staging and meta-commentary to the user.
+
+### 8.5 Redundant Table Framing
+Prose explains what a table is about to show, the table shows it, then a
+closing sentence restates what the table just showed.
+**Fix:** Let the table stand alone. Cut the sentence before and the
+sentence after.
+NOTE: it is true tables need to be mentioned in the text. Just not theatrically!
+
+### 8.6 Hedged Qualifier Stacking (Changelog Leakage)
+A qualifier records the history of a number instead of the number
+itself — a revision-log note that leaked into the document.
+Examples: "though the margin is narrower than the last draft claimed,"
+"and now heavier than the last draft admitted."
+**Fix:** Cut the qualifier. Keep the new number.
+
+**Severity:** BLOCKING. Same failure class as 1.2/1.3/7.4: assertion
+substituting for evidence.
+
+---
+
 ## Severity Guide for Technical Bid Review
 
 **BLOCKING (damages credibility with expert evaluators):**
@@ -310,6 +367,7 @@ Buzzwords substituted for specific engineering claims. No numbers, no evidence, 
 - Vague attributions replacing specific citations (5.1)
 - Elegant variation causing terminology confusion (2.5)
 - The Technical Puff composite pattern (7.4)
+- Performative epistemics / epistemic theater (8)
 
 **IMPORTANT (noticeable to careful readers):**
 - Overused AI vocabulary density (2.1)
@@ -334,4 +392,4 @@ Buzzwords substituted for specific engineering claims. No numbers, no evidence, 
 
 **Key diagnostic:** Does the document make specific, testable engineering claims with evidence, or does it make significance assertions decorated with buzzwords? The former wins proposals. The latter loses them.
 
-**The Editor's operating modes:** In editing mode, The Editor receives a content-stable draft and improves sentence-level clarity without changing technical meaning. In audit mode, The Editor catalogues AI writing patterns by category and severity, estimates density per section, and produces structured findings. The findings identify which patterns appear, where they cluster, and which ones most damage credibility with expert readers. See the operational guide (A.3.10) for full persona specification.
+**The Editor's operating modes:** In editing mode, The Editor receives a content-stable draft and improves sentence-level clarity without changing technical meaning. In audit mode, The Editor catalogues AI writing patterns by category and severity, estimates density per section, and produces structured findings. The findings identify which patterns appear, where they cluster, and which ones most damage credibility with expert readers. See the operational guide (A.12.10) for full persona specification.

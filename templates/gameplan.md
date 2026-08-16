@@ -6,7 +6,6 @@
 **Other reference files:** [list of files the orchestrator should read]
 **Date:** [date]
 **Current step:** 1
-**Quick mode:** standard — per-step flags below
 **lit_review:** no
 *Set to yes if the project involves technical claims that should be validated against primary sources. When active, The Software Engineer's test suite review requires any test asserting a quantitative or technical fact to name the primary source it will be validated against.*
 
@@ -22,14 +21,12 @@
 
 ## Steps
 
-| # | Step | Mode | Assigned To | Status |
-|---|------|------|-------------|--------|
-| 1 | [Specific enough that the orchestrator can execute without clarification] | | [Persona (role)] | Not started |
-| 2 | | | | Not started |
-| 3 | | | | Not started |
-| 4 | | | | Not started |
-
-*Mode flags: `[Q]` = quick mode (A.14), `[Full]` = full spawned-agent execution, blank = standard.*
+| # | Step | Assigned To | Status |
+|---|------|-------------|--------|
+| 1 | [Specific enough that the orchestrator can execute without clarification] | [Persona (role)] | Not started |
+| 2 | | | Not started |
+| 3 | | | Not started |
+| 4 | | | Not started |
 
 ---
 
