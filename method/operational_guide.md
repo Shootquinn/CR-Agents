@@ -271,7 +271,7 @@ Every project's first working-loop cycle is Step 0. Step 0 produces a team-revie
 
 **Autonomous entry.** The drafting variant of Step 0 starts autonomously without waiting for human authorization, provided (a) a work order or change order is present in the project directory and (b) no current gameplan matches it. The intent is that the human can hand over a work order, walk away, and return to a drafted, team-reviewed gameplan ready for approval. If neither a work order nor a current gameplan is available, the orchestrator must interview the human first — it does not invent objectives from nothing.
 
-**Gate behavior.** The one-step gate (CLAUDE.md) fires at Step 0 *closure*, not at Step 0 *entry*. Autonomous entry into Step 0 is consistent with the one-step gate because no prior step has closed. The gate triggers when The Manager closes Step 0 — at that point the orchestrator stops, presents the drafted gameplan, and waits for human approval before opening Step 1.
+**Gate behavior.** The one-step gate (A.4, step 8) fires at Step 0 *closure*, not at Step 0 *entry*. Autonomous entry into Step 0 is consistent with the one-step gate because no prior step has closed. The gate triggers when The Manager closes Step 0 — at that point the orchestrator stops, presents the drafted gameplan, and waits for human approval before opening Step 1.
 
 In both variants, Step 0 closes when the human approves the gameplan at the inter-step gate. Step 1 does not open until then. The drafting work itself is the orchestrator's responsibility, not the team's — you do not spawn the team to invent objectives from nothing; you spawn them to validate and improve a draft you authored.
 
