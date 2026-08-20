@@ -447,3 +447,11 @@ Prefer *But* to *However* at the head of a sentence — two fewer syllables, no 
 ## 7. Numbers
 
 Spell out whole numbers below 10; use figures for 10 and above — if it's a one-digit number, make it a word. (Authorities vary widely here: some spell out anything needing a hyphen, others everything through ninety-nine. Pick one and hold it.) Numerals in serious prose are perfectly respectable; occasional parenthesized numerals — (1), (2), (3) — beat spelling out *first*, *second*, *third* every time.
+
+## 8. Layout and titling
+
+**Paragraph length.** Vary it deliberately. Long paragraphs intimidate and get skipped. A run of short ones reads as glib, or as a refusal to pursue a point home. Paragraphs of uniform length read as assembled rather than written — the most reliable sign that prose has not been edited for a reader.
+
+**Section breaks.** When shifting between two large sections and no transition presents itself, use extra white space rather than manufacturing one. It cues the reader visually that a major turn is coming, gives a place to pause, and is honest about the break in a way a forced bridge is not. White space substitutes for *meanwhile*.
+
+**Titles.** Accurately descriptive first; zing second, if it can be had without costing accuracy. Skip the teasing title, which puts cuteness before communication. The title introduces the writer as much as the document.

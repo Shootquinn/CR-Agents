@@ -19,6 +19,25 @@
 
 ---
 
+## Document Structure
+
+[Required for any step producing a document. Decided before drafting — see `supplements/writing-guides/structure.md`.]
+
+**The point, in one sentence:** [if you cannot write it, the document is not ready to structure]
+
+**Shape:** [lead-first (LDR) / straight OCAR / action-first (ABDCE)] — [why this one, given the reader]
+
+**Opening promises:** [what audience, how broad]
+**Resolution delivers:** [must match the breadth above]
+
+**Known limitations and where each goes:**
+
+| Limitation | Placed in | Why there |
+|---|---|---|
+| | | |
+
+---
+
 ## Steps
 
 | # | Step | Assigned To | Status |

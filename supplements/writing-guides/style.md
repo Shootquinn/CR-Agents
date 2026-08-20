@@ -6,7 +6,7 @@ Derived from John R. Trimble, *Writing with Style: Conversations on the Art of W
 
 Apply this to expository and persuasive prose written for a human reader: essays, memos, reports, analyses, arguments.
 
-Do not apply it to code comments, machine-parsed output, API responses, log lines, or config. Do not apply it where a fixed house format governs — a template, a schema, a regulatory form, a citation style, a commit-message convention. There the format wins and this guide is noise.
+Do not apply it to code comments, machine-parsed output, API responses, log lines, or config, or where a fixed house format governs — a template, a schema, a regulatory form, a citation style. There the format wins and this guide is noise.
 
 The source is a student-facing American book with a mid-century literary taste. Where a position below is taste rather than rule, it says so.
 
@@ -16,7 +16,7 @@ Bad writing is mostly the failure to imagine a reader. The novice writes for him
 
 Two things are owed first: have something fresh to say, and don’t idle getting to it. Fail either and the reader leaves.
 
-Invent her before drafting: a companionable friend with a warm sense of humor and a love of simple directness. Then serve her. Come to the point, anticipate boredom and confusion, offer variety and wit, talk rather than pontificate.
+Invent her before drafting: a companionable friend with a warm sense of humor and a love of simple directness. Then serve her. Come to the point, anticipate boredom and confusion, offer variety and wit — serious is not the same as solemn — and talk rather than pontificate.
 
 **The sentence audit.** While revising, put each sentence to her:
 
@@ -56,7 +56,7 @@ Keep the opening plain — razzle-dazzle only camouflages weak ideas — and ful
 Treat yourself as a prosecutor, the piece as a case, the reader as a skeptical jury.
 
 - **One main contention per paragraph**, however many examples it draws in.
-- **Divide up the proof.** Work out what the thesis must establish — as a prosecutor establishes motive, means, and opportunity — and prove one thing at a time.
+- **Divide up the proof.** Work out what the thesis must establish — motive, means, opportunity — and prove one thing at a time.
 - **Assert, then support; assert, then support.** An unproved assertion stays an assertion.
 - **Make the evidence climb.** Save the strongest for last and label it: "Finally, and most seriously…"
 - **Signpost.** Say how many pieces of evidence are coming and where you are among them. Turns, parallels, and contrasts need explicit connectives.
@@ -94,12 +94,14 @@ Make it the default, because the alternative is a defensive pose. Asked to write
 
 It is harder than either extreme: it needs tone control, and tone is a matter of ear. Use the formal register only where the occasion truly calls for it — a legal brief, a policy statement, a scientific paper — and the job is to transmit information and stay offstage. Choose it; don't default to it.
 
+Within a single document the register shifts by section. Methodology, quantitative claims, and compliance passages take the formal register legitimately; framing, rationale, and argument do not. Calibrate section by section rather than imposing one register throughout — and remember that formal is never license for the pose.
+
 ## Prohibitions that aren't rules
 
 Each is taught as law and is not one. Professional prose breaks all of them unnoticed, which is why they survive.
 
 - ***But*, *And*, *So*, or *Yet* at the head of a sentence** — do it, with restraint; all are lighter than *however* or *furthermore*. No comma after them.
-- **Contractions** — use one where the rhythm asks, not where it doesn't, or the style gets overweighted with informality.
+- **Contractions** — use one where the rhythm asks, not where it doesn't, or the style gets overweighted with informality. *Why should we not have clean air?* against *Why shouldn't we have clean air?*
 - **Addressing the reader as *you*** — say it when you need it, exactly as in conversation. "The reader" only adds distance the printed page already supplies.
 - **First-person *I*** — reserve it for flagging a conjecture or warming a dry account; otherwise generalize impersonally, as if pointing out what any intelligent person could see. Well-supported assertions don't need props like *it seems to me*.
 - **Ending a sentence with a preposition** — a superstition imported from Latin. Judge by sound.
@@ -112,7 +114,7 @@ Form is not a container to fill. Shape the piece for effect — a reader who is 
 
 - **Plot it.** Hook curiosity with a real problem, develop it so the tension holds, resolve it.
 - **Break the pattern to create emphasis.** Any change draws the eye — a short sentence among long ones, a one-sentence paragraph, white space. Whatever you want stressed, make different from its surroundings. Vary paragraph length for the same reason.
-- **Hunt the merely-adequate sentence,** the commonest defect in competent prose. Recast until one sings; that is what buys attention for the next sentence. Where you slipped into report mode, an anecdote or analogy probably belonged.
+- **Hunt the merely-adequate sentence,** the commonest defect in competent prose. Recast until one sings; that is what buys attention for the next sentence.
 
 ## The read-aloud test
 
@@ -135,6 +137,7 @@ Nine-tenths of writing is rewriting; rewriting is where the piece gets made, not
 - **Let it stand, then read it twice:** once as an average reader, hunting unconscious obscurity; once as your worst enemy, hunting everything else.
 - **Rewrite wherever your own attention wanders.** If you drift there, the reader stops.
 - **If the meaning doesn't survive one reading, the fault is yours.** First remedy: shorter words and sentences.
+- **Borrow an ear when stuck.** Ask how a writer whose prose you admire would have written the passage.
 - **Verify every quotation against its source before shipping.** Transcribing accurately is the most mechanical task there is; a writer who fails it forfeits trust in everything harder.
 
 ---

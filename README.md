@@ -103,6 +103,11 @@ Every step produces reviewable documents on disk. The accumulator preserves pers
 | `supplements/llm_plm_cad.md` | CAD/geometry supplement. Active only during parametric modeling work. |
 | `supplements/signs_of_ai_writing.md` | AI writing detection. 7 categories, severity ratings. Loaded into every Editor spawn. |
 | `supplements/freecad_api_reference.md` | FreeCAD headless scripting. Project-specific; swap in your own for other CAD tools. |
+| `supplements/writing-guides/style.md` | Prose style and register. Loaded into every Writer spawn. |
+| `supplements/writing-guides/style-reference.md` | Punctuation, quoting, abbreviations, usage glossary. Lookup only, loaded on demand. |
+| `supplements/writing-guides/structure.md` | Document architecture — arc, openings, resolutions, information order. |
+| `supplements/writing-guides/structure-reference.md` | Condensing, verb and word lists, revision checklists, limitations placement. Lookup only. |
+| `supplements/writing-guides/reporting-copy.md` | Ordering rules for engineering reporting copy. Loaded into Engineer spawns that produce prose. |
 | `templates/gameplan.md` | Blank gameplan. Objectives, steps, progress log, design notes. |
 | `templates/accumulator.md` | Blank accumulator. Per-persona contribution history. |
 | `templates/work_order_drafter.md` | Prompt for drafting work orders in web chat before handing to Claude Code. |
