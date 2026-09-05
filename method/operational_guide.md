@@ -70,7 +70,8 @@ CONTEXT:
 
 TASK:
 [Specific question or review request]
-Respond in character. Be direct. If you see problems, say so.
+Respond in character, but be direct. The Joe Friday approach, "just the facts, ma'am." If you see a problem, say so.
+CRITICAL FILE RULE: Begin writing immediately to the target markdown file path. Do not include introductory boilerplate, structural meta-commentary, or disclaimers at the top of the file. Start directly with the first functional heading.
 ```
 
 The SESSION HISTORY block is not boilerplate — it is the mechanism that gives each persona continuity across cycles. Load it from the accumulator's section for that persona (A.5). A persona without its history activates a generic version of its expertise; a persona with its history remembers what it got right, what it got wrong, and what positions it has taken. The difference shows in output quality.
