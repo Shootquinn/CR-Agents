@@ -1,395 +1,240 @@
-# Signs of AI Writing — Comprehensive Detection Reference
+# Signs of AI Writing: Comprehensive Detection Reference
 
 ## Source
-
-**Title:** Wikipedia:Signs of AI writing
-**URL:** https://en.wikipedia.org/wiki/Wikipedia:Signs_of_AI_writing
-**Shortcuts:** WP:AISIGNS, WP:AITELLS, WP:LLMSIGNS
-**Origin:** WikiProject AI Cleanup (advice page, community-curated)
-**Retrieved:** 2026-03-09
-**Purpose in this project:** Working reference for The Editor persona when auditing ChatGPT-generated text. Organized by detection category with specific markers, diagnostic questions, and examples.
-
-**Important caveat from the source:** This list is descriptive, not prescriptive. No single marker proves AI authorship. Markers co-occur — where there is one, there are likely others. The strongest signal is density: many markers appearing together across a document.
+Wikipedia:Signs of AI writing (WP:AISIGNS, WP:AITELLS, WP:LLMSIGNS), https://en.wikipedia.org/wiki/Wikipedia:Signs_of_AI_writing, an advice page from WikiProject AI Cleanup. Retrieved 2026-09-06; trimmed to CSA bids written with Claude and Gemini. Descriptive, not prescriptive; density is the signal. Read Category 12 before accusing on style alone.
 
 ---
 
-## How to Use This Reference
-
-When reviewing a document for AI writing patterns:
-1. Read the document once for overall impression before marking specifics.
-2. On second pass, work through each category below and tally instances.
-3. Score by density and severity, not individual occurrences. A human might use one em dash per page; ChatGPT uses five.
-4. Note which categories cluster together — that clustering is the signal.
-5. Distinguish between markers that damage credibility with expert readers (high severity) and markers that are cosmetic tells (lower severity).
+## Ordering and Use
+Worst first, not by taxonomy. **Performative Epistemics is Category 1**, this project's own addition. **Negative Parallelism is BLOCKING** (2), not NOTE; its reversed form is at 2.3. Tally by category, score by density, and run Category 11 and 12 first.
 
 ---
 
-## Category 1: Content Inflation and Puffery
-
-### 1.1 Undue Emphasis on Significance, Legacy, and Broader Trends
-**WP:AIWTW** — The single most recognizable ChatGPT pattern.
-
-**Trigger words/phrases:**
-- stands as / serves as / is a testament / is a reminder
-- vital / significant / crucial / pivotal / key role / key moment
-- underscores / highlights its importance / significance
-- reflects broader / symbolizing its ongoing / enduring / lasting
-- contributing to the / setting the stage for / marking / shaping the
-- represents / marks a shift / key turning point
-- evolving landscape / focal point / indelible mark / deeply rooted
-
-**What it looks like:** The text inflates mundane facts into sweeping historical significance. A railway station becomes "crucial for regional socio-economic development." An etymology becomes evidence of "the enduring legacy of community resistance."
-
-**Diagnostic question:** If you removed the significance claim, would the paragraph lose any factual content? If no, it's inflation.
-
-**ChatGPT-specific pattern:** Often appears as a concluding sentence that adds no information: "This highlights the enduring importance of X in the broader context of Y."
-
-### 1.2 Promotional and Advertisement-Like Language
-**WP:AIPUFFERY, WP:AIPEACOCK**
-
-**Trigger words/phrases:**
-- boasts a / vibrant / rich (figurative) / profound
-- enhancing its / showcasing / exemplifies / commitment to
-- natural beauty / nestled / in the heart of
-- groundbreaking (figurative) / renowned
-- seamlessly / thoughtfully / meticulously
-
-**What it looks like:** Neutral description becomes sales copy. Technical specifications become "powerful capabilities." Locations become "nestled in the heart of" somewhere. Organizations show "commitment to excellence."
-
-**Severity for technical bids:** HIGH. CSA evaluators are expert readers. Puffery signals that the author is selling rather than demonstrating. A bid that "showcases groundbreaking capabilities" when it should be presenting engineering evidence will lose credibility.
-
-### 1.3 Superficial Analysis
-**WP:SUPERFICIAL**
-
-**Trigger words/phrases:**
-- highlighting / underscoring / emphasizing ...
-- ensuring / reflecting / symbolizing ...
-- contributing to / cultivating / fostering (figurative)
-- encompassing / valuable insights
-- align with / resonate with
-
-**What it looks like:** A dangling present participle phrase appended to the end of a sentence that adds no analytical content. "The system processes data in real-time, ensuring optimal performance and reliability." The "ensuring" clause says nothing — it's a verbal gesture toward analysis without performing any.
-
-**Diagnostic question:** Does the "-ing" phrase make a testable claim? If not, it's superficial analysis.
-
-**ChatGPT-specific pattern:** Chains of these: "X does Y, ensuring Z, while fostering W and contributing to V." Each clause is vaguer than the last.
+# TIER 1: BLOCKING
+Damages credibility with expert evaluators.
 
 ---
 
-## Category 2: Language and Grammar Patterns
-
-### 2.1 Overused AI Vocabulary Words
-**WP:AIVOCAB, WP:AIWORDS** — Among the strongest statistical tells. These words appear far more frequently in post-2023 text than in comparable pre-2023 text.
-
-**High-frequency ChatGPT words (research-documented):**
-- Additionally (especially sentence-initial)
-- align with
-- crucial
-- delve (less common post-2024, but still diagnostic in older outputs)
-- emphasizing
-- enduring
-- enhance
-- fostering
-- garner
-- highlight (as verb)
-- interplay
-- intricate / intricacies
-- key (as adjective)
-- landscape (abstract noun)
-- pivotal
-- showcase
-- tapestry (abstract noun)
-- testament
-- underscore (as verb)
-- valuable
-- vibrant
-
-**Diagnostic method:** These co-occur. One "Additionally" is human-plausible. A paragraph with "Additionally," "crucial," "showcasing," and "vibrant" is almost certainly AI-generated. Count density per page.
-
-### 2.2 Avoidance of Basic Copulatives ("is"/"are")
-**WP:AICOPULA**
-
-**Substitution patterns:**
-- "is" → "serves as" / "stands as" / "marks" / "represents"
-- "has" → "boasts" / "features" / "offers"
-- "was a candidate" → "ventured into politics as a candidate"
-
-**What it looks like:** Simple, direct constructions are replaced with more elaborate ones that sound formal but add no meaning. Research documents a >10% decrease in "is" and "are" usage in AI-generated text vs. human baselines.
-
-**Why this matters for bids:** Technical writing demands clarity. "The drill is a rotary percussion system" communicates faster than "The drill serves as a rotary percussion system." Evaluators notice when simple statements are dressed up.
-
-### 2.3 Negative Parallelisms
-**WP:AIPARALLEL**
-
-**Patterns:**
-- "Not only ... but also ..."
-- "It is not just about ..., it's ..."
-- "It's not X — it's Y"
-- "No X, no Y, just Z"
-
-**What it looks like:** Constructions that appear balanced and thoughtful but actually add nothing. "The system is not just a drill — it's a comprehensive mining solution." The negative frame creates an illusion of nuance where none exists.
-
-### 2.4 Rule of Three
-**WP:RO3**
-
-**Patterns:**
-- "adjective, adjective, and adjective"
-- "short phrase, short phrase, and short phrase"
-- Lists of exactly three items where the third is weaker
-
-**Diagnostic question:** Is the third item as strong as the first two? If it's filler ("and more"), it's the AI padding to three.
-
-### 2.5 Elegant Variation (Synonym Swapping)
-**WP:AIELEVAR**
-
-**What it looks like:** A concept is introduced with one term, then referred to by a different synonym each subsequent time. "The rover" becomes "the robotic platform," then "the autonomous vehicle," then "the exploration system." Human technical writers repeat the correct term. AI has a repetition-penalty that forces synonym rotation.
-
-**Why this matters:** In technical documents, consistent terminology prevents confusion. "Borebot" should remain "Borebot," not alternate with "the drilling platform," "the extraction system," and "the robotic miner."
-
-### 2.6 False Ranges
-**WP:FALSERANGE**
-
-**Pattern:** "from X to Y" constructions where X and Y are not endpoints on any coherent scale.
-
-**Example:** "from fundamental physics to medicine and neuroscience" — there is no scale on which physics is one end and neuroscience is the other.
-
-**Why LLMs do this:** The construction mimics persuasive writing meant to impress. LLMs are heavily trained on such text.
-
----
-
-## Category 3: Structural Patterns
-
-### 3.1 Title Case in Headings
-**WP:AITITLECASE**
-
-AI chatbots capitalize all main words in section headings: "Strategic Negotiations and Global Partnerships" instead of "Strategic negotiations and global partnerships."
-
-### 3.2 Overuse of Boldface
-**WP:AIBOLD**
-
-Mechanical bolding of terms for emphasis, inherited from READMEs, sales decks, and listicles. Every key term gets bold treatment in a "key takeaways" fashion.
-
-### 3.3 Inline-Header Vertical Lists
-**WP:AILIST**
-
-Lists where each item has a bolded inline header followed by a colon and description:
-- **Item Name:** Description of the item and its significance...
-
-This is the default ChatGPT output format for any enumerated content. Human technical writers use it sometimes; ChatGPT uses it for everything.
-
-### 3.4 Outline-Like "Challenges and Future Prospects" Sections
-**WP:AICHALLENGES**
-
-**Formula:** "Despite its [positive words], [subject] faces challenges including [list]. Despite these challenges, [positive outlook]."
-
-This sandwich structure (positive → challenges → positive) is nearly diagnostic for ChatGPT. The challenges are generic, and the concluding optimism adds nothing.
-
-### 3.5 Unnecessary Tables
-**WP:AITABLE**
-
-Small tables that could be prose. AI defaults to tabular format for any structured information, even when a sentence would be clearer.
-
----
-
-## Category 4: Punctuation and Typography
-
-### 4.1 Overuse of Em Dashes
-**WP:AIDASH** — The marker that prompted creation of this reference.
-
-LLMs use em dashes (—) more frequently than human writers and in places where humans use commas, parentheses, colons, or semicolons. ChatGPT especially uses em dashes in a formulaic, "punched up" style mimicking sales writing.
-
-**Diagnostic:** Count em dashes per page. Human technical writing: 0-2 per page typical. ChatGPT output: 5-10+ per page, often in parallel constructions.
-
-**Pattern:** "X — and Y — represents Z" or "The system — designed for lunar conditions — operates autonomously." Where a human would write parentheses or commas, ChatGPT reaches for the em dash.
-
-### 4.2 Curly Quotation Marks and Apostrophes
-**WP:AICURLY**
-
-ChatGPT uses curly quotes (" ") instead of straight quotes (" "). It also uses curly apostrophes ('). Sometimes mixes curly and straight inconsistently within the same document.
-
-**Note:** This is ChatGPT-specific. Claude typically uses straight quotes. Also produced by Microsoft Word's "smart quotes" feature, so not diagnostic alone.
-
-### 4.3 Emojis
-**WP:AIEMOJI**
-
-Emojis decorating headings or bullet points. Rare in formal documents but common in ChatGPT outputs for less formal contexts.
-
----
-
-## Category 5: Attribution and Evidence Patterns
-
-### 5.1 Vague Attributions and Weasel Wording
-**WP:AIWEASEL**
-
-**Trigger phrases:**
-- Industry reports / Observers have cited / Experts argue
-- Some critics argue / Several sources / such as (before exhaustive lists)
-
-**What it looks like:** Claims attributed to unnamed authorities. "Experts have noted that the system's approach is innovative." Which experts? What did they actually say?
-
-**ChatGPT-specific:** Exaggerates the quantity of sources. One article becomes "several publications." One reviewer becomes "scholars."
-
-### 5.2 Undue Emphasis on Notability and Media Coverage
-**Trigger phrases:**
-- independent coverage / local/regional/national media outlets
-- profiled in / written by a leading expert
-- active social media presence
-
-**Why this matters for bids:** A technical bid that spends words asserting its own importance rather than demonstrating it is following the ChatGPT pattern of telling rather than showing.
-
-### 5.3 Knowledge-Cutoff Disclaimers
-**WP:AICUTOFF**
-
-**Trigger phrases:**
-- as of [date] / based on available information
-- While specific details are limited / not widely documented
-- maintains a low profile / keeps personal details private
-
-These are ChatGPT's way of hedging when it doesn't have information. In a technical bid, this might manifest as vague claims without specific numbers or dates.
-
----
-
-## Category 6: ChatGPT-Specific Artifacts
-
-### 6.1 Collaborative Communication Leakage
-**WP:CERTAINLY**
-
-Phrases meant for the user that leak into the output:
-- "I hope this helps" / "Of course!" / "Certainly!"
-- "Would you like..." / "Is there anything else"
-- "Let me know" / "Here is a more detailed breakdown"
-
-### 6.2 Placeholder Text and Templates
-Unfilled template language: "[Describe the specific section]" or "INSERT_SOURCE_URL" appearing in final text.
-
-### 6.3 Reference Markup Artifacts
-ChatGPT-specific: `citeturn0search0`, `:contentReference[oaicite:0]{index=0}`, or similar markup appearing in text where citations should be.
-
-### 6.4 Markdown in Non-Markdown Contexts
-**WP:MARKDOWN**
-
-ChatGPT defaults to Markdown formatting. In a .docx produced via ChatGPT, you may find:
-- `**bold**` markup that wasn't rendered
-- `##` heading prefixes
-- Backtick code fences
-- Markdown-style links `[text](url)`
-
----
-
-## Category 7: Composite Patterns (Highest Diagnostic Value)
-
-Individual markers can appear in human writing. The following combinations are near-diagnostic:
-
-### 7.1 The Significance Sandwich
-"[Subject] plays a crucial role in [broad field]. [Factual content]. This underscores the enduring significance of [subject] in the broader landscape of [field]."
-
-Opening puffery + content + closing significance claim. The opening and closing add nothing.
-
-### 7.2 The Feature Parade
-"[Subject] boasts [feature], showcasing its [quality]. Additionally, it features [feature], highlighting its [quality]. Furthermore, [feature] underscores its commitment to [value]."
-
-Each sentence follows the same template: feature + "-ing" phrase claiming significance.
-
-### 7.3 The Balanced Assessment
-"Not only does [subject] [positive], but it also [positive]. Despite [challenge], [positive outlook]. This reflects the broader [trend]."
-
-Negative parallelism + challenge sandwich + significance claim. Three AI patterns in one paragraph.
-
-### 7.4 The Technical Puff
-"The system leverages cutting-edge [technology] to deliver robust [capability], ensuring optimal [outcome] while maintaining seamless [quality]."
-
-Buzzwords substituted for specific engineering claims. No numbers, no evidence, no testable assertions. Every adjective is decorative.
-
----
-
-## Category 8: Performative Epistemics (Epistemic Theater)
-**WP:EPISTEMICTHEATER**
+## Category 1: Performative Epistemics (Epistemic Theater)
+**No Wikipedia shortcut. This project's own category.**
 
 This pattern is grammatically clean. The sentence's only job is to perform about the document's own rigor. It is a song and a dance instead of good faith rigor or a testable claim.
 
-**The test:** delete the sentence. If nothing is lost but word count, it was performative — cut it. If deleting it would let a false or unsupported claim stand, it was a real caveat — keep it.
+**The test:** delete the sentence. If nothing is lost but word count, it was performative, so cut it. If deleting it would let a false or unsupported claim stand, it was a real caveat, so keep it.
 
-### 8.1 Self-Narrating Honesty
+### 1.1 Self-Narrating Honesty
 The document asserts its own good faith instead of making a claim.
-Examples: "and now heavier than the last draft admitted, because burying
-a correction that hurts us would defeat the purpose of publishing at
-all." / "That is an honest cost to our position." / "The consequences
-are real and we state them rather than waiting to be told."
+Examples: "and now heavier than the last draft admitted, because burying a correction that hurts us would defeat the purpose of publishing at all." / "That is an honest cost to our position." / "The consequences are real and we state them, not waiting to be told."
 
-### 8.2 Restated Conclusions
+### 1.2 Restated Conclusions
 A sentence repeats a number or finding just given, dressed as insight.
-Example: "...which is to say that at the heaviest fixed-site sizing case
-the three prospecting cells sit essentially ON that boundary" immediately
-after the margin was already stated as 1.02.
+Example: "...which is to say that at the heaviest fixed-site sizing case the three prospecting cells sit essentially ON that boundary" immediately after the margin was already stated as 1.02.
 **Fix:** Cut the second statement. Keep the number.
 
-### 8.3 Throat-Clearing Before the Point
-A clause announces that a point is coming, or frames why it matters,
-before making it — where the fact itself, stated first, would have done
-both jobs.
-Example: "the mast is a storage-reduction device, not structural
-overhead, and this is why elevation matters more than it looks" used as
-a section's opening sentence.
+### 1.3 Throat-Clearing Before the Point
+A clause announces that a point is coming, or frames why it matters, before making it, where the fact itself, stated first, would have done both jobs.
+Example: "the mast is a storage-reduction device, not structural overhead, and this is why elevation matters more than it looks" used as a section's opening sentence.
 **Fix:** Cut the throat-clearing clause. Keep the fact.
 
-### 8.4 Meta-Commentary About the Argument Itself
-The document coaches the reader on how to argue with it, instead of
-making the argument.
-Examples: "which a critic will likely go to first," "Attack the duty
-cycle first," staging an "Invitation to comment" section as "Push
-first... Push second... Push third."
+### 1.4 Meta-Commentary About the Argument Itself
+The document coaches the reader on how to argue with it, instead of making the argument.
+Examples: "which a critic will likely go to first," "Attack the duty cycle first," staging an "Invitation to comment" section as "Push first... Push second... Push third."
 **Fix:** Delete the staging and meta-commentary to the user.
 
-### 8.5 Redundant Table Framing
-Prose explains what a table is about to show, the table shows it, then a
-closing sentence restates what the table just showed.
-**Fix:** Let the table stand alone. Cut the sentence before and the
-sentence after.
+### 1.5 Redundant Table Framing
+Prose explains what a table is about to show, the table shows it, then a closing sentence restates what the table just showed.
+**Fix:** Let the table stand alone. Cut the sentence before and the sentence after.
 NOTE: it is true tables need to be mentioned in the text. Just not theatrically!
 
-### 8.6 Hedged Qualifier Stacking (Changelog Leakage)
-A qualifier records the history of a number instead of the number
-itself — a revision-log note that leaked into the document.
-Examples: "though the margin is narrower than the last draft claimed,"
-"and now heavier than the last draft admitted."
+### 1.6 Hedged Qualifier Stacking (Changelog Leakage)
+A qualifier records the history of a number instead of the number itself, a revision-log note that leaked into the document.
+Examples: "though the margin is narrower than the last draft claimed," "and now heavier than the last draft admitted."
 **Fix:** Cut the qualifier. Keep the new number.
 
-**Severity:** BLOCKING. Same failure class as 1.2/1.3/7.4: assertion
-substituting for evidence.
+### 1.7 Procedural Statements About Your Own Work
+**Corresponds to Wikipedia's edit-summary sign "Specific mentions of 'preserved' or 'retained' information, 'avoided' mistakes, and other procedural statements". Wikipedia files it under edit summaries; the mechanism is identical in body prose, status reports and commit messages.**
+
+**Words to watch:** preserved / preserving, retained / retaining, avoided / avoiding, ensured / ensuring, aimed / aiming to, verified independently, checked, confirmed, genuinely, actually.
+
+**Wikipedia's diagnostic, quoted:** *"It is unusual for a human edit summary to include mention of material that was not edited or things that they didn't do."*
+
+**What it looks like:** The writer reports the care taken instead of the result obtained. "Removed promotional language and revised the passage to use a more neutral, balanced tone while preserving the original meaning and technical details." "Reworded lead and body for neutrality and balance... while preserving sourced criticisms."
+
+**In a status report or a chat reply it reads as:** "I did not tell it what to find." "I verified this independently." "The improved wording survived." "I did not relax a row to reach green." "Measured, not asserted."
+
+**Why it survives the throat-clearing ban:** it is disguised as substance. It looks like a fact about the work rather than a claim about the writer, so a writer told to cut preambles will keep it.
+
+**Fix:** State the result. The reader assumes the work was done. If the procedure genuinely matters, it belongs in a method section with an owner, not welded to the finding.
+
+**Severity:** BLOCKING. Same failure class as 3.2/3.3/5.4: assertion substituting for evidence.
 
 ---
 
-## Severity Guide for Technical Bid Review
+## Category 2: Negative Parallelism
+**WP:AIPARALLEL**, promoted from NOTE to BLOCKING for this project.
 
-**BLOCKING (damages credibility with expert evaluators):**
-- Puffery substituting for evidence (1.2)
-- Superficial analysis replacing technical reasoning (1.3)
-- Vague attributions replacing specific citations (5.1)
-- Elegant variation causing terminology confusion (2.5)
-- The Technical Puff composite pattern (7.4)
-- Performative epistemics / epistemic theater (8)
+The output reads as though it is correcting a misconception the reader never held. It contrasts the real claim against a rejected alternative that nobody proposed, which makes the claim sound weighed rather than merely asserted.
 
-**IMPORTANT (noticeable to careful readers):**
-- Overused AI vocabulary density (2.1)
-- Em dash overuse (4.1)
-- Copula avoidance (2.2)
-- Rule of three padding (2.4)
-- Title case headings (3.1)
-- Challenge/prospects sandwich (3.4)
+**The test, and it is the whole category:** *did anyone actually propose Y?* If nobody did, cut to X and the sentence loses nothing. The construction is legitimate only when Y is a live option someone raised, or one the reader is likely holding.
 
-**NOTE (minor tells, contextual):**
-- Curly quotes (4.2) — also produced by Word
-- Boldface patterns (3.2)
-- List formatting (3.3)
-- Negative parallelisms (2.3) — humans use these too, just less
-- False ranges (2.6) — rare in technical writing
+**The plain-language version of the defect:** "The cat caught a mouse rather than the dog." The dog was never in the room.
+
+### 2.1 "Not only X, but also Y"
+Constructions using "not", "but" or "however" to stage a contrast: "Not only ... but ...", "It is not just ..., it's ...".
+
+Example, from an April 2025 revision to *Eugenio Duse*, and note it runs across two sentences:
+
+> He hailed from the esteemed Duse family, renowned for their theatrical legacy. Eugenio's life, however, took a path that intertwined both personal ambition and familial complexities.
+
+### 2.2 "Not X, but Y"
+The stronger form, denying the first characteristic outright: "It's not ..., it's ...", "no ..., no ..., just ...".
+
+Example: "The system is not just a drill — it's a comprehensive mining solution."
+
+### 2.3 "X rather than Y": THE REVERSED FORM
+**Absent from the 2026-03 retrieval of this reference. Added 2026-09-06.**
+
+Wikipedia's note: *"This pattern may also be reversed, a construction particularly common in Grok output."*
+
+Their example, from an April 2026 revision to *First Battle of Guilin*, which explicitly states it is from Grokipedia:
+
+> Chiang's strategy emphasized military suppression of these holdouts to enforce subordination, prioritizing empirical consolidation of power amid fragmented loyalties **rather than** ideological purity.
+
+**Worked examples from this project:**
+
+| Written | Nobody proposed | Fix |
+|---|---|---|
+| "It assumes the polar grade rather than measuring it" | measuring it; no instrument exists | "It assumes the polar grade. Nobody has measured it." |
+| "the axis re-scores the ground rather than relocating it" | relocating the ground | "the axis argues about how good that ground is, not where it is" |
+| "measured by command rather than assumed" | assuming | state the measurement |
+| "reported as a zero rather than omitted" | omitting it | report the zero |
+| "keyed on the property rather than a phrase" | keying on a phrase | "keyed on the property" |
+
+**Why this one is worth its own category here:** it is the highest-frequency form in this project's output, it reads as considered judgement, and a writer told only to "remove hedging" will walk straight past it. In one Step 51 audit, nineteen of thirty-two clause-level strikes were this single shape.
+
+---
+
+## Category 3: Content Inflation and Puffery
+
+**3.1** (WP:AILEGACY) stands as, testament, crucial, pivotal, underscores, landscape. **Diagnostic question:** If you removed the significance claim, would the paragraph lose any factual content? If no, it's inflation.
+**3.2** (WP:AIPUFFERY) boasts, showcasing, exemplifies, groundbreaking, seamlessly, meticulously; HIGH severity, reads as selling, not demonstrating.
+**3.3** (WP:SUPERFICIAL) a dangling "-ing" clause claims analysis without performing any, e.g. "ensuring optimal performance." **Diagnostic question:** Does the "-ing" phrase make a testable claim? If not, it's superficial analysis.
+
+---
+
+## Category 4: Attribution and Evidence Patterns
+
+**4.1** (WP:AIWEASEL) "Experts have noted..." Which experts? **4.2** (WP:AICONNECT) "was the CEO of" softened to "associated with leadership of." **4.3** (WP:AICUTOFF) hedges it cannot find something, then speculates what the gap "likely" means; in a bid, vague claims without numbers.
+
+---
+
+## Category 5: Composite Patterns
+
+**5.1 The Significance Sandwich:** puffery opener, fact, significance close adding nothing. "X plays a crucial role in Y. [Content]. This underscores the enduring significance of X."
+
+**5.2 The Feature Parade:** every sentence is feature plus an "-ing" phrase claiming significance. "X boasts Y, showcasing Z. Additionally, it features W, highlighting V."
+
+**5.3 The Balanced Assessment:** negative parallelism, then a challenge sandwich, then a significance claim. Three patterns in one paragraph.
+
+**5.4 The Technical Puff:** buzzwords substitute for engineering claims. "The system leverages cutting-edge [technology] to deliver robust [capability], ensuring optimal [outcome] while maintaining seamless [quality]." No numbers, no evidence, every adjective decorative.
+
+---
+# TIER 2: IMPORTANT
+Noticeable to careful readers; density is the signal.
+
+---
+
+## Category 6: Language and Grammar Patterns
+
+**6.1** (WP:AIVOCAB, WP:AIWORDS), the strongest statistical tell: additionally, align with, boasts, crucial, delve, emphasizing, enduring, enhance, fostering, garner, highlight, interplay, intricate, key, landscape, meticulous, pivotal, robust, showcase, tapestry, testament, underscore, valuable. Delve and tapestry are the most documented of these; the paper is titled "Why Does ChatGPT 'Delve' So Much?" One word is human-plausible; several together are not.
+**6.2** (WP:AINOCOPULA) "is" becomes "serves as"; "has" becomes "boasts." **6.3** (WP:RO3) three items, the third weaker filler. **Diagnostic question:** Is the third item as strong as the first two? If it's filler ("and more"), it's padding to three.
+**6.4** (WP:AIELEVAR) a new synonym each mention: "the rover," then "the robotic platform." Keep "Borebot" as "Borebot."
+
+---
+
+## Category 7: Structural Patterns
+
+**7.1** (WP:AITITLECASE) title-case headings. **7.2** (WP:AIBOLD) bolding every key term. **7.3** (WP:AILIST) bullets opening with a bolded header and colon, for everything. **7.4** (WP:FACESCHALLENGES) "Despite its [strengths], faces challenges. Despite these, [outlook]." The sign is the rigid formula. **7.5** (WP:AITABLE) small tables that could be prose. **7.6** headings at level 3, or `----` breaks between sections.
+
+---
+
+## Category 8: Punctuation and Typography
+
+**8.1** (WP:AIDASH), the marker that prompted this reference: LLMs use em dashes where humans use commas. The author's scale: novels run about five per book, Moby-Dick about five per page, Claude about five per paragraph. Only Claude, of contemporary models, uses more em dashes than professional writers (July 2026); ChatGPT uses fewer, so it's a live tell here.
+**8.2** (WP:AIEMOJI) decorating headings or bullets.
+
+---
+# TIER 3: FORENSIC
+Near-conclusive when present; absence proves nothing.
+
+---
+
+## Category 9: Model-Specific Artifacts and Leakage
+
+**9.1** (WP:CERTAINLY) "I hope this helps," reviewer-addressed submission notes. **9.2** (WP:AIPLACEHOLDER) "[Describe the specific section]," dates like `2025-xx-xx`. **9.3** (WP:STARTSPAN) Gemini's leak: `[cite: 1]`. **9.4** (WP:MARKDOWN) unrendered `**bold**`/`##` in a .docx. **9.5** (WP:AIFICTREF) invalid ISBN/DOI, wrong-article DOIs, unverifiable page numbers.
+
+---
+
+## Category 10: Edit Summaries and Commit Messages
+**WP:AISUMMARY**, applies to commit messages; rigid formulae, and one suggests the edit is AI. **The rigidity is the sign.** **10.1** ensured, adheres to, refined, streamlined, in compliance with, neutrality, clarity, flow. **10.2** see 1.7, BLOCKING here since it appears in body prose too. **10.3** "added sourced content," not what the content is.
+
+---
+# TIER 4: COUNTER-EVIDENCE
+Run before concluding AI authorship; false accusations are expensive.
+
+---
+
+## Category 11: Signs of Human Writing
+
+**Age.** ChatGPT launched 30 November 2022. Text demonstrably written before that date is not AI-generated, however much it resembles the patterns above. The corpus of human writing is vast enough to produce coincidences.
+
+**Ability to explain an editorial choice.** A writer who can say why they made a mistake, supply the correct link, or quote the passage they were working from, made a human error.
+
+**Syntax LLMs avoid.** Empirically more common in human writing than in AI output:
+- Simple *is* and *has* phrases: "there is a", "it has a"
+- Plain words where a stiff synonym exists: wrote (not authored), moved (not relocated), used (not utilized), tried (not attempted), died (not passed away)
+- Superlative or definitive statements: "one of the best", "is the only", "was the first"
+- Hedging qualifiers and intensifiers: very, perhaps, tends to
+- Wordy constructions: "as a result of", "in order to", "all of the", "a part of", "the fact that"
+
+**Consistency with pre-2023 work.** If a writer's current output matches their own writing from before chatbots existed, including quirks like heavy bolding, that consistency argues for human authorship.
+
+---
+
+## Category 12: Ineffective Indicators
+
+These are commonly cited and do not work. Some point the opposite way.
+
+- **Perfect grammar.** Many people write well, professionally.
+- **Mixed casual and formal register.** Indicates a technical person writing casually, youth, playfulness, neurodivergence, code-switching, or several authors on one page.
+- **"Bland" or "robotic" prose.** LLM output skews positive and verbose. It is formulaic in specific ways, and may not read as robotic to someone unfamiliar with it.
+- **"Fancy" or academic prose.** LLMs over-use *specific* words. The correlation does not extend to formal vocabulary generally.
+- **Transition words in isolation.** Only a few are over-used, and essay-writing humans use them too.
+- **Unsourced content.** Most unsourced material predates LLMs. Modern chatbots add citations readily, inaccurate ones but present.
+- **Bizarre markup.** Misplaced HTML tags and mangled syntax point to browser extensions, translation tools, or visual-editor mistakes.
+- **Correct markup.** Getting complex formatting right is normal for anyone using a visual editor or a preview button.
+
+**Before alleging AI use, consider whether confirmation bias is operating.** False accusations drive away good contributors and create an atmosphere of suspicion.
+
+---
+
+## Differences Between Models, and History
+
+**ChatGPT and Grok** dwell on broader context more than Gemini and Claude. **Claude** alone, of contemporary models, uses more em dashes than professional writers (July 2026). **Grok** over-uses pseudo-scientific vocabulary and the reversed form in 2.3. Historical, rare now: didactic disclaimers, formulaic summaries ("In summary"), generation cut off mid-thought.
+
+---
+
+## Severity Guide
+
+**BLOCKING:** Category 1, incl. 1.7; negative parallelism (2, esp. 2.3); puffery (3.2); superficial analysis (3.3); vague attributions (4.1); the Technical Puff (5.4).
+**IMPORTANT:** AI vocabulary (6.1); copula avoidance (6.2); rule-of-three (6.3); elegant variation (6.4); em dashes (8.1, elevated for Claude); title case (7.1); challenge sandwich (7.4).
+**FORENSIC:** markup (9.3); citation forensics (9.5); leakage (9.1); placeholder text (9.2).
+**NOTE:** boldface (7.2); list formatting (7.3); emojis (8.2).
 
 ---
 
 ## Application Notes
 
-**Primary concern:** Expert technical readers notice AI writing patterns that a general audience misses. People who read dozens of technical proposals, grant applications, or engineering reports develop instincts for statistical-average prose. A document's credibility depends on sounding like it was written by someone who understands the subject, not by a chatbot producing generic technical prose.
+**Key diagnostic:** testable engineering claims with evidence win proposals; buzzword claims lose them (operational guide A.12.10).
 
-**Key diagnostic:** Does the document make specific, testable engineering claims with evidence, or does it make significance assertions decorated with buzzwords? The former wins proposals. The latter loses them.
-
-**The Editor's operating modes:** In editing mode, The Editor receives a content-stable draft and improves sentence-level clarity without changing technical meaning. In audit mode, The Editor catalogues AI writing patterns by category and severity, estimates density per section, and produces structured findings. The findings identify which patterns appear, where they cluster, and which ones most damage credibility with expert readers. See the operational guide (A.12.10) for full persona specification.
+**The dashboard case, 2026-09-06:** a register pass can clear every marker in Categories 1 through 8 and still fail, since the defect was never which words sat beside the numbers, but that words sat there at all. Test: if the prose could be lorem ipsum with no change to the reader's experience, the fix is deletion. This file documents prose tells, not information design.
