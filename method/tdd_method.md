@@ -165,15 +165,3 @@ specific facts.
 [Attach: Document that passed all tests from Prompt 3]
 [Attach: Test suite from Prompt 1 (for re-validation)]
 ```
-
----
-
-## That's It
-
-Define what "done" looks like. Ask Claude to build it. Validate against your definition.
-
-The method is simple because you're working with the model's strengths instead of against them.
-
----
-
-*TDD for Documentation, v1.3*
