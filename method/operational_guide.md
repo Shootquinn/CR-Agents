@@ -124,7 +124,7 @@ Build agents (typically The Engineer) that run FreeCAD, compilation, or other pr
 
 Sub-agents write substantial output directly to disk instead of returning it through the orchestrator's context window. The orchestrator (or the next agent) reads from disk on demand. This conserves context -- the scarcest resource in long sessions.
 
-**Directory:** `{project_dir}/cr_scratch/`. Created at session start if it does not exist. Committed to version control (preserves agent reasoning for audit and learning).
+**Directory:** `{project_dir}/cr_scratch/`. Created at session start if it does not exist. Preserves agent reasoning for audit and learning.
 
 **Naming convention:** `step{N}_{persona}_{purpose}.md`
 Examples: `step5_systems_engineer_review.md`, `step4_loftsman_findings.md`, `step6_manager_open.md`
@@ -355,7 +355,6 @@ Do not resolve the The Software Engineer vs. The Systems Engineer, The Loftsman 
 1. Confirm the accumulator is current. The Manager writes entries at each step close (A.5.2), so this is a check, not a write. If a cycle closed without one, spawn The Manager to record it rather than writing it from the orchestrator's context.
 2. Update the gameplan (mark completed steps, update current step, add design notes and open questions).
 3. Write any in-progress work to disk.
-4. Commit if using version control.
 
 ---
 
