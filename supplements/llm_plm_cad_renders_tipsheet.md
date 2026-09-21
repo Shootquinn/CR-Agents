@@ -98,6 +98,67 @@ holding folder on the scratch drive; never delete.
 
 ---
 
+## Runbook: How a Render Is Launched (read this before Prompt 2)
+
+**The human never opens FreeCAD, never runs a macro, never clicks Macro > Execute.** Every render, still or animation, is a Python file launched from a terminal by the agent. If an agent's plan says "open the GUI and run this macro", the plan is wrong; rewrite it to the command below.
+
+### The command
+
+Windows, PowerShell, from the project root:
+
+```
+$env:PYTHONDONTWRITEBYTECODE = "1"; $env:PYTHONIOENCODING = "utf-8"
+& "C:\Program Files\FreeCAD 1.1\bin\FreeCADCmd.exe" path\to\render_script.py
+```
+
+- The executable is `FreeCADCmd.exe` (lowercase `freecadcmd.exe` is the same file). Not `FreeCAD.exe`.
+- Variant control is by environment variable set in the same shell before the call (shot name, frame range, resume flag, output name; see Principle 5). No script edits per run.
+- Scripts have no `if __name__ == "__main__":` guard. FreeCADCmd never sets `__name__` to `__main__`, so a guard makes the script exit 0 with no output.
+- Alternative for scripts that must be read as text: `FreeCADCmd.exe -c "exec(open(r'path\script.py').read())"`.
+- Long jobs (over about 30 s) launch detached, with stdout to a log file:
+
+```
+Start-Process -FilePath "C:\Program Files\FreeCAD 1.1\bin\FreeCADCmd.exe" `
+  -ArgumentList "path\to\render_script.py" `
+  -RedirectStandardOutput "<scratch>\logs\shot.log" -RedirectStandardError "<scratch>\logs\shot.err" `
+  -WindowStyle Hidden -PassThru
+```
+
+Record the returned PID and the log path in the plan file.
+
+### "One GUI session" means one window that the script opens itself
+
+Stills and frames need FreeCAD's 3D view (`view.saveImage`), which exists only with the GUI libraries loaded. The render script does this in code, from inside the FreeCADCmd process:
+
+```python
+import FreeCADGui as Gui
+Gui.showMainWindow()          # a window appears by itself; nobody clicks anything
+...
+view.saveImage(png, W*SS, H*SS, "Transparent")
+...
+sys.exit(0)                   # the script ends the process
+```
+
+A window appearing on screen during a run is expected. Leave it alone. The script opens it once per launch, loops over every camera position or frame inside that one window, and exits. Working examples: `build_parts_double_dong/double_dong_render.py` (stills) and `build_parts_double_dong/double_dong_anim.py` (frames).
+
+Two separate things carry the word "GUI" and are not the same:
+
+| Term | Meaning | Who does it |
+|---|---|---|
+| Headless build | Geometry edits, tests, the stripped render copy. No window at all. | FreeCADCmd, no `FreeCADGui` import |
+| Script-opened GUI session | The render step: `Gui.showMainWindow()` inside the script | The script, once per launch |
+| Hand-run macro in the FreeCAD GUI | Not part of this method | Nobody |
+
+### If the run does not work
+
+Send the log, not a request to run it by hand. Check in this order:
+1. The log file exists and has content. Empty log and exit 0 means a main-guard in the script.
+2. `FreeCADCmd.exe` path resolves (`Test-Path`).
+3. The scratch output folder exists and is writable.
+4. Liveness per Principle 3: newest-frame age and CPU delta.
+
+---
+
 ## Principles
 
 ### 1. Render every pull at full resolution
@@ -252,7 +313,7 @@ ffmpeg -i input -an -c:v libx264 -preset slow -crf 24 -maxrate 10M -bufsize 20M 
 
 ## Quick Reference
 
-- FreeCAD command line for headless runs; one GUI session for stills, batching views
+- Launch = `FreeCADCmd.exe script.py` from a terminal (see Runbook). No hand-run macros, no clicking in the GUI. The script opens its own single window for stills and frames and exits itself
 - Full resolution only (3840x2160, SS=2); keep 7680x4320 frames
 - Parallel jobs OK; watchdog on output; 60 min first-frame grace, 10 min stall
 - Frames off the synced drive; MP4 ~100 MB, x264 slow, CRF 22-28, maxrate cap, faststart
