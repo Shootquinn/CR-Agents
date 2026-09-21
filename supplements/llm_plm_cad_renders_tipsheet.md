@@ -139,7 +139,7 @@ view.saveImage(png, W*SS, H*SS, "Transparent")
 sys.exit(0)                   # the script ends the process
 ```
 
-A window appearing on screen during a run is expected. Leave it alone. The script opens it once per launch, loops over every camera position or frame inside that one window, and exits. Working examples: `build_parts_double_dong/double_dong_render.py` (stills) and `build_parts_double_dong/double_dong_anim.py` (frames).
+A window appearing on screen during a run is expected. Leave it alone. The script opens it once per launch, loops over every camera position or frame inside that one window, and exits.
 
 Two separate things carry the word "GUI" and are not the same:
 
