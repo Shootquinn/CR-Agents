@@ -557,7 +557,7 @@ Before the first production geometry step — or at any point where the team has
 
    **b. Sketch production (representative shapes):** For each part, The Designer writes a quick script that represents the part as a simplified but *representative* shape. Not arbitrary boxes. A woodruff key sketch is a half-moon. A pressure plate finger sketch is a cantilevered beam. A drive dog sketch has a realistic engagement profile. The sketch should make someone say "I can see what this part does" — not "what is this rectangle?" Simplification means no fillets, no bolt holes, no cosmetic features — it does not mean stripping away the functional character of the part. The Designer also describes the design intent in natural language: what each part should look like, how parts relate visually, what the overall proportions should convey. The Designer's output is both geometry (quick STEP files) and prose (design notes).
 
-   **c. Design Critique (after sketch assembly):** After the sketch assembly is built and interference checks have run (Section 7.4), The Designer produces a Design Critique document — the "this doesn't look right" mechanism. This is the feedback that real design teams give in sketch reviews: spatial concerns, functional concerns, pride test failures, and aesthetic issues captured as actionable items. Examples: "These pressure plate fingers need to be cantilevered beams, not flat plates, or they cannot produce spring force." "The drive dog profile should have draft angles for engagement/disengagement." "The woodruff key is a rectangle — it should be a half-moon shape that a machinist would recognize." Without Design Critique, problems hide until production geometry is complete and expensive to fix.
+   **c. Design Critique (after sketch assembly):** After the sketch assembly is built and interference checks have run (Section 7.4), The Designer produces a Design Critique document — the "this doesn't look right" mechanism. This is the feedback that real design teams give in sketch reviews: spatial concerns, functional concerns, pride test failures, and aesthetic issues captured as actionable items. Examples: "These pressure plate fingers need to be cantilevered beams, not flat plates, or they cannot produce spring force." "The drive dog profile should have draft angles for engagement/disengagement." "The woodruff key is a rectangle — it should be a half-moon shape that a machinist would recognize." Without Design Critique, problems hide until production geometry is complete and expensive to fix. The critique of renders is run by an image-capable reviewer (operational guide A.3.1).
 
 2. **The Engineer:** Reviews The Designer's sketching study for engineering feasibility. Runs interference checks on the sketch assembly (Section 7.4). Flags any visual concepts that conflict with mechanical requirements, material constraints, or assembly sequence. Provides engineering feedback before the study goes to the human. This is a collaborative exchange, not a gate — The Designer and The Engineer iterate until the concept is both visually sound and mechanically feasible.
 
@@ -629,7 +629,7 @@ Applies to animation deliverables. Turntable stills and videos keep their Recomm
 - Write frames, textures and model files outside cloud-synced storage. Keep only code, logs and the finished video in the synced tree.
 - Judge job liveness by output (operational guide A.3.4): newest-frame age and CPU-time delta. Process existence proves nothing.
 - Run ffprobe on the encoded file and check its size before delivery.
-- The render script opens its own GUI session with `Gui.showMainWindow()` and exits when done. Nobody clicks.
+- The render script opens its own GUI session with `Gui.showMainWindow()`, latched against the second run (freecad_api_reference, Headless Script Rules), and exits when done. Nobody clicks.
 
 ---
 
@@ -652,8 +652,8 @@ After processing a work order or change order, the following outputs should exis
 - [ ] Functional validity tests passed (Section 7.1) — **mandatory**
 - [ ] FCStd verified in FreeCAD GUI; STEP verified in viewer (product tree, dimensions, visual inspection)
 - [ ] All text files committed or backed up with SHA-1
-- [ ] PNG renders generated per Section 9 (**Recommended**; FCStd is the authoritative artifact)
 - [ ] The delivered FCStd opens with every deliverable object visible and named; the expected visible count is computed from object counts, never read from the saved file — **mandatory**
+- [ ] PNG renders generated per Section 9 (**Recommended**; FCStd is the authoritative artifact)
 - [ ] MP4 turntable video generated per Section 9 (**Recommended**)
 
 **For change orders:**
