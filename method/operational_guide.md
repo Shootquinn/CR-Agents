@@ -187,11 +187,11 @@ After each cycle, The Manager updates the accumulator files (A.5) at close and t
 
 | Lane | Use | Loop items run |
 |---|---|---|
-| Knob | A value the human or a measurement supplies (a number, colour or sign). The orchestrator applies it and returns the picture or result. | Item 2 reduced to the apply and the read-back. Skips 3-6. |
+| Knob | A value the human or a measurement supplies (a number, colour or sign). The orchestrator applies it; a spawned non-writer reads it back and returns the picture or result. | Item 2 reduced to the apply and the read-back. Skips 3-6. |
 | Task | One new operation, one agent. | Item 2 with one specialist (a background spawn per A.3.4 if over 30 seconds) plus the read-back. Skips 3-6. |
 | Mechanism | A novel mechanism. | Items 1-8 in full. |
 
-Every lane keeps a read-back by a non-writer (tdd_method Principle 11). On a proven rig, make one change per iteration and return one still first.
+Every lane keeps a read-back by a non-writer (tdd_method Principle 11). A read-back that is a visual judgment follows A.3.1. On a proven rig, make one change per iteration and return one still first.
 
 **Trim pass.** LLM-assisted drafting reliably overwrites. Budget a dedicated trim step after production and review are complete. The trim pass is a first-class step, not an afterthought: define a word target, identify sections that can be merged or compressed, and execute as a scripted docx modification or a targeted rewrite. A trim pass after the review cycle is cheaper and cleaner than trying to constrain word count during production, when the priority is completeness.
 
