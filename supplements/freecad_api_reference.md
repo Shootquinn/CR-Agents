@@ -1,6 +1,6 @@
-# FreeCAD 1.0 Headless API Reference
+# FreeCAD Headless API Reference (1.0.2, 1.1.4 notes)
 
-**Purpose:** Consolidated reference of empirically verified API patterns for FreeCAD 1.0 headless scripting via FreeCADCmd. Every entry in this file was discovered by running code and observing results — not from documentation alone.
+**Purpose:** Consolidated reference of empirically verified API patterns for FreeCAD 1.0.2 and 1.1.4 headless scripting via FreeCADCmd. Every entry in this file was discovered by running code and observing results — not from documentation alone.
 
 **Versions covered:** FreeCAD 1.0.2 (untagged text) and 1.1.4 (notes tagged `[1.1.4]`); text tagged `[1.0]` is 1.0.2 behavior not confirmed on 1.1.4. Executable paths in this file are install-specific.
 
@@ -1025,7 +1025,7 @@ App.closeDocument(tool_doc.Name)  # tool doc no longer needed
 
 ## Headless Script Rules
 
-### NEVER Import FreeCADGui in FreeCADCmd Scripts
+### Do Not Import FreeCADGui in FreeCADCmd Scripts by Accident
 
 ```python
 # WRONG -- opens a GUI window on the user's machine!
@@ -1045,7 +1045,7 @@ import Sketcher
 
 **Problem:** `FreeCADCmd`'s `doc.saveAs()` does NOT generate `GuiDocument.xml`. Without it, FreeCAD GUI creates default ViewProviders on first open, but defaults everything to hidden (user must manually toggle visibility).
 
-**Two valid solutions:**
+**Two valid solutions on 1.0 (a third, verified on 1.1.4, follows the list):**
 
 1. **Strip mode (simplest):** [1.0] Remove any `GuiDocument.xml`. FreeCAD creates defaults on open.
 2. **Template mode:** [1.0] Generate a complete `GuiDocument.xml` that passes `Gui::Document::RestoreDocFile()` validation. Use `fix_visibility_xml.py --template`.
