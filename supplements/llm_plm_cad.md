@@ -1,22 +1,10 @@
 # LLM-PLM with Test-Driven Development: Method Supplement
 
-**Author:** Quinn Morley, Unleashed Robotics
-**Date:** February 2026
-**Companion to:** *Programmatic CAD and Lightweight PLM for Hardware Startups* (report_draft.md)
-**Process:** Collaborative Reasoning (Nelson, 2026), via prompt0.md and operational guide
-
 ---
 
 ## 1. What This Document Is
 
-This is the method supplement for running LLM-assisted programmatic CAD and lightweight PLM using the collaborative reasoning process and test-driven development. It is not a prompt. It is a reference document that a Claude Code orchestrator reads alongside the operational guide and a work order or change order to understand *what kind of work it is doing and how the CAD/PLM outputs fit together.*
-
-The orchestrator's process comes from prompt0.md and the operational guide. This document provides the domain knowledge: what the project directory looks like, what ASSEMBLY.md is, what a change order propagation document contains, how FCStd and STEP files work, and what the test-driven workflow looks like when the deliverable is geometry rather than prose.
-
-**Typical session start:**
-> "Good morning, check out prompt0.md before we get started and then the work order we have today is called NewDevice03.md."
-
-The orchestrator reads prompt0.md (environment and process setup), reads this document (domain method), then reads the work order (what to do today).
+This is the domain reference for LLM-assisted programmatic CAD and lightweight PLM under the collaborative reasoning process. It is active only for CAD/geometry work. Section 2 onward covers the toolchain, project layout, ASSEMBLY.md, change orders, test gates, and persona duties.
 
 ---
 
@@ -57,7 +45,7 @@ The orchestrator reads prompt0.md (environment and process setup), reads this do
 All build scripts run inside FreeCAD's headless interpreter:
 
 ```
-"C:/Program Files/FreeCAD 1.0/bin/FreeCADCmd.exe" build_parts/<part_name>.py
+"C:/Program Files/FreeCAD 1.1/bin/freecadcmd.exe" build_parts/<part_name>.py
 ```
 
 FreeCADCmd.exe is FreeCAD without the GUI event loop. It loads the full kernel (Part, PartDesign, Sketcher, Assembly modules) and runs any Python script. Multiple instances can run in parallel on independent FCStd files; there is no shared state. Typical build times: 1--5 seconds for simple parts, 10--40 seconds for parts with many booleans or complex profiles.
@@ -76,7 +64,7 @@ OCCT non-parametric shapes (`Part.makeCylinder`, `Part.makeBox`, `Part.BSplineCu
 2. **Imported third-party geometry** (McMaster STEP files) that arrives as OCCT shapes.
 3. **Tool shapes for PartDesign::Boolean** -- cylinders, boxes, or complex profiles (epitrochoids) consumed as cut/fuse tools into a PartDesign::Body.
 
-Case 3 is the most common. If a feature cannot be expressed as a Sketcher profile (periodic B-splines with 500+ control points, radial pockets from a bore surface where datum planes produce delta=0), build an OCCT tool shape and consume it via `PartDesign::Boolean`. The tool is non-parametric, but the Boolean operation sits in the feature tree. Debug the PartDesign approach first; drop to OCCT only when PartDesign genuinely cannot express the geometry.
+Case 3 is the most common. If a feature cannot be expressed as a Sketcher profile (periodic B-splines with 500+ control points, radial pockets from a bore surface where datum planes produce delta=0), build an OCCT tool shape and consume it via `PartDesign::Boolean`. The tool is non-parametric, but the Boolean operation sits in the feature tree. Debug the PartDesign approach first; drop to OCCT only when PartDesign cannot express the geometry.
 
 ### 2.6 The Three-Layer Pattern
 
@@ -88,7 +76,7 @@ Parts that combine PartDesign features with OCCT tool shapes follow this pattern
 
 3. **PartDesign::Boolean bridge** -- `PartDesign::Boolean` (Cut or Fuse) takes the OCCT tool shape and applies it within the Body's feature tree. The result is a named operation the engineer sees in the tree.
 
-**The "Fuse First, Boolean Once" rule:** When applying multiple OCCT cuts (e.g., 40 magnet pockets, 15 coil bores), fuse all tool shapes into a single compound first, then perform one `PartDesign::Boolean` cut. Sequential booleans on the same Body cause volume collapse -- the second cut interacts with or undoes the first.
+**The "Fuse First, Boolean Once" rule:** When applying multiple OCCT cuts (e.g., 40 magnet pockets, 15 coil bores), fuse all tool shapes into a single compound first, then perform one `PartDesign::Boolean` cut. Sequential booleans on the same Body can interact with or undo earlier cuts. Fusing does not cure seam failures on periodic faces; cutter count is irrelevant there (see Section 11, item 1). Gate every boolean with the checks in Section 7.1.
 
 ```python
 # Pattern: Combined Tool (mandatory for >1 OCCT cut per Body)
@@ -167,7 +155,7 @@ project-root/
 │   └── <vendor>.STEP           # Third-party geometry (McMaster, etc.)
 ├── cr_scratch/                 # Working documents, trade studies, draft analyses
 ├── tests/
-│   └── test_borebot.py         # TDD test suite (pytest + conftest.py FreeCAD harness)
+│   └── test_<project>.py         # TDD test suite (pytest + conftest.py FreeCAD harness)
 ├── conftest.py                 # FreeCAD pytest fixture (headless document management)
 └── change-orders/
     └── CO-NNN_description/
@@ -187,16 +175,11 @@ project-root/
 
 - **RESOURCES/ is read-only.** Vendor STEP files live here. Build scripts import from RESOURCES/ but never write to it.
 
+- **Cloud-synced roots.** When the project root is cloud-synced, `parts_cache/*.FCStd`, backups, and `output/` frames live on a scratch drive behind a junction. Only code, logs, JSON, Markdown, and finished MP4s sync.
+
 - **params.yaml is singular.** One file at project root, not per-part. Sections are keyed by subsystem (geometry, winding, materials, etc.). Build scripts read what they need.
 
 - **Build scripts are self-contained.** Each script runs independently via `FreeCADCmd.exe <script>.py`. Parallelism comes from launching multiple FreeCADCmd.exe processes. `assemble.py` depends on all part FCStds existing; part scripts depend only on `common.py` and `params.yaml`.
-
-### 3.2 Differences from the CadQuery Directory Structure
-
-- **Per-part directories** are gone. A part is a script + an FCStd + a result JSON. The script lives in `build_parts/`, the outputs in `parts_cache/`.
-- **Per-part CHANGELOG.md** is gone. Change history lives in Git and in the accumulator.
-- **BOM.yaml as a separate file** is gone. BOM data (mass, material, count) is embedded in `params.yaml` and `ASSEMBLY.md`.
-- **build/ subdirectories** are gone. The flat `parts_cache/` directory replaces nested `parts/<name>/build/` trees.
 
 ---
 
@@ -263,7 +246,7 @@ A work order introduces new parts or assemblies into the project. The work order
 8. **CR team runs interference check on production assembly. Resolve before proceeding** (Section 7.4).
 9. CR team updates ASSEMBLY.md with new parts, dependencies, and assembly sequence.
 10. Engineer verifies STEP output in viewer.
-11. Commit all text files to Git.
+11. Commit or SHA-1 back up all text files.
 
 ### 5.2 Change Orders (Modifications) -- FreeCAD-Native Workflow
 
@@ -278,7 +261,7 @@ Before any build script modifies an existing FCStd, it MUST execute a pre-flight
 1. **Open the existing FCStd** and extract its current state:
    - Body volume (mm^3)
    - Feature count and feature names
-   - Bounding box dimensions
+   - Bounding box dimensions (on solids with B-spline faces use `optimalBoundingBox` and expect about 1e-3 mm agreement, not 1e-6; plain `BoundBox` runs loose)
    - File modification timestamp
 
 2. **Compare against params.yaml expected values:**
@@ -309,8 +292,6 @@ if os.path.exists(fcstd):
     # If we get here, FCStd matches params -- safe to rebuild
 doc = FreeCAD.newDocument("StatorShell")
 ```
-
-**Why this matters:** FCStd files are binary. You cannot `git diff` them meaningfully. The pre-flight check is the agent's equivalent of a human opening the file and looking at it. Without it, every rebuild is a potential data loss event.
 
 #### 5.2.2 Change Order Workflow (6 steps)
 
@@ -355,6 +336,8 @@ This distinction is more consequential in FreeCAD than in script-and-export work
 
 **The fillet ordering rule:** Fillets must be applied BEFORE boolean operations that fragment the target edge. A fillet on a clean circular edge succeeds. The same fillet after 40 magnet-pocket booleans have split that edge into 40+ segments will fail. Plan the feature tree so fillets precede booleans that touch adjacent geometry.
 
+**Index-keyed selection scan.** Select parts by census index or label, never by face count, face index, or material name. Before installing a solid whose face structure changes, scan downstream code for face-count matches, face-index selectors, and bounding-box gates, and list the results in the report.
+
 #### 5.2.4 The FCStd-First Workflow for Interactive Changes
 
 When the engineer edits a part in the FreeCAD GUI:
@@ -383,6 +366,14 @@ Scripted change:  params.yaml  -->  script opens existing FCStd  -->  FCStd upda
 - **App::Link placement updates.** When a part's dimensions change, its neighbors in the assembly may need placement updates. Joint-based assemblies propagate such changes through the solver; explicit-placement assemblies require manual coordinate updates in assemble.py.
 
 - **Binary file conflict.** FCStd files cannot be merged in Git. If two changes touch the same part, one must land first and the second must rebuild on top. Change orders on the same part must be serialized. The propagation document must check for in-flight changes to the same FCStd.
+
+#### 5.2.6 Editing a Solid of Record
+
+1. **Measure before build; the brief and caches are not measurements.** Before cutting, pull dimensions, angles, pitch, and radii from the model of record with read-only scripts and write them to a measurement report that opens with corrections to the brief. Cache and params values are inputs to check; record every one that disagrees and list its downstream consumers. Verify the coordinate frame with one measured datum against the formula before using any derived angle.
+
+2. **Resolve ambiguities before the build.** Ambiguities and variant choices in the measurement report go to the human as interactive questions before the build stage. Where the reference is reasoned and not measured (for example, which end), keep the mirrored numbers ready in the report.
+
+3. **Backup with SHA-1, stage, test, then install.** Before any write to a model of record (FCStd, BREP cache, JSON cache), copy every file to a backup folder and record SHA-1; the install script re-verifies them and asserts the pre-state. Build and test in a stage directory; install only after the human approves the geometry. If a write lands early, put "unapproved change installed" at the top of the gameplan status block until resolved.
 
 ---
 
@@ -416,6 +407,8 @@ The TDD method (see method/tdd_method.md) applies to CAD work with adaptations f
 - Dimensional accuracy (do key measurements match `params.yaml`?)
 - Feature presence (does the part have the expected features — threads, chamfers, holes?)
 - Volume/mass sanity checks (is the volume in the expected range?)
+- Boolean expected-delta: after each cut or fuse, compare removed volume to the analytic expectation for that feature (not the whole-part volume) at 3 % or tighter, and assert isValid, isClosed, one solid. Polygonal cutters inscribe, so expect a small one-sided bias. The whole-part volume band in operational guide A.14 passes a wrong cut of a small feature; this check supplements it.
+- Topology: after a boolean on a solid of record, count faces per edge (all 2 except documented cylinder seams), search for leftover planar faces on any split plane, and list minimum face area and edge length. Record the face-count change and its cause; a large rise from a faceted cutter is a record, not a failure.
 
 **Assembly-level tests:**
 - Product tree structure (correct number of components, correct names)
@@ -452,6 +445,8 @@ For a change order:
 3. Update the test suite (new pass criteria for changed parameters, new tests for new constraints).
 4. Execute the change. Validate against updated suite.
 
+**Red-first.** Run the new suite on the unmodified model. Tests that must fail there (feature presence) are the discriminators; tests that pass on both are invariants and are labelled as such. A suite that is green at baseline proves nothing.
+
 ### 7.3 Test Execution
 
 Some tests are automated (script runs without error, `validate_params()` passes, FCStd file is non-empty and valid). Others require human verification (visual inspection in viewer, dimensional measurement, interference checking). The test suite should mark each test as **automated** or **manual** and specify the evidence required for a pass.
@@ -471,8 +466,6 @@ Interference checking is a mandatory automated gate — not a best-effort recomm
 
 **Reporting:** Per-pair results: part A name, part B name, intersection volume (mm³), pass/fail. Include in test suite output. Any single fail blocks the gate.
 
-**Principle:** Interference is caught by the process, not by the user. The engineering team's credibility depends on delivering assemblies where every part occupies its own space. A user who opens an assembly and finds overlapping parts loses confidence in everything else the team produced.
-
 ### 7.5 Assembly Placement Verification
 
 **Problem:** Dimension-checking tests (volume, bounding box, face count) pass even when assembly parts are displaced, rotated, or on wrong planes. A part can have geometrically correct dimensions but be in a completely wrong position within the assembly. This class of error is invisible to parametric tests and only visible in 3D visualization or explicit placement auditing.
@@ -481,7 +474,7 @@ Interference checking is a mandatory automated gate — not a best-effort recomm
 
 1. **Placement audit.** After assembly creation, verify every link placement programmatically. For assemblies where parts are built at absolute coordinates, all link placements should be identity (position 0,0,0, rotation 0°). Any non-identity placement is suspect.
 
-2. **Visual verification.** Generate a turntable MP4 or multi-view PNG render of the assembled model. The Designer (or equivalent design reviewer) must confirm "this looks like the design." Comparing against a 2D cross-section plot is insufficient — the 2D plot validates geometry, not assembly placement. The 3D render validates both.
+2. **Visual verification.** Generate a turntable MP4 or multi-view PNG render of the assembled model. The Designer (or equivalent design reviewer) must confirm "this looks like the design." Visual gates here and in Section 8.4 are run by an image-capable (Opus-class) reviewer against a written rubric; a text-only agent reports numbers and marks the visual gate not run. Comparing against a 2D cross-section plot is insufficient — the 2D plot validates geometry, not assembly placement. The 3D render validates both.
 
 3. **Include in test suite.** At minimum, add a test that checks all assembly link placements are within tolerance of their expected positions. This catches the case where a constraint solver or face-matching algorithm silently moves parts.
 
@@ -495,9 +488,9 @@ CAD geometry is built in two passes within each step. This is not optional.
 
 The exploratory build produces *data*: interference findings, clearance measurements, axial stack-up verification, mass estimates, and a list of design issues discovered during construction. This data informs the production pass.
 
-**The Designer gates the exploratory build on completeness:** "Can we learn from this? Are there features we intended to include but didn't, creating blind spots?" A part missing a functional feature fails the exploratory gate. It is not a draft. It is an incomplete experiment. A part with all features present but geometrically simplified passes.
+**The Designer gates the exploratory build on completeness:** "Can we learn from this? Are there features we intended to include but didn't, creating blind spots?" A part missing a functional feature fails the exploratory gate. A part with all features present but geometrically simplified passes.
 
-**Pass 2: Production build.** The production build refines every feature to deployment-ready quality, informed by the findings from Pass 1. Counterbores replace plain holes. Retention features get proper dimensions. Fits and tolerances are specified. Chamfers and fillets are added where they serve function (assembly guidance, stress relief). The production build is not "add the stuff we skipped." It is "fix what the prototype taught us."
+**Pass 2: Production build.** The production build refines every feature to deployment-ready quality, informed by the findings from Pass 1. Counterbores replace plain holes. Retention features get proper dimensions. Fits and tolerances are specified. Chamfers and fillets are added where they serve function (assembly guidance, stress relief). Pass 2 fixes what Pass 1 exposed.
 
 **The Designer gates the production build on quality:** "Would you build this? Would a machinist or printer operator produce a functional part from this geometry?" This is the pride test applied to individual parts, not just the assembly.
 
@@ -524,6 +517,7 @@ This section describes how the CR team's personas map to LLM-PLM work.
 | **The Manager** | Opens/closes each cycle. Scopes the work, evaluates output readiness. |
 | **The Engineer** | Primary executor. Builds FreeCAD PartDesign parts, runs build scripts, reports results. Validates FCStd and STEP output empirically. |
 | **The Loftsman** | Geometric reasoning. Reviews placement math, thread engagement geometry, surface definitions. Validates that parametric dependencies in ASSEMBLY.md correctly represent the geometric relationships. |
+| **The Topologist** | Boolean and seam validity. Runs the topology gate (Section 7.1): edge multiplicity, leftover faces, face-count growth, plain vs optimal bounding box. |
 | **The Software Engineer** | Test suite design and review. Ensures tests validate the right things. Flags ceremony. |
 | **The Designer** | Design critic for both physical products and documentation. Reviews params.yaml for functional validity and shape representativeness before geometry exists — "will these parameters produce parts that belong in a world-class product?" Reviews sketch and production geometry for the pride test: would this part look at home in a product catalog from a top design house? Reviews ASSEMBLY.md, change orders, and all prose for consistency. The Designer catches lazy placeholders, non-functional geometry, and design shortcuts (see functional validity tests, Section 7.1). Every update that touches documentation or physical design. |
 | **The Systems Engineer** | Architecture-level review. Product tree structure, method coherence, scalability of the assembly approach. |
@@ -533,22 +527,24 @@ This section describes how the CR team's personas map to LLM-PLM work.
 **Wave 1 (technical, parallel):**
 - The Engineer: builds/modifies FreeCAD PartDesign parts, runs build scripts, generates FCStd and STEP
 - The Loftsman: reviews geometry math, placement calculations, constraint definitions
+- The Topologist: required for any boolean or seam work; second geometry reviewer required by A.4 step 2
 - The Software Engineer: reviews/updates test suite
-- The Designer: reviews params.yaml for functional validity, shape representativeness, and pride test (params-level review — lightweight, non-blocking, findings feed into Wave 1 scripts)
 
 **Wave 2 (review, after integration):**
-- The Designer: reviews sketch/production geometry for pride test and functional validity; reviews interference check results (Section 7.4); reviews all documentation changes (ASSEMBLY.md, change orders, changelogs)
+- The Designer: reviews params.yaml for functional validity and shape representativeness before geometry exists (Section 8.4a); reviews sketch/production geometry for pride test and functional validity; reviews interference check results (Section 7.4); reviews all documentation changes (ASSEMBLY.md, change orders, changelogs)
 - The Systems Engineer: reviews product tree architecture, method-level concerns
+
+**Independent re-measure.** After cross-review, re-measure on the model of record with a script that shares no code with the build or tests, and include negative controls (probes away from the feature that must still hit).
 
 ### 8.3 Recruiter
 
-If a work order involves domain expertise outside the standing roster — e.g., GD&T for tolerance analysis, materials science for thermal properties, electrical engineering for PCB-mechanical interfaces — spawn The Recruiter to identify and spec a temporary team member.
+Domain expertise outside the standing roster: spawn The Recruiter per operational guide A.13.
 
 ### 8.4 Sketching Phase (Visual Design Exploration)
 
 Before the first production geometry step — or at any point where the team has parameters but no visual confirmation of design intent — run a sketching study cycle. This is a lightweight cycle that produces fast geometry for visual validation before committing to detailed scripts. The sketching phase is where design problems are cheapest to fix and where the team's design standards are first enforced.
 
-**Why:** Parametric definitions (params.yaml, ASSEMBLY.md) describe a design numerically, but nobody can evaluate proportions, spatial relationships, or whether a part "looks right" from a spreadsheet of dimensions. The gap between parameter definition and production geometry is where design mistakes hide. A sketching study fills this gap cheaply — and with the addition of The Designer's params review and Design Critique, it also catches functional validity failures (Section 7.1) before any geometry investment.
+**Why:** Parametric definitions (params.yaml, ASSEMBLY.md) describe a design numerically, but nobody can evaluate proportions or spatial relationships from a spreadsheet of dimensions.
 
 **Cycle structure (3 personas):**
 
@@ -619,58 +615,8 @@ Standard conventions for all pregame matplotlib cross-section plots:
 
 ## 9. Visualization and Rendering
 
-The CAD workflow generates FCStd files as the authoritative geometric artifacts and STEP files as the export format for sharing and verification. Neither format is visually inspectable without a viewer application. The visualization pipeline bridges this gap: it produces PNG renders and MP4 turntable videos from STEP or FCStd files without requiring a GUI, making visual output available in the terminal, in pull requests, and in documentation deliverables.
-
-### 9.1 Why Visualization Matters
-
-Git diffs show that a fillet radius changed from 2 mm to 3 mm. They do not show what the resulting shape looks like. A headless rendering pipeline partially addresses this gap by generating visual output automatically after every geometry change. Automated renders are not a complete substitute for interactive inspection — sub-millimeter positioning errors, degenerate faces, and interference between closely mated parts still require loading the STEP file in a viewer and measuring directly. But renders catch gross errors (missing features, wildly wrong dimensions, parts in the wrong place) without requiring the engineer to open a viewer for every regeneration.
-
-For documentation deliverables (assembly instructions, print guides), rendered images are essential. Assembly instructions require step-by-step diagrams showing each assembly operation from the student's or technician's perspective. These must be producible programmatically so they update when the design changes.
-
-### 9.2 The Rendering Pipeline
-
-The standard rendering tool is `render_step.py`, which uses VTK (Visualization Toolkit) for headless 3D rendering from STEP files.
-
-**Dependencies:**
-- Python with VTK (`import vtk`)
-- ffmpeg (for MP4 turntable video generation)
-
-**Outputs per STEP file:**
-- **PNG render:** A single wireframe-from-edges image. Provides quick visual verification without opening a viewer. Generated alongside the STEP file in the project's `output/` directory.
-- **MP4 turntable video:** A 360-degree rotation showing the part or assembly from all angles. Useful for sharing and review. Requires ffmpeg. Use H.264 codec (libx264), not H.265/HEVC — H.265 does not embed in Discord and many other platforms.
-
-**Usage:**
-```bash
-python render_step.py path/to/part.step
-# Outputs: path/to/part.png, path/to/part.mp4
-```
-
-**When to render:**
-- After generating or regenerating any STEP file (part or assembly)
-- After assembly script changes that affect component placement
-- When producing documentation that requires visual output
-
-### 9.3 Instructional Rendering
-
-Assembly instructions and print guides require more than turntable renders. They need specific camera angles showing specific assembly operations (e.g., "attach part A to part B from this direction"). This requires either:
-
-1. **Scripted instructional views:** Extend the rendering script to accept camera position, target, and part visibility parameters. The assembly script or a separate documentation script defines a sequence of views (one per assembly step), each specifying which parts are visible, where the camera is, and what annotations to show. This is the most maintainable approach — views update automatically when the design changes.
-
-2. **Manual STEP viewer screenshots:** Open the assembly in FreeCAD or CAD Assistant, hide/show parts to match each assembly step, and capture screenshots. This requires no scripting but is manual labor that must be repeated if the design changes. Acceptable for a first pass but does not scale.
-
-3. **FreeCAD SVG export:** FreeCAD's TechDraw workbench can export 2D projected views as SVG line art. Clean and scriptable but lacks shading and color, which can make it hard to distinguish parts in an assembly view.
-
-**Recommendation:** Start with scripted VTK rendering for turntable and beauty-shot views. For instructional step-by-step views, extend the renderer with camera and visibility parameters during the assembly step (not during documentation). If the rendering pipeline is not available, fall back to manual screenshots from a STEP viewer and document the procedure.
-
-### 9.4 Render Tooling in the Project
-
-`render_step.py` should be present in the project repository or accessible from the working directory. The prompt0 self-check verifies its availability. If it is not present:
-
-1. Check if it exists in a sibling project or shared tools directory.
-2. If not found, write a minimal VTK rendering script that loads a STEP file via OCCT, converts to VTK polydata, and renders to PNG. The core logic is approximately 50 lines of Python using `OCP` for STEP loading and `vtk` for rendering.
-3. If VTK is not available, fall back to manual STEP viewer screenshots and document the procedure for reproducibility.
-
-The rendering pipeline is recommended but not blocking. FCStd files are the authoritative design artifacts; STEP files are the export format. Renders provide convenience and documentation support. A project that produces correct FCStd and STEP files but no renders is complete; a project that produces beautiful renders from incorrect geometry is not.
+Renders follow `supplements/llm_plm_cad_renders_tipsheet.md` (FreeCAD GUI, full resolution, storage and ffmpeg rules).
+For a STEP-only quick look without FreeCAD, a VTK wireframe is acceptable; images are judged by an image-capable model (Section 7.5).
 
 ---
 
@@ -685,16 +631,16 @@ After processing a work order or change order, the following outputs should exis
 - [ ] `assemble.py` updated (or created) with new components
 - [ ] Assembly FCStd and STEP export regenerated
 - [ ] `ASSEMBLY.md` updated with new parts, dependencies, assembly sequence
-- [ ] `BOM.yaml` regenerated (if applicable)
+- [ ] BOM data in `params.yaml` and `ASSEMBLY.md` updated
 - [ ] Test suite written and validated
 - [ ] Exploratory build completeness gate passed (Section 7.6) — **mandatory** — all functional features present
 - [ ] Production build quality gate passed (Section 7.6) — **mandatory** — all features deployment-ready
 - [ ] Interference check passed on production assembly (Section 7.4) — **mandatory automated gate**
 - [ ] Functional validity tests passed (Section 7.1) — **mandatory**
 - [ ] FCStd verified in FreeCAD GUI; STEP verified in viewer (product tree, dimensions, visual inspection)
-- [ ] All text files committed to Git
-- [ ] PNG renders generated via render_step.py (**Recommended** -- requires VTK; FCStd is the authoritative artifact, PNG provides quick visual verification without opening FreeCAD)
-- [ ] MP4 turntable video generated via render_step.py (**Recommended** -- requires VTK + ffmpeg; useful for sharing and review but not required for geometry correctness)
+- [ ] All text files committed or backed up with SHA-1
+- [ ] PNG renders generated per Section 9 (**Recommended**; FCStd is the authoritative artifact)
+- [ ] MP4 turntable video generated per Section 9 (**Recommended**)
 
 **For change orders:**
 - [ ] `CO-NNN.md` (change request)
@@ -704,17 +650,17 @@ After processing a work order or change order, the following outputs should exis
 - [ ] `assemble.py` updated if assembly positioning affected
 - [ ] Assembly FCStd and STEP export regenerated
 - [ ] `ASSEMBLY.md` updated (current values, change order history)
-- [ ] `BOM.yaml` regenerated (if applicable)
+- [ ] BOM data in `params.yaml` and `ASSEMBLY.md` updated
 - [ ] Test suite updated and validated
 - [ ] Exploratory build completeness gate passed (Section 7.6) — **mandatory** — all functional features present
 - [ ] Production build quality gate passed (Section 7.6) — **mandatory** — all features deployment-ready
 - [ ] Interference check passed on production assembly (Section 7.4) — **mandatory automated gate**
 - [ ] Functional validity tests passed (Section 7.1) — **mandatory**
 - [ ] FCStd verified in FreeCAD GUI; STEP verified in viewer (product tree, dimensions, visual inspection)
-- [ ] All text files committed to Git
+- [ ] All text files committed or backed up with SHA-1
 - [ ] For topological changes: face selectors verified, all parent assemblies re-verified
-- [ ] PNG renders regenerated via render_step.py (**Recommended**)
-- [ ] MP4 turntable video regenerated via render_step.py (**Recommended**)
+- [ ] PNG renders regenerated per Section 9 (**Recommended**)
+- [ ] MP4 turntable video regenerated per Section 9 (**Recommended**)
 
 ---
 
@@ -722,7 +668,7 @@ After processing a work order or change order, the following outputs should exis
 
 These are the limits of this method. Do not pretend they don't exist.
 
-1. **Geometry complexity.** Validated only on prismatic and revolved forms. Helical swept forms were attempted but revealed an OCCT boolean limitation: BSpline-swept solids cut against analytical surfaces can silently fail (imprint edges without removing material). When performing these operations, calculate the volume of both boolean solids before the operation to ensure the addition or subtraction works as expected. If possible, cut the part primatives before combining/unioning them (i.e., cut the threads into a "stud" before adding the prismatic bolt head). Flag complex operations like this for user review at the appropriate step gate. 
+1. **Geometry complexity.** Booleans on B-spline and periodic faces can fail silently (imprint without material removal, or wrong invalid results at a seam). A cutter crossing the theta = 0 seam of a periodic cylinder face can return a wrong, invalid solid regardless of cutter count or tolerance. Split the solid at the seam plane, cut each half with all cutters, fuse, then run the topology gate (Section 7.1); re-check volume after any `removeSplitter`. Confirm diagnosis with wedge pieces that touch and do not touch the seam. Gate every such boolean with the expected-delta and topology checks in Section 7.1 and flag it for user review at the step gate.
 
 2. **Assembly scale.** FreeCAD's native Assembly solver (Ondsel MbD) tested with up to 16 parts and grounded joints. Behavior with dozens of interdependent parametric constraints (revolute, fixed) is an open question. Fallback: explicit XYZ placements on App::Link objects (deterministic but requires manual placement math).
 
@@ -734,4 +680,4 @@ These are the limits of this method. Do not pretend they don't exist.
 
 6. **Partial automated cross-part validation.** `validate_params()` enforces scalar-computable cross-part constraints (clearance ranges, pitch matching) at generation time. Non-scalar constraints (coaxiality, thread form compatibility, assembly sequence) are checked by LLM analysis and human review, not by code. Full automated enforcement of non-scalar constraints would require a constraint solver and formal schema that do not exist yet.
 
-7. **Functional validity is a judgment call, not fully automatable.** A reviewing persona must correctly identify non-functional geometry — there is no algorithm for "does this look like a real part." The defense-in-depth: (1) The Designer's params review catches placeholder descriptions before geometry exists (Section 8.4a), (2) The Designer's Design Critique catches non-representative shapes after the sketch assembly (Section 8.4c), (3) functional validity tests define "representative" per part type with specific criteria (Section 7.1), (4) human review at the step gate catches what the LLM missed. This layered approach acknowledges that no single check is sufficient. The standard is not "does this pass a test?" but "would this part look at home in a product from a world-class design house?"
+7. **Functional validity is a judgment call, not fully automatable.** A reviewing persona must correctly identify non-functional geometry — there is no algorithm for "does this look like a real part." The defense-in-depth: (1) The Designer's params review catches placeholder descriptions before geometry exists (Section 8.4a), (2) The Designer's Design Critique catches non-representative shapes after the sketch assembly (Section 8.4c), (3) functional validity tests define "representative" per part type with specific criteria (Section 7.1), (4) human review at the step gate catches what the LLM missed. This layered approach acknowledges that no single check is sufficient. The standard: would this part look at home in a product from a world-class design house?
