@@ -2,6 +2,8 @@
 
 **Purpose:** Consolidated reference of empirically verified API patterns for FreeCAD 1.0 headless scripting via FreeCADCmd. Every entry in this file was discovered by running code and observing results — not from documentation alone.
 
+**Versions covered:** FreeCAD 1.0.2 (untagged text) and 1.1.4 (notes tagged `[1.1.4]`); text tagged `[1.0]` is 1.0.2 behavior not confirmed on 1.1.4. Executable paths in this file are install-specific.
+
 **Maintained by:** The Engineer (primary), updated after each step that produces new API knowledge.
 
 **Source evidence:** `cr_scratch/step1_capability_report.md`, `cr_scratch/step1_scripts/`, `cr_scratch/step1_5_assembly_solver_report.md`, `cr_scratch/step1_5_scripts/`
@@ -562,7 +564,7 @@ Use `pytest.xfail` (not `pytest.fail`) so the test is reported as INCONCLUSIVE r
 
 ## Error Handling
 
-| Error Type | Exception Class | Identifies Problem | Exit Code |
+| Error Type | Exception Class | Identifies Problem | Exit Code [1.0] |
 |-----------|----------------|-------------------|-----------|
 | Python syntax | `SyntaxError` | Yes — specific cause + line number | 1 |
 | Bad API call | `AttributeError` | Yes — object type + missing method | 1 |
@@ -570,6 +572,8 @@ Use `pytest.xfail` (not `pytest.fail`) so the test is reported as INCONCLUSIVE r
 | Missing file | `OSError` | Yes — full file path | 1 |
 
 Bad geometry errors produce a two-layer message: FreeCAD-level ("BRep_API: command not done") then OCC-level exception. Detectable but less specific than other error types.
+
+**[1.1.4]** An uncaught exception exits 0: FreeCAD prints the exception and re-runs the script body. Only `sys.exit(n)` propagates a nonzero code. `Gui.showMainWindow()` also runs the script twice, so latch it (`if getattr(App, "_ran", False): sys.exit(0)` then `App._ran = True`). Do not gate on the exit code. Print a sentinel line as the last output, flush stdout, and gate on the sentinel plus the output artifact with a fresh mtime.
 
 ---
 
@@ -1035,7 +1039,7 @@ import PartDesign
 import Sketcher
 ```
 
-`FreeCADCmd.exe` is the headless executable. Importing `FreeCADGui` and calling `showMainWindow()` will launch an actual FreeCAD GUI window. This is never appropriate in automated scripts.
+`FreeCADCmd.exe` is the headless executable. Importing `FreeCADGui` and calling `showMainWindow()` will launch an actual FreeCAD GUI window. This is never appropriate in automated scripts. **[1.1.4]** The prohibition covers scripts that open a window by accident. A script that opens its own GUI session on purpose, once and latched, to set visibility, save or render, is the verified route in Visibility in Headless-Created FCStd Files.
 
 ### Visibility in Headless-Created FCStd Files
 
@@ -1043,8 +1047,10 @@ import Sketcher
 
 **Two valid solutions:**
 
-1. **Strip mode (simplest):** Remove any `GuiDocument.xml`. FreeCAD creates defaults on open.
-2. **Template mode:** Generate a complete `GuiDocument.xml` that passes `Gui::Document::RestoreDocFile()` validation. Use `fix_visibility_xml.py --template`.
+1. **Strip mode (simplest):** [1.0] Remove any `GuiDocument.xml`. FreeCAD creates defaults on open.
+2. **Template mode:** [1.0] Generate a complete `GuiDocument.xml` that passes `Gui::Document::RestoreDocFile()` validation. Use `fix_visibility_xml.py --template`.
+
+**[1.1.4]** A save made from a GUI session (the script calls `Gui.showMainWindow()` inside FreeCADCmd, opens the document, sets Visibility, saves) writes a complete `GuiDocument.xml` and is the verified route. A headless save of a flat 803-object model opened with 0 of 803 objects visible. A GUI-saved 1.1.4 file has an `<Expand>` element with no `count` attribute.
 
 ### GuiDocument.xml Specification (FreeCAD 1.0)
 
@@ -1058,7 +1064,7 @@ import Sketcher
  FreeCAD Document, see https://www.freecad.org for more information...
 -->
 <Document SchemaVersion="1" HasExpansion="1">
-    <Expand count="0"/>                          <!-- MANDATORY: count attr (lowercase c) -->
+    <Expand count="0"/>                          <!-- [1.0] MANDATORY: count attr (lowercase c) -->
     <ViewProviderData Count="N">                 <!-- MANDATORY: Count attr (uppercase C) -->
         <ViewProvider name="..." expanded="0" treeRank="-1">
             <!-- Extensions (if applicable) -->
@@ -1076,10 +1082,10 @@ import Sketcher
 
 | Element | Why Required | What Happens If Missing |
 |---------|-------------|------------------------|
-| `<Expand count="N">` | `ExpandInfo::restore()` calls `getAttribute<long>("count")` unconditionally | `getAttribute` throws, "Reading failed from embedded file" |
+| `<Expand count="N">` [1.0] | `ExpandInfo::restore()` calls `getAttribute<long>("count")` unconditionally | `getAttribute` throws, "Reading failed from embedded file" |
 | `<Camera settings="..."/>` | `RestoreDocFile()` calls `readElement("Camera")` after ViewProviderData | SAX parser reads past `</Document>`, hits EOF, throws |
 
-**Expand element:** Must have `count` attribute (lowercase c). Use `count="0"` for no expansion state. The `<ViewProviderData>` uses `Count` (uppercase C) -- different casing.
+[1.0] **Expand element:** Must have `count` attribute (lowercase c). Use `count="0"` for no expansion state. The `<ViewProviderData>` uses `Count` (uppercase C) -- different casing.
 
 **Camera element:** Must be the LAST child of `<Document>`, after `</ViewProviderData>`. Settings value is an Open Inventor camera string with `&#10;` for newlines. Default safe value:
 ```
@@ -1130,7 +1136,7 @@ OrthographicCamera {
 - Import FreeCADGui in FreeCADCmd scripts -- see prohibition above
 - Add minimal GuiDocument.xml (1 property per VP) -- FreeCAD ignores these
 - Omit the `<Camera>` element -- parser crashes
-- Omit the `count` attribute on `<Expand>` -- parser crashes
+- [1.0] Omit the `count` attribute on `<Expand>` -- parser crashes
 - Use `file=""` (empty string) for binary file references across multiple VPs -- causes "Reading failed"
 - Omit binary files referenced by `file=` attributes -- must exist in ZIP
 - Set tool bodies (Part::Feature used for PartDesign::Boolean) to Visibility=True -- obscures the boolean result
@@ -1695,3 +1701,4 @@ for pocket_shape in magnet_shapes:
 | 6.5 | 2026-03-24 | **Tool body visibility best practice:** Part::Feature boolean tools must have `Visibility=False` — they render on top of the boolean result and look like the boolean failed. **OriginGroupExtension prohibition:** Do NOT inject `Gui::ViewProviderOriginGroupExtension` into GuiDocument.xml — FreeCAD 1.0.2 rejects it as "not a python addable version". Omit Extensions block from Body VPs entirely. **App::Link assembly pattern:** Cross-document App::Link works headlessly (saveAs first), preserves PartDesign trees, 65x smaller FCStd. ElementCount+PlacementList for repeated parts. From WO-2026-002 Step 6.5. |
 | PD-1 | 2026-03-25 | **8 new sections (The Loftsman draft, WO-2026-002 process docs update):** Pre-Flight Diff Pattern (preflight_check API, tolerance handling), GUI Editability Guidance (safe/unsafe edits, round-trip workflow), Assembly Joint Strategy (decision tree, type summary, GUI instructions, transition strategy), PartDesign::Hole Best Practices (standard settings, radial/axial holes, Refine=False rule), Coil Pocket OCCT Exception (bore-surface workaround), Combined Tool Pattern expanded (binary merge tree, performance data), Fillet Ordering Rule expanded (feature tree ordering), Boolean Cut Strategy expanded (one-boolean-per-batch rule, correct/wrong examples). |
 | 8 | 2026-03-29 | **App::Link Placement Behavior (CRITICAL):** Link.Placement is the ONLY transform — FreeCAD does NOT compose with LinkedObject.Placement. Two linking patterns (geometry-at-origin vs position-in-source-Placement). Multi-level assembly placement composition via `top_plc.multiply(internal_plc)`. Common failure mode: top-level script discards sub-assembly-internal offsets, parts cluster at zone boundaries. Diagnostic and prevention guidance. |
+| 1.1.4 notes | 2026-10-19 | Version tags ([1.0], [1.1.4]); uncaught exception exits 0 and re-runs the script; GUI-session save route; Expand without count; showMainWindow scope |
