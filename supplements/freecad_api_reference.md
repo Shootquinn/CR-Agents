@@ -1017,7 +1017,7 @@ App.closeDocument(tool_doc.Name)  # tool doc no longer needed
 - The nut stud tool must extend well past both hex faces (offset Z=-5 or more).
 - Boolean results are `Part::Feature`, not `PartDesign::Body`. This is expected and correct.
 - The 3% clearance creates ~0.12mm radial clearance at crests (for M8).
-- After boolean cuts: `removeSplitter()` then `fix(1e-7, 1e-7, 1e-7)` if invalid.
+- After boolean cuts: `removeSplitter()` then `fix(1e-7, 1e-7, 1e-7)` if invalid. **[1.1.4]** Re-check volume after `removeSplitter()`: on one seam-split cut it changed the volume by +77,000 mm3.
 - Profile height MUST be < pitch (90% works). Equal to pitch causes OCCT self-intersection.
 - `PartDesign::Pocket` has direction issues on helix geometry — use Part-level `shape.cut()` instead.
 
@@ -1050,7 +1050,7 @@ import Sketcher
 1. **Strip mode (simplest):** [1.0] Remove any `GuiDocument.xml`. FreeCAD creates defaults on open.
 2. **Template mode:** [1.0] Generate a complete `GuiDocument.xml` that passes `Gui::Document::RestoreDocFile()` validation. Use `fix_visibility_xml.py --template`.
 
-**[1.1.4]** A save made from a GUI session (the script calls `Gui.showMainWindow()` inside FreeCADCmd, opens the document, sets Visibility, saves) writes a complete `GuiDocument.xml` and is the verified route. A headless save of a flat 803-object model opened with 0 of 803 objects visible. A GUI-saved 1.1.4 file has an `<Expand>` element with no `count` attribute.
+**[1.1.4]** A save made from a GUI session (the script calls `Gui.showMainWindow()` inside FreeCADCmd, opens the document, sets Visibility, saves) writes a complete `GuiDocument.xml` and is the verified route. A headless save of an 803-object model of top-level `Part::Feature` shapes opened with 0 of 803 objects visible. A GUI-saved 1.1.4 file has an `<Expand>` element with no `count` attribute.
 
 ### GuiDocument.xml Specification (FreeCAD 1.0)
 

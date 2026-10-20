@@ -317,7 +317,7 @@ doc = FreeCAD.newDocument("StatorShell")
    - Export STEP
    - Install by the smallest change that produces the new state. For a model of record, follow 5.2.6.
    - The install refuses unless the backup's hash equals the live file's hash.
-   - After the install, diff every other object in the document against the pre-install state. Expect an empty diff apart from the intended change.
+   - After the install, diff every other object in the document against the pre-install state. Expect no change beyond float noise (at most 1e-9 mm3) apart from the intended change.
 
 6. **Update documentation** -- ASSEMBLY.md, params.yaml, accumulator, gameplan.
 
