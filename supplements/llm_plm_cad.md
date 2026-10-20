@@ -315,6 +315,9 @@ doc = FreeCAD.newDocument("StatorShell")
    - Run test suite (volume checks, interference, constraints)
    - Rebuild assembly (assemble.py)
    - Export STEP
+   - Install by the smallest change that produces the new state. For a model of record, follow 5.2.6.
+   - The install refuses unless the backup's hash equals the live file's hash.
+   - After the install, diff every other object in the document against the pre-install state. Expect an empty diff apart from the intended change.
 
 6. **Update documentation** -- ASSEMBLY.md, params.yaml, accumulator, gameplan.
 
@@ -369,7 +372,7 @@ Scripted change:  params.yaml  -->  script opens existing FCStd  -->  FCStd upda
 
 #### 5.2.6 Editing a Solid of Record
 
-1. **Measure before build; the brief and caches are not measurements.** Before cutting, pull dimensions, angles, pitch, and radii from the model of record with read-only scripts and write them to a measurement report that opens with corrections to the brief. Cache and params values are inputs to check; record every one that disagrees and list its downstream consumers. Verify the coordinate frame with one measured datum against the formula before using any derived angle.
+1. **Measure before build; the brief and caches are not measurements.** Before cutting, pull dimensions, angles, pitch, and radii from the model of record with read-only scripts and write them to a measurement report that opens with corrections to the brief. Cache and params values are inputs to check; record every one that disagrees and list its downstream consumers. Verify the coordinate frame with one measured datum against the formula before using any derived angle (tags per operational guide A.3.5).
 
 2. **Resolve ambiguities before the build.** Ambiguities and variant choices in the measurement report go to the human as interactive questions before the build stage. Where the reference is reasoned and not measured (for example, which end), keep the mirrored numbers ready in the report.
 
@@ -407,7 +410,7 @@ The TDD method (see method/tdd_method.md) applies to CAD work with adaptations f
 - Dimensional accuracy (do key measurements match `params.yaml`?)
 - Feature presence (does the part have the expected features — threads, chamfers, holes?)
 - Volume/mass sanity checks (is the volume in the expected range?)
-- Boolean expected-delta: after each cut or fuse, compare removed volume to the analytic expectation for that feature (not the whole-part volume) at 3 % or tighter, and assert isValid, isClosed, one solid. Polygonal cutters inscribe, so expect a small one-sided bias. The whole-part volume band in operational guide A.14 passes a wrong cut of a small feature; this check supplements it.
+- Boolean expected-delta: after each cut or fuse, compare removed volume to the analytic expectation for that feature (not the whole-part volume) at 3 % or tighter, with 0 < removed volume <= tool volume, and assert isValid, isClosed, one solid. Polygonal cutters inscribe, so expect a small one-sided bias. The whole-part volume band in operational guide A.14 passes a wrong cut of a small feature; this check supplements it.
 - Topology: after a boolean on a solid of record, count faces per edge (all 2 except documented cylinder seams), search for leftover planar faces on any split plane, and list minimum face area and edge length. Record the face-count change and its cause; a large rise from a faceted cutter is a record, not a failure.
 
 **Assembly-level tests:**
@@ -474,7 +477,7 @@ Interference checking is a mandatory automated gate — not a best-effort recomm
 
 1. **Placement audit.** After assembly creation, verify every link placement programmatically. For assemblies where parts are built at absolute coordinates, all link placements should be identity (position 0,0,0, rotation 0°). Any non-identity placement is suspect.
 
-2. **Visual verification.** Generate a turntable MP4 or multi-view PNG render of the assembled model. The Designer (or equivalent design reviewer) must confirm "this looks like the design." Visual gates here and in Section 8.4 are run by an image-capable (Opus-class) reviewer against a written rubric; a text-only agent reports numbers and marks the visual gate not run. Comparing against a 2D cross-section plot is insufficient — the 2D plot validates geometry, not assembly placement. The 3D render validates both.
+2. **Visual verification.** Generate a turntable MP4 or multi-view PNG render of the assembled model. The Designer (or equivalent design reviewer) must confirm "this looks like the design." Visual gates here and in Section 8.4 are run by an image-capable reviewer against a written rubric (operational guide A.3.1); a text-only agent reports numbers and marks the visual gate not run. A capture passes only if its count of non-transparent pixels exceeds a floor measured on a known-blank capture, because file byte size cannot separate a framed small model from a blank frame. Comparing against a 2D cross-section plot is insufficient — the 2D plot validates geometry, not assembly placement. The 3D render validates both.
 
 3. **Include in test suite.** At minimum, add a test that checks all assembly link placements are within tolerance of their expected positions. This catches the case where a constraint solver or face-matching algorithm silently moves parts.
 
@@ -615,8 +618,18 @@ Standard conventions for all pregame matplotlib cross-section plots:
 
 ## 9. Visualization and Rendering
 
-Renders follow `supplements/llm_plm_cad_renders_tipsheet.md` (FreeCAD GUI, full resolution, storage and ffmpeg rules).
+Renders for animation deliverables follow Section 9.1.
 For a STEP-only quick look without FreeCAD, a VTK wireframe is acceptable; images are judged by an image-capable model (Section 7.5).
+
+### 9.1 Animation Campaigns
+
+Applies to animation deliverables. Turntable stills and videos keep their Recommended status in Section 10.
+
+- Render at final resolution only. No draft passes: scene setup dominates the cost, and draft frames cannot be reused.
+- Write frames, textures and model files outside cloud-synced storage. Keep only code, logs and the finished video in the synced tree.
+- Judge job liveness by output (operational guide A.3.4): newest-frame age and CPU-time delta. Process existence proves nothing.
+- Run ffprobe on the encoded file and check its size before delivery.
+- The render script opens its own GUI session with `Gui.showMainWindow()` and exits when done. Nobody clicks.
 
 ---
 
@@ -640,6 +653,7 @@ After processing a work order or change order, the following outputs should exis
 - [ ] FCStd verified in FreeCAD GUI; STEP verified in viewer (product tree, dimensions, visual inspection)
 - [ ] All text files committed or backed up with SHA-1
 - [ ] PNG renders generated per Section 9 (**Recommended**; FCStd is the authoritative artifact)
+- [ ] The delivered FCStd opens with every deliverable object visible and named; the expected visible count is computed from object counts, never read from the saved file — **mandatory**
 - [ ] MP4 turntable video generated per Section 9 (**Recommended**)
 
 **For change orders:**
@@ -658,6 +672,8 @@ After processing a work order or change order, the following outputs should exis
 - [ ] Functional validity tests passed (Section 7.1) — **mandatory**
 - [ ] FCStd verified in FreeCAD GUI; STEP verified in viewer (product tree, dimensions, visual inspection)
 - [ ] All text files committed or backed up with SHA-1
+- [ ] The delivered FCStd opens with every deliverable object visible and named; the expected visible count is computed from object counts, never read from the saved file — **mandatory**
+- [ ] Source files hashed before and after the run, with every write routed through a guard that raises — **mandatory**
 - [ ] For topological changes: face selectors verified, all parent assemblies re-verified
 - [ ] PNG renders regenerated per Section 9 (**Recommended**)
 - [ ] MP4 turntable video regenerated per Section 9 (**Recommended**)
@@ -668,7 +684,7 @@ After processing a work order or change order, the following outputs should exis
 
 These are the limits of this method. Do not pretend they don't exist.
 
-1. **Geometry complexity.** Booleans on B-spline and periodic faces can fail silently (imprint without material removal, or wrong invalid results at a seam). A cutter crossing the theta = 0 seam of a periodic cylinder face can return a wrong, invalid solid regardless of cutter count or tolerance. Split the solid at the seam plane, cut each half with all cutters, fuse, then run the topology gate (Section 7.1); re-check volume after any `removeSplitter`. Confirm diagnosis with wedge pieces that touch and do not touch the seam. Gate every such boolean with the expected-delta and topology checks in Section 7.1 and flag it for user review at the step gate.
+1. **Geometry complexity.** Booleans on B-spline and periodic faces can fail silently (imprint without material removal, or wrong invalid results at a seam). A cutter crossing the theta = 0 seam of a periodic cylinder face can return a wrong, invalid solid regardless of cutter count or tolerance. Split the solid at the seam plane, cut each half with all cutters, fuse, then run the topology gate (Section 7.1); re-check volume after any `removeSplitter`. Assert that the split plane meets the seam; a plane that misses it leaves a plain cut. Confirm diagnosis with wedge pieces that touch and do not touch the seam. Gate every such boolean with the expected-delta and topology checks in Section 7.1 and flag it for user review at the step gate.
 
 2. **Assembly scale.** FreeCAD's native Assembly solver (Ondsel MbD) tested with up to 16 parts and grounded joints. Behavior with dozens of interdependent parametric constraints (revolute, fixed) is an open question. Fallback: explicit XYZ placements on App::Link objects (deterministic but requires manual placement math).
 
@@ -681,3 +697,5 @@ These are the limits of this method. Do not pretend they don't exist.
 6. **Partial automated cross-part validation.** `validate_params()` enforces scalar-computable cross-part constraints (clearance ranges, pitch matching) at generation time. Non-scalar constraints (coaxiality, thread form compatibility, assembly sequence) are checked by LLM analysis and human review, not by code. Full automated enforcement of non-scalar constraints would require a constraint solver and formal schema that do not exist yet.
 
 7. **Functional validity is a judgment call, not fully automatable.** A reviewing persona must correctly identify non-functional geometry — there is no algorithm for "does this look like a real part." The defense-in-depth: (1) The Designer's params review catches placeholder descriptions before geometry exists (Section 8.4a), (2) The Designer's Design Critique catches non-representative shapes after the sketch assembly (Section 8.4c), (3) functional validity tests define "representative" per part type with specific criteria (Section 7.1), (4) human review at the step gate catches what the LLM missed. This layered approach acknowledges that no single check is sufficient. The standard: would this part look at home in a product from a world-class design house?
+
+8. **Bounding boxes over-report on B-spline solids.** `Shape.BoundBox` is a loose box on solids with B-spline faces. In one imported assembly 74 of 894 solids over-reported by more than 1 mm, worst 236.6 mm. Use `optimalBoundingBox` for datums and expect agreement of about 1e-3 mm, not 1e-6 (Section 5.2.1).
