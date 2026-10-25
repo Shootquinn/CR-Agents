@@ -137,3 +137,7 @@ Gameplans are created before execution and may take a couple iterations to get r
 The one-step gate is enforced: after The Manager closes a step, Claude Code stops and reports. It does not open the next step until you say so. Use this time to provide feedback, adjust the gameplan, or flag issues.
 
 Work orders can be drafted in Claude web chat using `templates/work_order_drafter.md` before handing them to Claude Code for execution.
+
+## Known Issues
+
+Some process documents (the operational guide, method files and supplements) contain performative epistemics: sentences that signal honesty, rigor or verification instead of stating results. They may need to be rewritten to remove it. This is on the maintainer's to-do list.
