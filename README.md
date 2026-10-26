@@ -102,7 +102,7 @@ Every step produces reviewable documents on disk. The accumulator preserves pers
 | `method/tdd_method.md` | Test-driven documentation. Defines how test suites are built and used. |
 | `supplements/llm_plm_cad.md` | CAD/geometry supplement. Active only during parametric modeling work. |
 | `supplements/signs_of_ai_writing.md` | AI writing detection. 7 categories, severity ratings. Loaded into every Editor spawn. |
-| `supplements/performative-epistemics.md` | Seven prose patterns cut on sight, with the delete test. Loaded into summary spawns. |
+| `supplements/performative-epistemics.md` | What performative epistemics is, its tics, the delete test, and real examples. Loaded into summary spawns. |
 | `supplements/source_summaries/md-summary-chat-prompt.md` | Source-summary prompt for lit_review projects. One neutral summary per article, report, or paper. Loaded into every summary spawn. |
 | `supplements/source_summaries/md-book-summary-chat-prompt.md` | Book-length variant: chapter agents, visual agents, merge. Loaded into book-summary spawns. |
 | `supplements/freecad_api_reference.md` | FreeCAD headless scripting. Project-specific; swap in your own for other CAD tools. |
