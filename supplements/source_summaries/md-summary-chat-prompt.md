@@ -66,7 +66,7 @@ Include: specific numbers, dates, targets, power or performance figures; reusabl
 ## 9. Prose and copyright
 
 - Original wording throughout. Numbers, statistics, and findings are reported directly, since data is not copyrightable. No large verbatim block of the source's prose; a short quote is rare, under fifteen words, used at most once per source. Cite specific claims as (Author, Year, p. N).
-- Performative epistemics governs the summary's own prose (`supplements/performative-epistemics.md` where the repo carries it). Cut on sight: sentences whose only content is that the summary is careful or candid; a finding restated in a "which is to say" clause; headers that tell the reader how to feel; staging of the argument ("note that", "it is worth observing"); narration before and after a table; references to earlier drafts; statements of what was preserved, retained, or avoided. State the result. Test: delete the sentence; if only word count goes, it was decorative.
+- The Editor's AI-writing list governs the summary's own prose. Cut on sight: sentences whose only content is that the summary is careful or candid; a finding restated in a "which is to say" clause; headers that tell the reader how to feel; staging of the argument ("note that", "it is worth observing"); narration before and after a table; references to earlier drafts; statements of what was preserved, retained, or avoided. State the result. Test: delete the sentence; if only word count goes, it was decorative.
 - Paragraphs for narrative, bullets for enumerated findings. Straight quotes, no emojis, the source's units and precision.
 
 ## 10. Template

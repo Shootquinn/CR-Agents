@@ -81,7 +81,7 @@ Descriptive throughout. State what the book claims, establishes, and recommends 
 
 ## 8. Prose constraints
 
-The summary's own prose, not only the books it describes, is held to `supplements/performative-epistemics.md`. The failures it names:
+The summary's own prose, not only the books it describes, is held to the Editor's AI-writing list. Its performative-epistemics failures:
 
 - **Self-narrating honesty.** No sentence whose only content is that the document is being careful, thorough, or candid.
 - **Restated conclusions.** State a finding once. No "which is to say" clause re-delivering it.
