@@ -54,7 +54,7 @@ Ten personas anchored to biographical reference material form the standing roste
 
 Wave 1 agents run in parallel on technical work. Wave 2 agents run sequentially after integration. The Manager bookends the cycle.
 
-Five productive tensions are structural: The Software Engineer vs. The Systems Engineer, The Loftsman vs. The Engineer, The Loftsman vs. The Topologist, The Motor Designer vs. The Engineer, The Editor vs. The Designer. Do not resolve these. Disagreement between tension pairs is information.
+Five productive tensions are structural: The Software Engineer vs. The Systems Engineer, The Loftsman vs. The Engineer, The Loftsman vs. The Topologist, The Motor Designer vs. The Engineer, The Editor vs. The Designer.
 
 **The Recruiter.** Spawned when a task requires expertise outside the standing roster. The Recruiter identifies a historical figure whose published work covers the capability gap and produces a persona specification for human approval.
 
@@ -131,10 +131,8 @@ You can also edit `claude-docx-bundle/docx_style.md` directly to change the defa
 
 ## What You Need to Know
 
-The human is a team member, not a director. Your job is creative origination, evaluative judgment, and reflective practice. The team handles execution. You approve or redirect at each gate.
+Gameplans are created before execution and may take a couple of iterations to get right.
 
-Gameplans are created before execution and may take a couple of iterations to get right. This is normal and cheap. Fixing a missing section in a gameplan costs minutes; fixing it in a draft costs hours.
+After The Manager closes a step, Claude Code stops and reports. It does not open the next step until you say so. Use this time to provide feedback, adjust the gameplan, or flag issues.
 
-The one-step gate is enforced: after The Manager closes a step, Claude Code stops and reports. It does not open the next step until you say so. Use this time to provide feedback, adjust the gameplan, or flag issues.
-
-Work orders can be drafted in Claude web chat using `templates/work_order_drafter.md` before handing them to Claude Code for execution.
+Work orders can be drafted in Claude web chat using `templates/work_order_drafter.md` before handing them to Claude Code to start a project.
