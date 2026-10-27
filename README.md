@@ -1,9 +1,9 @@
 # Collaborative Reasoning + Test-Driven Documentation
 By: Quinn Morley, Unleashed Robotics
 
-A method for performing technical work using AI-simulated expert teams, test-driven quality assurance, and (optionally) programmatic CAD. Runs on Claude Code. Applicable to engineering documents, proposals, hardware design, systems analysis, or anything complex enough that getting it wrong is expensive.
+A method for performing technical work using AI-simulated expert teams, test-driven quality assurance, and (optionally) programmatic CAD. Runs on Claude Code. Applicable to engineering documents, proposals, hardware design, systems analysis, and other complex work where an error is expensive.
 
-Based on Nelson (2026), "Activating Expertise: Human-AI Teams for Collaborative Reasoning," implemented via spawned sub-agents with clean context windows per persona, with accumulated judgement calls to enable a persistent "pseudo-ego." Nelson's method is further augmented with the Test Driven Documentation method developed by the author in late 2025.
+Based on Nelson (2026), "Activating Expertise: Human-AI Teams for Collaborative Reasoning," implemented via spawned sub-agents with clean context windows per persona, with accumulated judgement calls to enable a persistent "pseudo-ego." Nelson's method is extended with the Test Driven Documentation method the author developed in late 2025.
 
 ---
 
@@ -21,11 +21,11 @@ Or more simply:
 Read CLAUDE.md. Work through prompt0. Today we're going to design an airplane.
 ```
 
-That is the entire entry point. CLAUDE.md bootstraps the session: it tells the orchestrator where to find the operational guide, the gameplan, and the accumulator. prompt0 verifies tools and establishes session capabilities. The team assembles, builds a gameplan for your review, writes a test suite, and begins executing. You approve each step before the next one starts.
+CLAUDE.md bootstraps the session: it tells the orchestrator where to find the operational guide, the gameplan, and the accumulator. prompt0 verifies tools and establishes session capabilities. The team assembles, builds a gameplan for your review, writes a test suite, and begins executing. You approve each step before the next one starts.
 
 After compaction or a new session, the recovery incantation is the same: "Read CLAUDE.md, work through prompt0, and read the gameplan."
 
-LLM-PLM (Product Lifecycle Management performed by the LLM) activates when CAD/geometry creation is expected to occur. If CAD work happens later, the team will pick up the supplement automatically. You can read more about this in the `supplements/llm_plm_cad.md` file.
+LLM-PLM (Product Lifecycle Management performed by the LLM) activates when CAD/geometry creation is expected to occur. If CAD work happens later, the team will pick up the supplement automatically. More detail is in the `supplements/llm_plm_cad.md` file.
 
 ---
 
@@ -37,7 +37,7 @@ Claude Code arrives relatively unskilled compared to browser Claude. It cannot o
 
 ## The Team
 
-Ten personas anchored to biographical reference material form the standing roster. Each runs as a spawned sub-agent with its own clean context window, receiving only the material relevant to their review task. The biographical anchors are the mechanism: a persona grounded in a specific practitioner's published work and documented approach activates that domain knowledge with precision.
+Ten personas anchored to biographical reference material form the standing roster. Each runs as a spawned sub-agent with its own clean context window, receiving only the material relevant to their review task. The biographical anchors are the mechanism: a persona grounded in a specific practitioner's published work and documented approach activates that practitioner's domain knowledge.
 
 | Persona | Role | Wave |
 |---------|------|------|
@@ -101,14 +101,13 @@ Every step produces reviewable documents on disk. The accumulator preserves pers
 | `docs/technical_note.md` | Method architecture and rationale. For human readers who want to understand why. Not read by the orchestrator. |
 | `method/tdd_method.md` | Test-driven documentation. Defines how test suites are built and used. |
 | `supplements/llm_plm_cad.md` | CAD/geometry supplement. Active only during parametric modeling work. |
-| `supplements/signs_of_ai_writing.md` | AI writing detection. 7 categories, severity ratings. Loaded into every Editor spawn. |
+| `supplements/signs_of_ai_writing.md` | AI writing detection. 11 categories. Loaded into every Editor spawn. |
 | `supplements/source_summaries/md-summary-chat-prompt.md` | Source-summary prompt for lit_review projects. One neutral summary per article, report, or paper. Loaded into every summary spawn. |
 | `supplements/source_summaries/md-book-summary-chat-prompt.md` | Book-length variant: chapter agents, visual agents, merge. Loaded into book-summary spawns. |
 | `supplements/freecad_api_reference.md` | FreeCAD headless scripting. Project-specific; swap in your own for other CAD tools. |
 | `supplements/writing-guides/style.md` | Prose style and register. Loaded into every Writer spawn. |
 | `supplements/writing-guides/style-reference.md` | Punctuation, quoting, abbreviations, usage glossary. Lookup only, loaded on demand. |
 | `supplements/writing-guides/structure.md` | Document architecture — arc, openings, resolutions, information order. |
-| `supplements/writing-guides/structure-reference.md` | Condensing, verb and word lists, revision checklists, limitations placement. Lookup only. |
 | `supplements/writing-guides/reporting-copy.md` | Ordering rules for engineering reporting copy. Loaded into Engineer spawns that produce prose. |
 | `templates/gameplan.md` | Blank gameplan. Objectives, steps, progress log, design notes. |
 | `templates/accumulator.md` | Blank accumulator. Per-persona contribution history. |
@@ -134,7 +133,7 @@ You can also edit `claude-docx-bundle/docx_style.md` directly to change the defa
 
 The human is a team member, not a director. Your job is creative origination, evaluative judgment, and reflective practice. The team handles execution. You approve or redirect at each gate.
 
-Gameplans are created before execution and may take a couple iterations to get right. This is normal and cheap. Fixing a missing section in a gameplan costs minutes; fixing it in a draft costs hours.
+Gameplans are created before execution and may take a couple of iterations to get right. This is normal and cheap. Fixing a missing section in a gameplan costs minutes; fixing it in a draft costs hours.
 
 The one-step gate is enforced: after The Manager closes a step, Claude Code stops and reports. It does not open the next step until you say so. Use this time to provide feedback, adjust the gameplan, or flag issues.
 
@@ -142,4 +141,4 @@ Work orders can be drafted in Claude web chat using `templates/work_order_drafte
 
 ## Known Issues
 
-Some process documents (the operational guide, method files and supplements) contain performative epistemics: sentences that signal honesty, rigor or verification instead of stating results. They may need to be rewritten to remove it. This is on the maintainer's to-do list.
+Some process documents (the operational guide, method files and supplements) contain performative epistemics: sentences that signal honesty, rigor or verification instead of stating results. These sentences may need rewriting. This is on the maintainer's to-do list.

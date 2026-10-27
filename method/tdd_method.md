@@ -1,27 +1,11 @@
 # Test-Driven Documentation (TDD)
-## A Method for Technical Document Creation Using Claude
+## A Method for Technical Document Drafting
 
 ---
 
-## The Method in One Sentence
+## Synopsis
 
-**Claude excels at software engineering, so treat your writing project like an Agile software project—define acceptance tests first, then build content that passes them.**
-
-This approach plays to Claude's strengths: systematic reasoning, test validation, structured problem decomposition, and maintaining consistency across large contexts. It transforms an ambiguous creative task ("write a report") into a well-specified engineering task ("build something that passes these tests").
-
----
-
-## Why This Works
-
-Traditional approach: "Write me a report about X."
-- LLM guesses at structure, depth, and completeness
-- Reviewer finds gaps, requests revisions
-- Iterate until acceptable (inefficient)
-
-TDD approach: "Here are 100 tests the report must pass. Create an outline that passes all of them."
-- Requirements are explicit before writing begins
-- Gaps are identified at outline stage (cheap to fix)
-- Final draft is validated against known criteria
+**Claude excels at software engineering, so treat your writing project like an Agile software project which defines acceptance tests first, then builds content that passes the tests.**
 
 ---
 
@@ -36,21 +20,20 @@ I need to write a [DOCUMENT TYPE] about [TOPIC].
 
 Requirements:
 - [Audience]
-- [Purpose]  
+- [Purpose]
 - [Constraints: length, format, deadline]
-- [Key questions it must answer]
-- [Source materials available]
+- [Questions it must answer]
+- [Source materials]
 
-Create a comprehensive test suite (around 150 tests—use your 
-engineering judgment based on document complexity) that this 
+Create a comprehensive test suite (around 150 tests; use your 
+engineering judgment based on document complexity) which this 
 document must pass.
 
 Organize tests by scope:
 
 WHOLE-DOCUMENT TESTS
 - Requirements that apply to the complete document
-- Examples: "All sections use consistent terminology," "Executive summary 
-  stands alone," "No contradictory claims between sections"
+- Examples: "All sections use consistent terminology," "Executive abstract should be concise," "No contradictory claims between sections"
 - These are validated once, against the finished draft
 
 SECTION-LEVEL TESTS  
@@ -59,10 +42,14 @@ SECTION-LEVEL TESTS
   "Section 6 includes the calculation showing 78%"
 - These are validated while drafting each section
 
+REQUIRED:
+- Thesis statement in the test plan. This can be provided by the user or synthesized by you from a preponderance of the requirements. 
+
 For each test, specify:
 - What is being tested
 - Pass/fail criteria  
 - Evidence required (if applicable)
+
 ```
 
 ### Prompt 2: Generate Outline
@@ -70,12 +57,15 @@ For each test, specify:
 ```
 Generate a paragraph-level outline which, if followed correctly, will 
 result in a document that passes all of the tests in the attached 
-TDD test plan.
+TDD test suite.
 
 Each paragraph in the outline should be represented by its topic 
-sentence—the claim that paragraph will make. It's often easier to 
+sentence: the claim that paragraph will make. It's often easier to 
 just write the sentence than to expend effort crafting a terse 
 bullet point that you'll later have to re-expand anyway.
+
+What Is a Topic Sentence?
+"A topic sentence introduces the main idea of a paragraph and supports the main thesis of a paper or essay. The topic sentence is typically the first sentence of a paragraph, and it introduces the subject of a paragraph by laying out a controlling idea or particular point of view on the topic. The rest of the paragraph will include supporting sentences with examples and evidence to support the main point." (source: https://www.masterclass.com/articles/topic-sentence-guide)
 
 [Attach: TDD test suite from Prompt 1]
 ```
@@ -84,7 +74,7 @@ bullet point that you'll later have to re-expand anyway.
 
 ```
 Write the document using the attached outline. For each paragraph, 
-a topic sentence is provided—develop it into a complete paragraph.
+a topic sentence is provided. Develop it into a complete paragraph.
 
 [Attach: Outline from Prompt 2]
 [Attach: Any reference materials needed]
@@ -94,27 +84,25 @@ a topic sentence is provided—develop it into a complete paragraph.
 
 ## Key Principles
 
-1. **Tests before content.** Always.
+1. **Tests before content.**
 
-2. **Organize by location, tag by severity.** When drafting Section 3, you need Section 3's tests—not a mixed list sorted by importance. Severity (critical/major/minor) is useful metadata, but scope is the organizing principle.
+2. **Organize by location, tag by severity.** When drafting Section 3, you need Section 3's tests, and you check to make sure they support the overall thesis.
 
 3. **Topic sentences, not headings.** "Introduction" tells you nothing. "This report demonstrates that X is feasible because Y" tells you exactly what to write.
 
-4. **Trace everything.** Every test maps to content. Every claim maps to evidence. Orphans indicate gaps.
+4. **Trace everything.** Every test maps to content. Every claim maps to evidence. Orphans indicate gaps. Careful traceability can help detect hallucinations or temperature drifts.
 
-5. **Validate at outline stage.** Fixing a missing section in an outline costs minutes. Fixing it in a draft costs hours.
+5. **Validate at outline stage.** Running the tests is cheap.
 
-6. **Audit tests on architecture migration.** When the system under test changes structure (monolithic script to per-part modules, spreadsheet parameters to file-based params, single assembly to App::Link federation), every existing test that opens or references the old structure must be audited in the same step. A test that references a deleted object is not a pre-existing failure — it is a test that was broken by the migration and not fixed. The Software Engineer owns this audit as part of the migration step, not as deferred debt.
+6. **Audit tests on architecture migration.** When the system under test changes structure, every existing test that opens or references the old structure must be audited in the same step. We want to avoid missing tests that were broken by the migration and not fixed.
 
-7. **Verify test sources against primary materials.** Any test that cites a source document (work order, SOW, RFP, customer requirement, specification, peer-reviewed paper) must be verified against that source before the test suite is accepted as the contract. The verification is simple: does the source actually say what the test claims it says? A test that attributes a requirement to a numbered SOW clause must be checked against the actual SOW to confirm the clause exists and contains the claimed language. A test that attributes a number to a paper must be checked against the paper. This rule exists because LLMs confidently fabricate plausible-sounding source attributions — a test can cite a requirement ID for language the source never states, and downstream agents will treat the test as authoritative without re-checking. The test suite is the contract; a contract built on fabricated requirements is worse than no contract at all, because it creates false confidence. The verification burden is on the agent writing or modifying the test, not on downstream consumers. Reviewers of the test suite must also verify any source claims they encounter that they have not personally checked.
+7. **Verify test sources against primary materials.** Any test that cites a source document (work order, SOW, RFP, customer requirement, specification, peer-reviewed paper) must be verified against that source before the test suite is accepted as the contract. Does the source say what the test claims it says? A test that attributes a requirement to a numbered SOW clause must be checked against the SOW to confirm the clause exists and contains the claimed language. A test that attributes a number to a paper must be checked against the paper. This rule exists because LLMs confidently fabricate plausible-sounding source attributions. The verification burden is on the agent writing or modifying the test. However, reviewers of the test suite must also verify any source claims they encounter that they have not personally checked. See 8 for how the deliverable must have facts mapped back to tests as well.
 
-8. **Every claim of fact gets a test linked to a primary source.** Any factual claim in the document — a number, a measurement, a regulatory threshold, a personnel commitment, a cited result — should have a corresponding test in the suite, and that test should name the primary source it will be validated against. The source can be a paper, a regulation, a budget spreadsheet, a letter of commitment, meeting minutes, or a markdown summary of any of these. If the source is on disk or retrievable, the test is verifiable. If the claim has a test and the test maps to an accessible source, verification is straightforward and the claim is low-risk. If the claim has no test and no source, it is high-risk: it is either an LLM confabulation (plausible-sounding details generated because specificity correlates with factual content in training data) or a human assertion that was inserted without sourcing and never revisited. Both failure modes produce the same result: a specific, plausible, internally consistent claim that no one can trace to reality. The test suite should make unsourced factual claims visible by their absence — if a reviewer can grep the test suite for a claim and find no test, the claim needs either a source or a flag. This principle does not require sourcing every sentence. Analytical conclusions, design rationale, and argumentative framing are the author's territory. The principle targets empirical claims: numbers, dates, measurements, regulatory classifications, personnel hours, cited results. These are the claims where "trust me" is not an acceptable verification standard, because they are also the claims where LLMs are most confidently wrong.
+8. **Every claim of fact gets a test linked to a primary source.** Any factual claim in the document (a number, a measurement, a regulatory threshold, a personnel commitment, a cited result) should have a corresponding test in the suite, and that test should name the primary source it will be validated against. The source can be a paper, a regulation, a budget spreadsheet, a letter of commitment, meeting minutes, or a markdown summary of any of these. If the source is on disk or retrievable, the test is verifiable. If the claim has a test and the test maps to an accessible source, verification is straightforward and the claim is low-risk. If the claim has no test and no source, or is simply referencing an abstract or pubmed metadata, it is high-risk. High-risk claims can either be LLM confabulation (plausible-sounding details generated because specificity correlates with factual content in training data) or a human assertion that was inserted without sourcing and never revisited. Both failure modes produce the same result: a specific, plausible, internally consistent claim that no one can trace to reality. Analytical conclusions, design rationale, and argumentative framing are the author's territory. This principle (No. 8) targets empirical claims: numbers, dates, measurements, regulatory classifications, personnel hours, cited results.
 
-9. **Every detector and numeric gate runs a zero control and a known-bad control before its output is trusted.** The zero control is a known-clean case that must read zero. The known-bad control is a synthetic case with a planted defect that must fire. Record both results next to the gate's output. The rule covers an AI-tell grep, a fact-check pass and an echo-site audit as much as a geometry probe. A gate that was never shown to fire passes everything, and its green result carries no information. A count with no zero control cannot be told from noise, so a nonzero reading may be the detector's own floor.
+9. **Every detector and numeric gate runs a zero control and a known-bad control before its output is trusted.** The zero control is a known-clean case that must read zero. The known-bad control is a synthetic case with a planted defect that must fire. Record both results next to the gate's output. The rule covers an AI-tell grep, a fact-check pass and an echo-site audit as much as a geometry probe. A gate that was never shown to fire passes everything. Its green result carries no information. A count with no zero control cannot be told from noise, so a nonzero reading may be the detector's own floor.
 
-10. **Run the suite red first.** Run every test on the untouched baseline before building anything. A test that passes at baseline is labelled an invariant, and a gate that cannot fail is replaced. Test constants come from the parameters or the spec and are never imported from the build under test. A suite that was never red proves nothing about the build, because it would have passed with or without the change. Constants imported from the build make the test agree with the bug: the expected value moves whenever the code does, and the defect and its check share one source.
-
-11. **The reader is not the writer.** Verify the artifact across every encode boundary with a different tool than the one that wrote it (for example, a .docx unpacked with a second library). Add one re-measure of the key quantity that imports nothing from the build. The exit code of the producing process proves nothing about its output. This rule prevents one failure. When the writer and the checker share the same blind spot, a bug in that shared spot passes both, and the report reads green.
+10. **Run the suite red first.** Run every test on the untouched baseline before building anything. A test that passes at baseline is labelled an invariant, and gates that cannot fail are replaced.
 
 ---
 
@@ -126,48 +114,29 @@ a topic sentence is provided—develop it into a complete paragraph.
 - A complex regulatory submission might need 400+
 - Software projects routinely use thousands of tests
 
-Claude isn't afraid of large test suites. The right number is whatever comprehensively covers your document's requirements without inventing tests for their own sake.
-
----
-
-## Why Claude Specifically
-
-This method leverages Claude's architectural strengths:
-
-- **Large context window**: Hold entire test suite + outline + draft simultaneously
-- **Systematic reasoning**: Test validation is natural for a model trained on code
-- **Consistency maintenance**: Cross-reference checking across long documents
-- **Structured output**: Generates well-organized tests and outlines without drift
-
-The method may be less effective with models optimized primarily for conversational fluency rather than systematic task completion.
+The right number is whatever comprehensively covers your deliverable's requirements without inventing tests for their own sake. Avoid creating 5 tests for this document and 10 for this document. The true deliverable of the [day, hour, whatever] is what the test plan should be written to, and it should be dedicated to the support of that single deliverable.
 
 ---
 
 ## The Revision Pass (Optional Prompt 4)
 
-After the document passes its test suite, a dedicated editing pass can improve prose quality without changing technical content. This addresses a specific LLM failure mode: text that passes all technical tests but reads like statistical average prose — correct but lifeless. Wikipedia's WP:AISIGNS (Signs of AI Writing) catalogues the patterns: overused transition words ("Additionally," "Furthermore"), dangling present participles ("ensuring," "highlighting"), puffery ("groundbreaking," "crucial"), elegant variation (synonyms that shift meaning), and superficial analysis ("reflecting broader trends").
+After the document passes its test suite, a dedicated editing pass can improve prose quality without changing technical content. This addresses a specific LLM failure mode: text that passes all technical tests but reads like statistical average prose (correct but lifeless). Using the analogy to Agile software development, we have the tests green, now we need to go back and add the "elegance." 
 
 The revision pass operates under strict constraints:
-- **Subtract or replace, never add.** Replacements must be shorter than originals.
-- **Preserve all technical meaning.** Technical terms and precise jargon survive. Decorative language does not.
+- **Subtract or replace whenever possible.** Replacements should be shorter than originals.
+- **Preserve all technical meaning.** Technical terms and precise jargon survive. Decorative language and performative candor/epistemics do not.
 - **Test suite remains the contract.** Edits cannot introduce new test failures. Run the suite again after revision.
 
 This pass runs after content is frozen, so there is no risk of scope creep. A reviewer familiar with the domain (not just consistency checking, but evaluating whether a cognizant reader can follow the technical design intent) should verify that edits did not break the document's communication architecture.
 
+Prompt 4:
 ```
-Revise the attached document for prose quality. Do not add content
-or change technical meaning. Only subtract or replace words.
-Every replacement must be shorter than the original.
+Do a review/editing pass on the document. Using an analogy to Agile software development, we have the tests green, now we need to go back and add the "elegance." 
 
-Remove: decorative adjectives, dangling participle phrases
-("ensuring...", "highlighting..."), puffery, elegant variation
-(synonyms that shift meaning), superficial analysis
-("reflecting broader trends"), and transition words that add
-no logical connection ("Additionally", "Furthermore", "Moreover").
+The revision/editing pass should operate under strict constraints:
+- **Subtract or replace whenever possible.** Replacements should be shorter than originals.
+- **Preserve all technical meaning.** Technical terms and precise jargon survive. Decorative language and performative candor/epistemics do not.
+- **Test suite remains the contract.** Edits cannot introduce new test failures. Run the suite again after revision.
 
-Preserve: all technical terms, quantitative claims, and
-specific facts.
-
-[Attach: Document that passed all tests from Prompt 3]
-[Attach: Test suite from Prompt 1 (for re-validation)]
+This pass runs after content is frozen, so no scope creep. After editing the copy and running the tests, imagine you are a reviewer familiar with the domain (not just consistency checking, but evaluating whether a cognizant reader can follow the technical design intent) and verify that edits did not break the document's communication architecture.
 ```

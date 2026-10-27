@@ -2,7 +2,7 @@
 
 **Document(s) under work:** [filepaths]
 **Operational guide:** [filepath to method/operational_guide.md]
-**Accumulator file:** [filepath, or "none — new project"]
+**Accumulator file:** [filepath, or "none, new project"]
 **Other reference files:** [list of files the orchestrator should read]
 **Date:** [date]
 **Current step:** 1
@@ -21,11 +21,11 @@
 
 ## Document Structure
 
-[Required for any step producing a document. Decided before drafting — see `supplements/writing-guides/structure.md`.]
+[Required for any step producing a document. Decided before drafting. See `supplements/writing-guides/structure.md`.]
 
 **The point, in one sentence:** [if you cannot write it, the document is not ready to structure]
 
-**Shape:** [lead-first (LDR) / straight OCAR / action-first (ABDCE)] — [why this one, given the reader]
+**Shape:** [lead-first (LDR) / straight OCAR / action-first (ABDCE)]
 
 **Opening promises:** [what audience, how broad]
 **Resolution delivers:** [must match the breadth above]
@@ -42,6 +42,7 @@
 
 | # | Step | Assigned To | Status |
 |---|------|-------------|--------|
+| 0 | [Team wave to create gameplan steps] | [Relevant team members] | Not started |
 | 1 | [Specific enough that the orchestrator can execute without clarification] | [Persona (role)] | Not started |
 | 2 | | | Not started |
 | 3 | | | Not started |
@@ -51,7 +52,7 @@
 
 ## Context Recipes
 
-[For each step that spawns agents, specify which files each agent receives. Planning these up front prevents ad hoc context curation under time pressure.]
+[For each step that spawns agents, specify which files each agent receives. Plan these up front.]
 
 | Step | Agent | Files / Excerpts |
 |------|-------|-----------------|

@@ -10,34 +10,36 @@ This governs **order, not voice**. Terse, declarative and jargon-loaded is corre
 
 ## Lead with what was learned
 
-State the finding, then the procedure that produced it. Compressed, the form is "to learn X, we did Y." Dropping the "to learn X" is the standard failure — the question feels obvious because you did the work, and no reader knows the work as well as you do.
+State the finding, then the procedure that produced it. Compressed, the form is "to learn X, we did Y." Dropping the "to learn X" is the standard failure.
 
-## Data before the claim drawn from it
+## Data First
 
-Present the measurement, then the inference. A claim placed ahead of its evidence reads as a plot imposed on the data, and a reader who notices discounts the claim.
+Present the measurement, then the inference. A claim placed ahead of its evidence reads as a plot imposed on the data.
 
-## Keep the three layers visible
+## Just the Facts, Ma'am
 
-At any point a reader should be able to tell which material is data, which is inference any competent practitioner would draw from it, and which is your own interpretation. Blur them and the strongest evidence inherits the credibility of the weakest.
+An engineer up past midnight does not write extra shit. Initial reporting copy should be straight and do the point, like Joe Friday from Dragnet: "Just the facts, ma'am."
 
-## Every section gets its own lead
+## Data, Inference, and Interpretation
 
-State the purpose or the pattern first, then the detail. Detail with no frame forces the reader to hold facts with nowhere to put them.
+At any point a reader should be able to tell which material is data, which is inference, and which is interpretation.
 
-## Limitations never go last
+## Build each paragraph
 
-Whatever ends a section is read as its message. Results-then-caveat makes the caveat the message. Address each limitation as early as it can be addressed, constrain the claim to fit inside it, and finish on what was established. Where one has to appear in a conclusion, put it in a subordinate opening clause and leave the claim in the main clause.
+A paragraph makes one claim. Build it in three moves: topic sentence, problem, tentative solution.
 
-There is no bad method — only a method asked a question it cannot answer. Where a limitation is really a mismatch between question and method, narrow the question rather than hedge the result.
+Topic sentence. State the claim the paragraph makes. A reader who stops here has the point.
 
-## Put the action in the verb
+Problem. Name what stands in the way of the claim: the failure, the gap, the unmet requirement, the reading nothing yet explains. Give its size.
 
-**Fuzzy verbs** report that something happened without saying what: *evaluated*, *facilitated*, *mediated*, *is controlled by*. They cost the reader the mechanism. In a hypothesis they are fatal — a fuzzy hypothesis cannot be falsified, so it is not worth testing.
+Tentative solution. State the candidate answer, or the candidates ranked by the evidence behind each. Mark each as tentative until a measurement closes it, and name that measurement. End the paragraph here.
 
-**Nominalizations** turn the action into a noun and leave a weak verb carrying the sentence: *conducted an investigation* for *investigated*. They add length and no information. Keep one only where the name genuinely is the concept.
+A paragraph with two problems or topic sentences is two paragraphs.
 
-## What this does not ask of you
+## Avoid Improper Verb Usage
 
-It does not ask you to select which results to report. Choosing what serves a story is an authorial judgment and does not belong to empirical reporting — report what you observed, including the results that do not fit.
+**Don't use Fuzzy verbs** report that something happened without saying what: *evaluated*, *facilitated*, *mediated*, *is controlled by*. They cost the reader the mechanism. In a hypothesis they are fatal (a fuzzy hypothesis cannot be falsified, so it is not worth testing).
 
-It does not ask you to reorganize the document, choose its overall shape, or write for a non-specialist. Those decisions are made elsewhere.
+**Don't use Nominalizations** turn the action into a noun and leave a weak verb carrying the sentence: *conducted an investigation* for *investigated*. They add length and no information. Keep one only where the name genuinely is the concept.
+
+**Do use active voice.**

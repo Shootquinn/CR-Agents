@@ -1,10 +1,10 @@
 # Comprehensive Source Summary Prompt
 
-Produces one comprehensive markdown summary per source PDF, so later work can read clean text without reopening the original. Book-length sources use `md-book-summary-chat-prompt.md`. Pasted into a chat, this file is self-contained.
+Produces one comprehensive markdown summary per source PDF, so later work can read clean text without reopening the original. Book-length sources use `md-book-summary-chat-prompt.md`.
 
 ## 1. Stance: summaries are clean references
 
-A summary is a reference artifact and stays strictly descriptive. State what the source says and found, not whether it helps or hurts any argument, hypothesis, or proposal. Relevance is inferred later, during synthesis, and is not written into the summary. A downstream reader must be able to trust the summary as a neutral mirror of the source.
+A summary is a reference artifact and stays descriptive. State what the source says and found, not whether it helps or hurts any argument, hypothesis, or proposal. Relevance is inferred later, during synthesis, and is not written into the summary. A downstream reader must be able to trust the summary as a neutral mirror of the source.
 
 - No relevance or applicability section. If a relevance read is requested, it is a separate synthesis file.
 - If you catch yourself writing "this supports", "this matters because", or "this fills the gap in", stop. That is synthesis.
@@ -51,7 +51,7 @@ A distinct genre. Stay descriptive and reorganize:
 - Header: participants, date and time, duration, stated purpose.
 - Executive abstract: neutral synopsis of what the meeting covered and decided.
 - Body by topic, using the transcript's own outline where present.
-- Decisions and action items: a table of item, owner, status. This is the transcript's key findings.
+- Decisions and action items: a table of item, owner, status. This table is the transcript's findings.
 - Carry-forward: open threads and stated next steps, descriptive.
 - Omit personal, off-topic, and sensitive material, and note that it was excluded.
 

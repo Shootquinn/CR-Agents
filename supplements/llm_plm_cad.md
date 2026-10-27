@@ -1,10 +1,10 @@
-# LLM-PLM with Test-Driven Development: Method Supplement
+# LLM-PLM Method Supplement for CR-Agents
 
 ---
 
 ## 1. What This Document Is
 
-This is the domain reference for LLM-assisted programmatic CAD and lightweight PLM under the collaborative reasoning process. It is active only for CAD/geometry work. Section 2 onward covers the toolchain, project layout, ASSEMBLY.md, change orders, test gates, and persona duties.
+This is the domain reference for LLM-assisted programmatic CAD and lightweight PLM under the collaborative reasoning process. It is active only for CAD/geometry work.
 
 ---
 
@@ -18,11 +18,11 @@ This is the domain reference for LLM-assisted programmatic CAD and lightweight P
 
 **Authority ranking (highest to lowest):**
 
-1. **FCStd files** (`parts_cache/*.FCStd`, assembly FCStd) -- authoritative for geometry once they exist. If an FCStd file and params.yaml disagree, the FCStd is correct. Scripts must read FCStd state and update params.yaml to match before proceeding.
+1. **FCStd files** (`parts_cache/*.FCStd`, assembly FCStd): authoritative for geometry once they exist. If an FCStd file and params.yaml disagree, the FCStd is correct. Scripts must read FCStd state and update params.yaml to match before proceeding.
 
-2. **params.yaml** -- authoritative for design parameters when no FCStd exists yet, or when a parameter has no FCStd counterpart (additive change). Pre-flight sync keeps it current with FCStd state. Updated in exactly two circumstances: (a) the engineer edits it directly, (b) pre-flight sync from FCStd.
+2. **params.yaml**: authoritative for design parameters when no FCStd exists yet, or when a parameter has no FCStd counterpart (additive change). Pre-flight sync keeps it current with FCStd state. Updated in exactly two circumstances: (a) the engineer edits it directly, (b) pre-flight sync from FCStd.
 
-3. **Build scripts** (`build_parts/*.py`, `assemble.py`) -- generators, not authorities. They read params.yaml, produce or modify FCStd files, and must never overwrite FCStd state that has diverged from params.yaml without first syncing.
+3. **Build scripts** (`build_parts/*.py`, `assemble.py`): generators, not authorities. They read params.yaml, produce or modify FCStd files, and must never overwrite FCStd state that has diverged from params.yaml without first syncing.
 
 **Exception:** An explicit engineer request to rebuild from scratch overrides FCStd authority. Log the authorization.
 
@@ -52,9 +52,9 @@ FreeCADCmd.exe is FreeCAD without the GUI event loop. It loads the full kernel (
 
 ### 2.4 PartDesign::Body as Primary Container
 
-Every part is a `PartDesign::Body`. This is a hard rule, not a preference. PartDesign::Body provides a parametric feature tree (Pad, Pocket, Revolution, Hole, Fillet, Chamfer), a sequential tip pointer where each feature builds on the previous one, and placement in the Body's local coordinate frame.
+Every part is a `PartDesign::Body`. This is a hard rule. PartDesign::Body provides a parametric feature tree (Pad, Pocket, Revolution, Hole, Fillet, Chamfer), a sequential tip pointer where each feature builds on the previous one, and placement in the Body's local coordinate frame.
 
-**The Body is what the engineer edits in the GUI.** When a human opens an FCStd and modifies a sketch dimension or moves a feature, they are working inside the Body's feature tree. This is why PartDesign::Body matters -- it is editable, unlike a monolithic OCCT solid.
+**The Body is what the engineer edits in the GUI.** When a human opens an FCStd and modifies a sketch dimension or moves a feature, they are working inside the Body's feature tree. This is why PartDesign::Body matters: it is editable, unlike a monolithic OCCT solid.
 
 ### 2.5 OCCT Authorization
 
@@ -62,7 +62,7 @@ OCCT non-parametric shapes (`Part.makeCylinder`, `Part.makeBox`, `Part.BSplineCu
 
 1. **Frozen potted assemblies** that will never be edited (e.g., DumbStatorSolid for mass representation).
 2. **Imported third-party geometry** (McMaster STEP files) that arrives as OCCT shapes.
-3. **Tool shapes for PartDesign::Boolean** -- cylinders, boxes, or complex profiles (epitrochoids) consumed as cut/fuse tools into a PartDesign::Body.
+3. **Tool shapes for PartDesign::Boolean**: cylinders, boxes, or complex profiles (epitrochoids) consumed as cut/fuse tools into a PartDesign::Body.
 
 Case 3 is the most common. If a feature cannot be expressed as a Sketcher profile (periodic B-splines with 500+ control points, radial pockets from a bore surface where datum planes produce delta=0), build an OCCT tool shape and consume it via `PartDesign::Boolean`. The tool is non-parametric, but the Boolean operation sits in the feature tree. Debug the PartDesign approach first; drop to OCCT only when PartDesign cannot express the geometry.
 
@@ -70,11 +70,11 @@ Case 3 is the most common. If a feature cannot be expressed as a Sketcher profil
 
 Parts that combine PartDesign features with OCCT tool shapes follow this pattern:
 
-1. **PartDesign features** -- Pad, Revolution, Pocket, Hole, SubtractiveCylinder, Fillet, Chamfer. These are the parametric backbone.
+1. **PartDesign features**: Pad, Revolution, Pocket, Hole, SubtractiveCylinder, Fillet, Chamfer. These are the parametric backbone.
 
-2. **OCCT tool shapes** -- `Part.makeCylinder(...)`, `Part.makeBox(...)`, `Part.BSplineCurve().interpolate()`. Transient shapes built in Python, assigned to a `Part::Feature`, and immediately consumed by step 3. No parametric history.
+2. **OCCT tool shapes**: `Part.makeCylinder(...)`, `Part.makeBox(...)`, `Part.BSplineCurve().interpolate()`. Transient shapes built in Python, assigned to a `Part::Feature`, and immediately consumed by step 3. No parametric history.
 
-3. **PartDesign::Boolean bridge** -- `PartDesign::Boolean` (Cut or Fuse) takes the OCCT tool shape and applies it within the Body's feature tree. The result is a named operation the engineer sees in the tree.
+3. **PartDesign::Boolean bridge**: `PartDesign::Boolean` (Cut or Fuse) takes the OCCT tool shape and applies it within the Body's feature tree. The result is a named operation the engineer sees in the tree.
 
 **The "Fuse First, Boolean Once" rule:** When applying multiple OCCT cuts (e.g., 40 magnet pockets, 15 coil bores), fuse all tool shapes into a single compound first, then perform one `PartDesign::Boolean` cut. Sequential booleans on the same Body can interact with or undo earlier cuts. Fusing does not cure seam failures on periodic faces; cutter count is irrelevant there (see Section 11, item 1). Gate every boolean with the checks in Section 7.1.
 
@@ -96,11 +96,11 @@ For large feature counts (>15 shapes), use a binary merge tree to fuse in O(n lo
 
 ### 2.7 Assembly via App::Link
 
-Assembly is built in `assemble.py` using `App::Link` objects that reference bodies in `parts_cache/*.FCStd` files. App::Link stores a reference to the source FCStd file and body, not a copy of the geometry; the assembly FCStd is small (kilobytes). Source documents must be open when setting `LinkedObject`, so the assembly script opens all source FCStds before creating links. Placement is set on the Link, not on the source body -- each link has its own position and rotation in the assembly coordinate frame. McMaster STEP imports remain as `Part::Feature` shape copies (they have no source FCStd).
+Assembly is built in `assemble.py` using `App::Link` objects that reference bodies in `parts_cache/*.FCStd` files. App::Link stores a reference to the source FCStd file and body, not a copy of the geometry; the assembly FCStd is small (kilobytes). Source documents must be open when setting `LinkedObject`, so the assembly script opens all source FCStds before creating links. Placement is set on the Link, not on the source body. Each link has its own position and rotation in the assembly coordinate frame. McMaster STEP imports or other supplier-furnished solid geometry remain as `Part::Feature` shape copies (they have no source FCStd).
 
 The native Assembly workbench provides joint constraints (Grounded, Fixed, Rigid, Revolute) backed by the Ondsel MbD solver. Current practice: explicit XYZ placements on links (equivalent to grounded joints). Target: upgrade specific interfaces to proper joints for design exploration.
 
-**Multi-level assemblies.** When a project has sub-assemblies (e.g., a module assembly and a system assembly), the system-level script can either: (a) link to the sub-assembly FCStd as a single unit, or (b) link to individual part FCStd files and replicate the sub-assembly's internal placements. Option (b) gives per-part visibility and editability but requires the system script to compose placements: `system_plc.multiply(sub_assembly_internal_plc)`. See FreeCAD API reference "App::Link Placement Behavior" for the three placement categories (explicit, source, identity) and composition rules. **`Link.Placement` does not compose with `LinkedObject.Placement` — the link's placement is the only transform.** Failing to compose placements causes parts to cluster at zone boundaries with correct volumes but wrong positions.
+**Multi-level assemblies.** When a project has sub-assemblies (e.g., a module assembly and a system assembly), the system-level script can either: (a) link to the sub-assembly FCStd as a single unit, or (b) link to individual part FCStd files and replicate the sub-assembly's internal placements. Option (b) gives per-part visibility and editability but requires the system script to compose placements: `system_plc.multiply(sub_assembly_internal_plc)`. See FreeCAD API reference "App::Link Placement Behavior" for the three placement categories (explicit, source, identity) and composition rules. **`Link.Placement` does not compose with `LinkedObject.Placement`; the link's placement is the only transform.** Failing to compose placements causes parts to cluster at zone boundaries with correct volumes but wrong positions.
 
 **Assembly script hierarchy.** For multi-level projects, the directory may contain multiple assembly scripts:
 
@@ -112,23 +112,13 @@ build_parts/
 └── assemble_<system>_applink.py # System-level App::Link assembly (per-part links)
 ```
 
-The sub-assembly script is the **authoritative reference** for per-part internal placements. The system-level script must read or replicate these placements, not invent its own.
+The sub-assembly script is the **authoritative reference** for per-part internal placements. The system-level script must read or replicate these placements.
 
 ### 2.8 params.yaml as Seed, Not Master
 
 `params.yaml` is the parameter seed. Build scripts read it on first generation to create the initial FCStd. Once the FCStd exists, **the FCStd is the source of truth** for that part's geometry. `params.yaml` remains the source of truth for non-geometric metadata (materials, winding specs, electrical properties) that the FCStd does not carry.
 
-In the FreeCAD-native workflow, the FCStd has a live feature tree that the engineer can and does modify. The script is a generator, not a master.
-
-**Authority hierarchy (for geometry):**
-
-```
-FCStd (once it exists)
-  > params.yaml
-    > build script
-```
-
-See Section 5.2 for the Pre-Flight Diff Law that enforces this hierarchy.
+In the FreeCAD-native workflow, the FCStd has a live feature tree that the engineer can and does modify.
 
 ---
 
@@ -171,7 +161,7 @@ project-root/
 
 - **parts_cache/ is a build cache.** An FCStd becomes the authoritative design artifact the moment it is generated. The `_result.json` sidecar records build metadata (volume, feature count, validity, build time) for automated test consumption.
 
-- **output/ contains assembly-level artifacts.** The assembly FCStd, STEP export, cross-section plots, and renders. The assembly FCStd links into parts_cache/ -- it does not contain copies of part geometry.
+- **output/ contains assembly-level artifacts.** The assembly FCStd, STEP export, cross-section plots, and renders. The assembly FCStd links into parts_cache/. It does not contain copies of part geometry.
 
 - **RESOURCES/ is read-only.** Vendor STEP files live here. Build scripts import from RESOURCES/ but never write to it.
 
@@ -193,7 +183,7 @@ ASSEMBLY.md is the structured Markdown file that makes LLM-assisted change propa
 Every part: name, filesystem path, instance count, brief description.
 
 ### 4.2 Parametric Dependencies
-The most important section for change order processing. Documents inter-part constraints as scalar relationships:
+This section documents inter-part constraints as scalar relationships:
 
 ```
 - washer.inner_diameter - bolt.shank_diameter >= 0.2   (clearance fit, min 0.2mm)
@@ -204,7 +194,7 @@ The most important section for change order processing. Documents inter-part con
 
 Without this, the LLM must infer relationships from isolated `params.yaml` files (which contain no cross-references). With it, the LLM traces documented constraints.
 
-**Limitations of scalar notation:** These constraints project geometric relationships into a lower-dimensional space. `nut.inner_diameter - bolt.shank_diameter in [0.125, 0.625]` records a clearance range but does not express the full thread engagement relationship (helix angle, major/minor diameters, pitch diameter, thread form). The notation is adequate for assemblies where interfaces are geometrically simple. For assemblies with angled interfaces, datum-driven positioning, or standard-table-coupled parameters, the scalar format will not capture the full constraint structure. The LLM should flag geometric ambiguity rather than resolve it.
+**Limitations of scalar notation:** These constraints project geometric relationships into a lower-dimensional space. `nut.inner_diameter - bolt.shank_diameter in [0.125, 0.625]` records a clearance range but does not express the full thread engagement relationship (helix angle, major/minor diameters, pitch diameter, thread form). The notation is adequate for assemblies where interfaces are geometrically simple. For assemblies with angled interfaces, datum-driven positioning, or standard-table-coupled parameters, the scalar format will not capture the full constraint structure. The LLM should flag geometric ambiguity rather than resolve it (so that additional team expertise can resolve the ambiguity during a team wave).
 
 ### 4.3 Coordinate System
 Assembly origin, axis conventions, and any global positioning notes.
@@ -215,11 +205,9 @@ Build order with joint types and reference geometry for each mate.
 ### 4.5 Change Order History
 Running log of processed change orders.
 
-**Constraint enforcement:** Two layers exist, distinguished by what is computable from scalar parameters. `validate_params()` in the generation scripts enforces all scalar-computable constraints at generation time, including cross-part constraints such as nut-bolt clearance range, washer-bolt clearance, and pitch matching (hard enforcement -- script raises an error). Constraints that resist scalar reduction (coaxiality, thread form compatibility, assembly sequence) are documented in ASSEMBLY.md and enforced by LLM analysis and human review (soft enforcement -- flagged but not automatically blocked). The compensating controls for non-computable constraints are the LLM's analysis and the engineer's review.
+**Constraint enforcement:** Two layers exist, distinguished by what is computable from scalar parameters. `validate_params()` in the generation scripts enforces all scalar-computable constraints at generation time, including cross-part constraints such as nut-bolt clearance range, washer-bolt clearance, and pitch matching (hard enforcement, script raises an error). Constraints that resist scalar reduction (coaxiality, thread form compatibility, assembly sequence) are documented in ASSEMBLY.md and enforced by LLM analysis and human review (soft enforcement, flagged but not automatically blocked). The compensating controls for non-computable constraints are the LLM's analysis and the engineer's review.
 
 **Maintenance:** ASSEMBLY.md is only as useful as it is current. Update it as a mandatory step in every change order propagation. For informal parameter tweaks, update ASSEMBLY.md when committing the parameter change.
-
-**Scalability:** Designed for 5–50 parts. Below 5, the overhead isn't justified. Above 50, decompose into sub-assembly ASSEMBLY.md files with a top-level file referencing them.
 
 ---
 
@@ -229,11 +217,11 @@ Running log of processed change orders.
 
 A work order introduces new parts or assemblies into the project. The work order document should specify:
 
-- **What is being created** — new part(s), new sub-assembly, or new top-level assembly
-- **Functional requirements** — what the part/assembly must do
-- **Interface constraints** — how it connects to existing parts (mating surfaces, fasteners, clearances)
-- **Parameters** — known dimensions, materials, tolerances
-- **Acceptance criteria** — how to verify the output is correct
+- **What is being created**: new part(s), new sub-assembly, or new top-level assembly
+- **Functional requirements**: what the part/assembly must do
+- **Interface constraints**: how it connects to existing parts (mating surfaces, fasteners, clearances)
+- **Parameters**: known dimensions, materials, tolerances
+- **Acceptance criteria**: how to verify the output is correct
 
 **Work order workflow:**
 1. Engineer provides the work order document.
@@ -254,7 +242,7 @@ A change order modifies existing parts or assemblies. The change order document 
 
 #### 5.2.1 The Pre-Flight Diff Law
 
-Before any build script modifies an existing FCStd, it MUST execute a pre-flight check. This is not optional. This is what prevents the agent from destroying the engineer's work.
+Before any build script modifies an existing FCStd, it MUST execute a pre-flight check.
 
 **The procedure:**
 
@@ -270,13 +258,13 @@ Before any build script modifies an existing FCStd, it MUST execute a pre-flight
    - Expected bounding box
 
 3. **Classify each divergence** into one of three categories:
-   - **Match** -- parameter and FCStd agree. No action.
-   - **FCStd wins** -- both have the dimension, they disagree. Update params.yaml to match the FCStd.
-   - **Additive** -- params.yaml has a parameter with no FCStd counterpart. This is new design intent. Apply the feature to the existing FCStd geometry. Do NOT rebuild from scratch.
+   - **Match**: parameter and FCStd agree. No action.
+   - **FCStd wins**: both have the dimension, they disagree. Update params.yaml to match the FCStd.
+   - **Additive**: params.yaml has a parameter with no FCStd counterpart. This is new design intent. Apply the feature to the existing FCStd geometry. Do NOT rebuild from scratch.
 
 4. **If all match:** Proceed with rebuild.
 
-5. **If divergences exist:** The FCStd wins. Read the actual geometry, update params.yaml to match, then apply the requested change on top of the current FCStd state. Never overwrite user edits. Never ask -- just respect the file.
+5. **If divergences exist:** The FCStd wins. Read the actual geometry, update params.yaml to match, then apply the requested change on top of the current FCStd state. Never overwrite user edits. Never ask. Respect the file.
 
 6. **Check cross-part constraints** (from ASSEMBLY.md) after syncing all FCStd states to params.yaml. If constraints are violated, report the violation but do NOT auto-resolve. Two authoritative sources in conflict require human judgment.
 
@@ -295,18 +283,18 @@ doc = FreeCAD.newDocument("StatorShell")
 
 #### 5.2.2 Change Order Workflow (6 steps)
 
-1. **Engineer writes CO-NNN.md** -- the change request with reason and expected affected parts.
+1. **Engineer writes CO-NNN.md**: the change request with reason and expected affected parts.
 
-2. **Agent reads ASSEMBLY.md + CO-NNN.md** -- traces parametric dependencies to identify all affected parts. Dependencies include both params.yaml cross-references and assembly-level relationships (App::Link placements, joint references).
+2. **Agent reads ASSEMBLY.md + CO-NNN.md**: traces parametric dependencies to identify all affected parts. Dependencies include both params.yaml cross-references and assembly-level relationships (App::Link placements, joint references).
 
-3. **Agent drafts CO-NNN_propagation.md** -- for each affected part:
+3. **Agent drafts CO-NNN_propagation.md** for each affected part:
    - Whether a rebuild is required
    - Which parameters change (before/after values)
    - Whether the change is **dimensional** (topology preserved) or **topological** (face/edge structure changes)
    - Whether the FCStd has been user-edited (pre-flight check result)
    - Completion status
 
-4. **Engineer reviews** -- approves or modifies the propagation document. This is where the engineer catches what the agent missed: standard-table implications (M4 to M6 implies pitch, head size, washer changes), tolerance stack-ups, manufacturing constraints.
+4. **Engineer reviews**: approves or modifies the propagation document. This is where the engineer catches what the agent missed: standard-table implications (M4 to M6 implies pitch, head size, washer changes), tolerance stack-ups, manufacturing constraints.
 
 5. **Execute and verify:**
    - Run pre-flight check on each affected FCStd
@@ -319,11 +307,9 @@ doc = FreeCAD.newDocument("StatorShell")
    - The install refuses unless the backup's hash equals the live file's hash.
    - After the install, diff every other object in the document against the pre-install state. Expect no change beyond float noise (at most 1e-9 mm3) apart from the intended change.
 
-6. **Update documentation** -- ASSEMBLY.md, params.yaml, accumulator, gameplan.
+6. **Update documentation**: ASSEMBLY.md, params.yaml, accumulator, gameplan.
 
 #### 5.2.3 Dimensional vs. Topological Changes in FreeCAD
-
-This distinction is more consequential in FreeCAD than in script-and-export workflows.
 
 **Dimensional changes** (e.g., increase endplate thickness from 9.5mm to 11mm):
 - Topology is preserved. The same faces, edges, and vertices exist; they just moved.
@@ -350,7 +336,7 @@ When the engineer edits a part in the FreeCAD GUI:
 3. **Agent detects the edit** via pre-flight check (volume or feature count diverges from params.yaml expectations).
 4. **Agent reads the FCStd** to extract the new state: updated dimensions, new features, changed topology.
 5. **Agent updates params.yaml** to reflect the FCStd's current state. This keeps the text representation in sync for future builds, test validation, and documentation.
-6. **If additional scripted changes are needed** (e.g., the engineer adjusted shell thickness and the agent must now update bolt hole positions), the agent applies them on top of the current FCStd -- opening the existing file, not creating a new document.
+6. **If additional scripted changes are needed** (e.g., the engineer adjusted shell thickness and the agent must now update bolt hole positions), the agent applies them on top of the current FCStd, opening the existing file, not creating a new document.
 
 The data flow runs in both directions:
 
@@ -382,15 +368,13 @@ Scripted change:  params.yaml  -->  script opens existing FCStd  -->  FCStd upda
 
 ## 6. STEP Assembly Structure
 
-Understanding STEP structure is essential for verifying output.
-
 A STEP assembly (AP203/AP214/AP242) carries:
-- **PRODUCT** entities — one per component, with human-readable names
-- **NEXT_ASSEMBLY_USAGE_OCCURRENCE (NAUO)** — parent-child structural links
-- **CONTEXT_DEPENDENT_SHAPE_REPRESENTATION (CDSR)** — geometric placements (transformations between coordinate systems)
-- **STYLED_ITEM + COLOUR_RGB** — color assignments for visual identification
+- **PRODUCT** entities: one per component, with human-readable names
+- **NEXT_ASSEMBLY_USAGE_OCCURRENCE (NAUO)**: parent-child structural links
+- **CONTEXT_DEPENDENT_SHAPE_REPRESENTATION (CDSR)**: geometric placements (transformations between coordinate systems)
+- **STYLED_ITEM + COLOUR_RGB**: color assignments for visual identification
 
-FreeCAD's STEP export writes this structure through OCCT's XCAF document model. The output is the same structure that SolidWorks, Creo, and other professional tools produce — each component is a separate body with its own geometry, linked by NAUOs and placed by CDSRs. Not Boolean-united into a single solid.
+FreeCAD's STEP export writes this structure through OCCT's XCAF document model. The output is the same structure that SolidWorks, Creo, and other professional tools produce. Each component is a separate body with its own geometry, linked by NAUOs and placed by CDSRs. Not Boolean-united into a single solid.
 
 **AP selection:** AP214 by default (carries color). AP203 for maximum compatibility. AP242 if semantic PMI is needed. Controlled by a single variable in the assembly script.
 
@@ -408,7 +392,7 @@ The TDD method (see method/tdd_method.md) applies to CAD work with adaptations f
 - Parameter validation (intra-part constraints enforced by `validate_params()`)
 - Geometry existence (does the FCStd file generate without error? Does STEP export succeed?)
 - Dimensional accuracy (do key measurements match `params.yaml`?)
-- Feature presence (does the part have the expected features — threads, chamfers, holes?)
+- Feature presence (does the part have the expected features: threads, chamfers, holes?)
 - Volume/mass sanity checks (is the volume in the expected range?)
 - Boolean expected-delta: after each cut or fuse, compare removed volume to the analytic expectation for that feature (not the whole-part volume) at 3 % or tighter, with 0 < removed volume <= tool volume, and assert isValid, isClosed, one solid. Polygonal cutters inscribe, so expect a small one-sided bias. The whole-part volume band in operational guide A.14 passes a wrong cut of a small feature; this check supplements it.
 - Topology: after a boolean on a solid of record, count faces per edge (all 2 except documented cylinder seams), search for leftover planar faces on any split plane, and list minimum face area and edge length. Record the face-count change and its cause; a large rise from a faceted cutter is a record, not a failure.
@@ -422,10 +406,10 @@ The TDD method (see method/tdd_method.md) applies to CAD work with adaptations f
 - Color assignment (are components visually distinguishable?)
 
 **Functional validity tests:**
-- Shape representativeness — does the geometry represent a real, manufacturable part, or is it a dimensionally correct placeholder? A woodruff key is a half-moon. A pressure plate finger is a cantilevered beam that can deflect. A drive dog has a realistic engagement profile. If the shape wouldn't be recognized by a machinist or a mechanical engineer as the part it claims to be, it fails.
-- Functional feature presence — parts that perform mechanical functions (springs, detents, dogs, keys, splines) must have geometry that could plausibly perform those functions. A flat ring with rectangular tabs is not a diaphragm spring. A rectangular block is not a woodruff key.
-- Manufacturing plausibility — could this geometry actually be manufactured by the specified process? Stamped sheet metal has bends. Machined parts have tool-access constraints. Castings have draft angles.
-- Parametric-to-geometry fidelity — does the script faithfully represent what params.yaml describes, or did it take a shortcut? If the params say "6 cantilevered fingers with root radius," the geometry must have 6 cantilevered fingers with root radii — not 6 rectangular tabs.
+- Shape representativeness — does the geometry represent a real, manufacturable part?
+- Functional feature presence — parts that perform mechanical functions (springs, detents, dogs, keys, splines) must have geometry that could plausibly perform those functions.
+- Manufacturing plausibility — could this geometry actually be manufactured by the specified process? 
+- Parametric-to-geometry fidelity — does the script faithfully represent what params.yaml describes?
 
 **Workflow-level tests:**
 - Reproducibility (does re-running scripts from a commit produce equivalent geometry?)
@@ -448,7 +432,7 @@ For a change order:
 3. Update the test suite (new pass criteria for changed parameters, new tests for new constraints).
 4. Execute the change. Validate against updated suite.
 
-**Red-first.** Run the new suite on the unmodified model. Tests that must fail there (feature presence) are the discriminators; tests that pass on both are invariants and are labelled as such. A suite that is green at baseline proves nothing.
+**Red-first.** Run the new suite on the unmodified model. Tests that must fail there (feature presence) are the discriminators; tests that pass on both are invariants and are labelled as such. 
 
 ### 7.3 Test Execution
 
@@ -456,14 +440,14 @@ Some tests are automated (script runs without error, `validate_params()` passes,
 
 ### 7.4 Interference Checking and Spatial Validation
 
-Interference checking is a mandatory automated gate — not a best-effort recommendation. If parts overlap, the process failed. The user should never be the one to discover that parts occupy the same space.
+Interference checking is a mandatory automated gate. If parts overlap, the process failed. The user should never be the one to discover that parts occupy the same space.
 
 **Method:** Boolean intersection (`BRepAlgoAPI_Common` or `Part.Shape.common()` in FreeCAD) between neighboring part pairs at their assembly positions. Any intersection volume above tolerance (~0.01 mm³) is a fail. This is computationally inexpensive and catches the class of errors that visual inspection catches too late.
 
 **When to run:**
-1. **After sketch study assembly** (Section 8.4) — sketch geometry provides the spatial baseline for early detection. Interference at the sketch level is cheap to fix; interference discovered after production geometry is expensive. If parts overlap in the sketch, they will overlap in production.
-2. **After production assembly generation** — mandatory gate before user review. No assembly ships to the user with overlapping parts.
-3. **After any change order affecting dimensions or positions** — re-validate spatial relationships whenever the assembly envelope changes.
+1. **After sketch study assembly** (Section 8.4): sketch geometry provides the spatial baseline for early detection. Interference at the sketch level is cheap to fix; interference discovered after production geometry is expensive. If parts overlap in the sketch, they will overlap in production.
+2. **After production assembly generation**: mandatory gate before user review. No assembly ships to the user with overlapping parts.
+3. **After any change order affecting dimensions or positions**: re-validate spatial relationships whenever the assembly envelope changes.
 
 **Scope:** All neighbor pairs for small assemblies (<20 parts). For larger assemblies, use graph-based neighbor selection (parts sharing an axial zone, radial zone, or documented interface in ASSEMBLY.md).
 
@@ -477,11 +461,11 @@ Interference checking is a mandatory automated gate — not a best-effort recomm
 
 1. **Placement audit.** After assembly creation, verify every link placement programmatically. For assemblies where parts are built at absolute coordinates, all link placements should be identity (position 0,0,0, rotation 0°). Any non-identity placement is suspect.
 
-2. **Visual verification.** Generate a turntable MP4 or multi-view PNG render of the assembled model. The Designer (or equivalent design reviewer) must confirm "this looks like the design." Visual gates here and in Section 8.4 are run by an image-capable reviewer against a written rubric (operational guide A.3.1); a text-only agent reports numbers and marks the visual gate not run. A capture passes only if its count of non-transparent pixels exceeds a floor measured on a known-blank capture, because file byte size cannot separate a framed small model from a blank frame. Comparing against a 2D cross-section plot is insufficient — the 2D plot validates geometry, not assembly placement. The 3D render validates both.
+2. **Visual verification.** Generate a turntable MP4 or multi-view PNG render of the assembled model. The Designer (or equivalent design reviewer) must confirm "this looks like the design." Visual gates here and in Section 8.4 are run by an image-capable reviewer (i.e., Opus) against a written rubric (operational guide A.3.1).
 
 3. **Include in test suite.** At minimum, add a test that checks all assembly link placements are within tolerance of their expected positions. This catches the case where a constraint solver or face-matching algorithm silently moves parts.
 
-**Root cause pattern (from WO-2026-002):** CAD tool constraint solvers use face-matching to compute part positions. When parts are already at their final coordinates, face-matching can INTRODUCE displacement rather than correct it. The safe pattern for pre-positioned parts: lock (ground) all parts at their construction coordinates rather than constraining them via face references.
+CAD tool constraint solvers use face-matching to compute part positions. When parts are already at their final coordinates, face-matching can INTRODUCE displacement rather than correct it. The safe pattern for pre-positioned parts: lock (ground) all parts at their construction coordinates rather than constraining them via face references.
 
 ### 7.6 Exploratory and Production Build Passes
 
@@ -505,13 +489,9 @@ The exploratory build produces *data*: interference findings, clearance measurem
 - Seal provisions are modeled where sealing is required (O-ring grooves, face seal surfaces)
 - The part could be manufactured by its intended process without additional design work
 
-**Failure mode this prevents:** The AI builds "concept-level" geometry that passes dimensional tests but lacks the mechanical features needed for fabrication or assembly. A corrective sub-step gets created to add what should have been there from the start. By requiring all features in Pass 1 (even simplified), the process catches missing features early and produces useful data for Pass 2.
-
 ---
 
 ## 8. Collaborative Reasoning Integration
-
-This section describes how the CR team's personas map to LLM-PLM work.
 
 ### 8.1 Persona Assignments for CAD Work
 
@@ -522,7 +502,7 @@ This section describes how the CR team's personas map to LLM-PLM work.
 | **The Loftsman** | Geometric reasoning. Reviews placement math, thread engagement geometry, surface definitions. Validates that parametric dependencies in ASSEMBLY.md correctly represent the geometric relationships. |
 | **The Topologist** | Boolean and seam validity. Runs the topology gate (Section 7.1): edge multiplicity, leftover faces, face-count growth, plain vs optimal bounding box. |
 | **The Software Engineer** | Test suite design and review. Ensures tests validate the right things. Flags ceremony. |
-| **The Designer** | Design critic for both physical products and documentation. Reviews params.yaml for functional validity and shape representativeness before geometry exists — "will these parameters produce parts that belong in a world-class product?" Reviews sketch and production geometry for the pride test: would this part look at home in a product catalog from a top design house? Reviews ASSEMBLY.md, change orders, and all prose for consistency. The Designer catches lazy placeholders, non-functional geometry, and design shortcuts (see functional validity tests, Section 7.1). Every update that touches documentation or physical design. |
+| **The Designer** | Design critic for both physical products and documentation. Reviews params.yaml for functional validity and shape representativeness before geometry exists: "will these parameters produce parts that belong in a world-class product?" Reviews sketch and production geometry for the pride test: would this part look at home in a product catalog from a top design house? Reviews ASSEMBLY.md, change orders, and all prose for consistency. The Designer catches lazy placeholders, non-functional geometry, and design shortcuts (see functional validity tests, Section 7.1). Every update that touches documentation or physical design. |
 | **The Systems Engineer** | Architecture-level review. Product tree structure, method coherence, scalability of the assembly approach. |
 
 ### 8.2 Wave Assignments
@@ -545,21 +525,21 @@ Domain expertise outside the standing roster: spawn The Recruiter per operationa
 
 ### 8.4 Sketching Phase (Visual Design Exploration)
 
-Before the first production geometry step — or at any point where the team has parameters but no visual confirmation of design intent — run a sketching study cycle. This is a lightweight cycle that produces fast geometry for visual validation before committing to detailed scripts. The sketching phase is where design problems are cheapest to fix and where the team's design standards are first enforced.
+Before the first production geometry step, or at any point where the team has parameters but no visual confirmation of design intent, run a sketching study cycle. This lightweight cycle produces fast geometry for visual validation before committing to detailed scripts. The sketching phase is where design problems are cheapest to fix and where the team's design standards are first enforced.
 
 **Why:** Parametric definitions (params.yaml, ASSEMBLY.md) describe a design numerically, but nobody can evaluate proportions or spatial relationships from a spreadsheet of dimensions.
 
 **Cycle structure (3 personas):**
 
-1. **The Designer — three sub-roles:**
+1. **The Designer (three sub-roles):**
 
-   **a. Params review (before geometry):** The Designer reviews each part's params.yaml entry before any sketch geometry is generated. The question is not "are the numbers right?" — The Software Engineer handles that. The Designer's question is: "Will these parameters produce a part I'd show to a client? Does this parameter set describe a real part or a lazy placeholder? Are functional features described with enough specificity to generate representative geometry?" A parameter set that describes a pressure plate as "flat ring, OD × ID × thickness" without mentioning fingers, deflection, or spring rate is already a design failure at the params level. The Designer catches it here, before a single line of geometry code is written. This review is lightweight and non-blocking — findings feed directly into the sketch scripts.
+   **a. Params review (before geometry):** The Designer reviews each part's params.yaml entry before any sketch geometry is generated. The question is not "are the numbers right?" The Software Engineer handles that. The Designer's question is: "Will these parameters produce a part I'd show to a client? Does this parameter set describe a real part or a lazy placeholder? Are functional features described with enough specificity to generate representative geometry?" A parameter set that describes a pressure plate as "flat ring, OD × ID × thickness" without mentioning fingers, deflection, or spring rate is already a design failure at the params level. The Designer catches it here, before a single line of geometry code is written. This review is lightweight and non-blocking. Findings feed directly into the sketch scripts.
 
-   **b. Sketch production (representative shapes):** For each part, The Designer writes a quick script that represents the part as a simplified but *representative* shape. Not arbitrary boxes. A woodruff key sketch is a half-moon. A pressure plate finger sketch is a cantilevered beam. A drive dog sketch has a realistic engagement profile. The sketch should make someone say "I can see what this part does" — not "what is this rectangle?" Simplification means no fillets, no bolt holes, no cosmetic features — it does not mean stripping away the functional character of the part. The Designer also describes the design intent in natural language: what each part should look like, how parts relate visually, what the overall proportions should convey. The Designer's output is both geometry (quick STEP files) and prose (design notes).
+   **b. Sketch production (representative shapes):** For each part, The Designer writes a quick script that represents the part as a simplified but *representative* shape. Not arbitrary boxes. A woodruff key sketch is a half-moon. A pressure plate finger sketch is a cantilevered beam. A drive dog sketch has a realistic engagement profile. The sketch should make someone say "I can see what this part does", not "what is this rectangle?" Simplification means no fillets, no bolt holes, no cosmetic features. It does not mean stripping away the functional character of the part. The Designer also describes the design intent in natural language: what each part should look like, how parts relate visually, what the overall proportions should convey. The Designer's output is both geometry (quick STEP files) and prose (design notes).
 
-   **c. Design Critique (after sketch assembly):** After the sketch assembly is built and interference checks have run (Section 7.4), The Designer produces a Design Critique document — the "this doesn't look right" mechanism. This is the feedback that real design teams give in sketch reviews: spatial concerns, functional concerns, pride test failures, and aesthetic issues captured as actionable items. Examples: "These pressure plate fingers need to be cantilevered beams, not flat plates, or they cannot produce spring force." "The drive dog profile should have draft angles for engagement/disengagement." "The woodruff key is a rectangle — it should be a half-moon shape that a machinist would recognize." Without Design Critique, problems hide until production geometry is complete and expensive to fix. The critique of renders is run by an image-capable reviewer (operational guide A.3.1).
+   **c. Design Critique (after sketch assembly):** After the sketch assembly is built and interference checks have run (Section 7.4), The Designer produces a Design Critique document, the "this doesn't look right" mechanism. It captures spatial concerns, functional concerns, pride test failures, and aesthetic issues as actionable items. Examples: "These pressure plate fingers need to be cantilevered beams, not flat plates, or they cannot produce spring force." "The drive dog profile should have draft angles for engagement/disengagement." "The woodruff key is a rectangle — it should be a half-moon shape that a machinist would recognize." Without Design Critique, problems hide until production geometry is complete and expensive to fix. The critique of renders is run by an image-capable reviewer (operational guide A.3.1).
 
-2. **The Engineer:** Reviews The Designer's sketching study for engineering feasibility. Runs interference checks on the sketch assembly (Section 7.4). Flags any visual concepts that conflict with mechanical requirements, material constraints, or assembly sequence. Provides engineering feedback before the study goes to the human. This is a collaborative exchange, not a gate — The Designer and The Engineer iterate until the concept is both visually sound and mechanically feasible.
+2. **The Engineer:** Reviews The Designer's sketching study for engineering feasibility. Runs interference checks on the sketch assembly (Section 7.4). Flags any visual concepts that conflict with mechanical requirements, material constraints, or assembly sequence. Provides engineering feedback before the study goes to the human. This is a collaborative exchange, not a gate. The Designer and The Engineer iterate until the concept is both visually sound and mechanically feasible.
 
 3. **The Manager:** Reviews The Designer and Engineer output, evaluates whether it is ready for the human, and presents the sketching study at the gate.
 
@@ -573,7 +553,7 @@ Before the first production geometry step — or at any point where the team has
 - The Engineer's engineering feedback
 - Interference check results on sketch geometry (Section 7.4)
 
-**Gate:** The Designer's Design Critique items and interference check failures must be resolved — by parameter change, placement change, or explicit deferral with rationale — before proceeding to production geometry. The human reviews the sketch renders, The Designer's descriptions, the Design Critique, and the interference report. Feedback shapes the detailed geometry that follows. The sketching study is fast enough (~30 minutes) that multiple iterations are practical.
+**Gate:** The Designer's Design Critique items and interference check failures must be resolved (by parameter change, placement change, or explicit deferral with rationale) before proceeding to production geometry. The human reviews the sketch renders, The Designer's descriptions, the Design Critique, and the interference report. Feedback shapes the detailed geometry that follows. The sketching study is fast enough (~30 minutes) that multiple iterations are practical.
 
 **When to use:**
 - Before the first production geometry step of any multi-part assembly project
@@ -589,7 +569,7 @@ Before the first production geometry step — or at any point where the team has
 
 Pregame cross-section plots (matplotlib) must use correct engineering drawing projection. Cylindrical features are the most common source of error: an LLM generating plot code defaults to circle patches for cylinders regardless of view orientation.
 
-**Rule:** In axial cross-sections (R vs Z, side view), ALL cylindrical features — pins, shafts, bearings, bolts, bores — appear as **rectangles** (width = diameter, height = length along Z). Circles appear ONLY in radial cross-sections (X vs Y, looking along the bore axis). Spheres appear as circles in both views. Tapered features appear as trapezoids in the view showing the taper.
+**Rule:** In axial cross-sections (R vs Z, side view), ALL cylindrical features (pins, shafts, bearings, bolts, bores) appear as **rectangles** (width = diameter, height = length along Z). Circles appear ONLY in radial cross-sections (X vs Y, looking along the bore axis). Spheres appear as circles in both views. Tapered features appear as trapezoids in the view showing the taper.
 
 **Checklist (enforce in every pregame plot prompt):**
 - [ ] Identify which view direction (axial side view R-vs-Z, or radial end view X-vs-Y)
@@ -696,6 +676,6 @@ These are the limits of this method. Do not pretend they don't exist.
 
 6. **Partial automated cross-part validation.** `validate_params()` enforces scalar-computable cross-part constraints (clearance ranges, pitch matching) at generation time. Non-scalar constraints (coaxiality, thread form compatibility, assembly sequence) are checked by LLM analysis and human review, not by code. Full automated enforcement of non-scalar constraints would require a constraint solver and formal schema that do not exist yet.
 
-7. **Functional validity is a judgment call, not fully automatable.** A reviewing persona must correctly identify non-functional geometry — there is no algorithm for "does this look like a real part." The defense-in-depth: (1) The Designer's params review catches placeholder descriptions before geometry exists (Section 8.4a), (2) The Designer's Design Critique catches non-representative shapes after the sketch assembly (Section 8.4c), (3) functional validity tests define "representative" per part type with specific criteria (Section 7.1), (4) human review at the step gate catches what the LLM missed. This layered approach acknowledges that no single check is sufficient. The standard: would this part look at home in a product from a world-class design house?
+7. **Functional validity is a judgment call, not fully automatable.** A reviewing persona must correctly identify non-functional geometry; there is no algorithm for "does this look like a real part." The defense-in-depth: (1) The Designer's params review catches placeholder descriptions before geometry exists (Section 8.4a), (2) The Designer's Design Critique catches non-representative shapes after the sketch assembly (Section 8.4c), (3) functional validity tests define "representative" per part type with specific criteria (Section 7.1), (4) human review at the step gate catches what the LLM missed. The standard: would this part look at home in a product from a top design house?
 
 8. **Bounding boxes over-report on B-spline solids.** `Shape.BoundBox` is a loose box on solids with B-spline faces. In one imported assembly 74 of 894 solids over-reported by more than 1 mm, worst 236.6 mm. Use `optimalBoundingBox` for datums and expect agreement of about 1e-3 mm, not 1e-6 (Section 5.2.1).

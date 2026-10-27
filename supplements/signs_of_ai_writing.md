@@ -1,12 +1,7 @@
 # Signs of AI Writing: Comprehensive Detection Reference
 
 ## Source
-Wikipedia:Signs of AI writing (WP:AISIGNS, WP:AITELLS, WP:LLMSIGNS), https://en.wikipedia.org/wiki/Wikipedia:Signs_of_AI_writing, an advice page from WikiProject AI Cleanup. Retrieved 2026-09-06; trimmed to CSA bids written with Claude and Gemini. Descriptive, not prescriptive; density is the signal. Read Category 12 before accusing on style alone.
-
----
-
-## Ordering and Use
-Worst first, not by taxonomy. **Performative Epistemics is Category 1**, this project's own addition. **Negative Parallelism is BLOCKING** (2), not NOTE; its reversed form is at 2.3. Tally by category, score by density, and run Category 11 and 12 first.
+Originally based on Wikipedia:Signs of AI writing (WP:AISIGNS, WP:AITELLS, WP:LLMSIGNS), https://en.wikipedia.org/wiki/Wikipedia:Signs_of_AI_writing, an advice page from Wikipedia Project AI Cleanup. 
 
 ---
 
@@ -16,11 +11,8 @@ Damages credibility with expert evaluators.
 ---
 
 ## Category 1: Performative Epistemics (Epistemic Theater)
-**No Wikipedia shortcut. This project's own category.**
 
 This pattern is grammatically clean. The sentence's only job is to perform about the document's own rigor. It is a song and a dance instead of good faith rigor or a testable claim.
-
-**The test:** delete the sentence. If nothing is lost but word count, it was performative, so cut it. If deleting it would let a false or unsupported claim stand, it was a real caveat, so keep it.
 
 ### 1.1 Self-Narrating Honesty
 The document asserts its own good faith instead of making a claim.
@@ -62,9 +54,9 @@ Examples: "though the margin is narrower than the last draft claimed," "and now 
 
 **In a status report or a chat reply it reads as:** "I did not tell it what to find." "I verified this independently." "The improved wording survived." "I did not relax a row to reach green." "Measured, not asserted."
 
-**Why it survives the throat-clearing ban:** it is disguised as substance. It looks like a fact about the work rather than a claim about the writer, so a writer told to cut preambles will keep it.
+**Why it survives the throat-clearing ban:** it is disguised as substance. It looks like a fact about the work, so a writer told to cut preambles will keep it.
 
-**Fix:** State the result. The reader assumes the work was done. If the procedure genuinely matters, it belongs in a method section with an owner, not welded to the finding.
+**Fix:** State the result. The reader assumes the work was done. If the procedure matters, it belongs in a method section with an owner, not welded to the finding.
 
 **Severity:** BLOCKING. Same failure class as 3.2/3.3/5.4: assertion substituting for evidence.
 
@@ -73,7 +65,7 @@ Examples: "though the margin is narrower than the last draft claimed," "and now 
 ## Category 2: Negative Parallelism
 **WP:AIPARALLEL**, promoted from NOTE to BLOCKING for this project.
 
-The output reads as though it is correcting a misconception the reader never held. It contrasts the real claim against a rejected alternative that nobody proposed, which makes the claim sound weighed rather than merely asserted.
+The output reads as though it is correcting a misconception the reader never held. It contrasts the real claim against a rejected alternative that nobody proposed, which makes the claim sound weighed.
 
 **The test, and it is the whole category:** *did anyone actually propose Y?* If nobody did, cut to X and the sentence loses nothing. The construction is legitimate only when Y is a live option someone raised, or one the reader is likely holding.
 
@@ -110,7 +102,7 @@ Their example, from an April 2026 revision to *First Battle of Guilin*, which ex
 | "reported as a zero rather than omitted" | omitting it | report the zero |
 | "keyed on the property rather than a phrase" | keying on a phrase | "keyed on the property" |
 
-**Why this one is worth its own category here:** it is the highest-frequency form in this project's output, it reads as considered judgement, and a writer told only to "remove hedging" will walk straight past it. In one Step 51 audit, nineteen of thirty-two clause-level strikes were this single shape.
+It is the highest-frequency form in this project's output, it reads as considered judgement, and a writer told only to "remove hedging" will walk straight past it. In one Step 51 audit, nineteen of thirty-two clause-level strikes were this single shape.
 
 ---
 
@@ -180,7 +172,6 @@ Near-conclusive when present; absence proves nothing.
 
 ---
 # TIER 4: COUNTER-EVIDENCE
-Run before concluding AI authorship; false accusations are expensive.
 
 ---
 
@@ -196,45 +187,3 @@ Run before concluding AI authorship; false accusations are expensive.
 - Superlative or definitive statements: "one of the best", "is the only", "was the first"
 - Hedging qualifiers and intensifiers: very, perhaps, tends to
 - Wordy constructions: "as a result of", "in order to", "all of the", "a part of", "the fact that"
-
-**Consistency with pre-2023 work.** If a writer's current output matches their own writing from before chatbots existed, including quirks like heavy bolding, that consistency argues for human authorship.
-
----
-
-## Category 12: Ineffective Indicators
-
-These are commonly cited and do not work. Some point the opposite way.
-
-- **Perfect grammar.** Many people write well, professionally.
-- **Mixed casual and formal register.** Indicates a technical person writing casually, youth, playfulness, neurodivergence, code-switching, or several authors on one page.
-- **"Bland" or "robotic" prose.** LLM output skews positive and verbose. It is formulaic in specific ways, and may not read as robotic to someone unfamiliar with it.
-- **"Fancy" or academic prose.** LLMs over-use *specific* words. The correlation does not extend to formal vocabulary generally.
-- **Transition words in isolation.** Only a few are over-used, and essay-writing humans use them too.
-- **Unsourced content.** Most unsourced material predates LLMs. Modern chatbots add citations readily, inaccurate ones but present.
-- **Bizarre markup.** Misplaced HTML tags and mangled syntax point to browser extensions, translation tools, or visual-editor mistakes.
-- **Correct markup.** Getting complex formatting right is normal for anyone using a visual editor or a preview button.
-
-**Before alleging AI use, consider whether confirmation bias is operating.** False accusations drive away good contributors and create an atmosphere of suspicion.
-
----
-
-## Differences Between Models, and History
-
-**ChatGPT and Grok** dwell on broader context more than Gemini and Claude. **Claude** alone, of contemporary models, uses more em dashes than professional writers (July 2026). **Grok** over-uses pseudo-scientific vocabulary and the reversed form in 2.3. Historical, rare now: didactic disclaimers, formulaic summaries ("In summary"), generation cut off mid-thought.
-
----
-
-## Severity Guide
-
-**BLOCKING:** Category 1, incl. 1.7; negative parallelism (2, esp. 2.3); puffery (3.2); superficial analysis (3.3); vague attributions (4.1); the Technical Puff (5.4).
-**IMPORTANT:** AI vocabulary (6.1); copula avoidance (6.2); rule-of-three (6.3); elegant variation (6.4); em dashes (8.1, elevated for Claude); title case (7.1); challenge sandwich (7.4).
-**FORENSIC:** markup (9.3); citation forensics (9.5); leakage (9.1); placeholder text (9.2).
-**NOTE:** boldface (7.2); list formatting (7.3); emojis (8.2).
-
----
-
-## Application Notes
-
-**Key diagnostic:** testable engineering claims with evidence win proposals; buzzword claims lose them (operational guide A.12.10).
-
-**The dashboard case, 2026-09-06:** a register pass can clear every marker in Categories 1 through 8 and still fail, since the defect was never which words sat beside the numbers, but that words sat there at all. Test: if the prose could be lorem ipsum with no change to the reader's experience, the fix is deletion. This file documents prose tells, not information design.
