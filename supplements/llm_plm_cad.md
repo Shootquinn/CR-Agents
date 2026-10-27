@@ -24,7 +24,7 @@ This is the domain reference for LLM-assisted programmatic CAD and lightweight P
 
 3. **Build scripts** (`build_parts/*.py`, `assemble.py`): generators, not authorities. They read params.yaml, produce or modify FCStd files, and must never overwrite FCStd state that has diverged from params.yaml without first syncing.
 
-**Exception:** An explicit engineer request to rebuild from scratch overrides FCStd authority. Log the authorization.
+**Exception:** An explicit engineer request to rebuild from scratch overrides FCStd authority and the sync requirement above. Log the authorization.
 
 ### 2.2 Component Stack
 
@@ -52,7 +52,7 @@ FreeCADCmd.exe is FreeCAD without the GUI event loop. It loads the full kernel (
 
 ### 2.4 PartDesign::Body as Primary Container
 
-Every part is a `PartDesign::Body`. This is a hard rule. PartDesign::Body provides a parametric feature tree (Pad, Pocket, Revolution, Hole, Fillet, Chamfer), a sequential tip pointer where each feature builds on the previous one, and placement in the Body's local coordinate frame.
+Every part is a `PartDesign::Body`. This is a hard rule, except for the cases Section 2.5 authorizes. PartDesign::Body provides a parametric feature tree (Pad, Pocket, Revolution, Hole, Fillet, Chamfer), a sequential tip pointer where each feature builds on the previous one, and placement in the Body's local coordinate frame.
 
 **The Body is what the engineer edits in the GUI.** When a human opens an FCStd and modifies a sketch dimension or moves a feature, they are working inside the Body's feature tree. This is why PartDesign::Body matters: it is editable, unlike a monolithic OCCT solid.
 
@@ -227,7 +227,7 @@ A work order introduces new parts or assemblies into the project. The work order
 1. Engineer provides the work order document.
 2. Orchestrator reads ASSEMBLY.md (if project exists) to understand the current product tree.
 3. CR team (via working loop) defines the test suite for new parts/assemblies, **including functional validity tests and interference checks** (Sections 7.1, 7.4).
-4. CR team creates `params.yaml` for each new part. **The Designer reviews for functional validity and shape representativeness** (Section 8.4a).
+4. CR team creates `params.yaml` for each new part. **The Designer reviews for functional validity and shape representativeness** (Section 8.4, item a).
 5. **CR team runs sketching study with interference check on sketch geometry. Resolve Design Critique items and interference failures before proceeding** (Section 8.4).
 6. CR team writes FreeCAD build scripts, validates against test suite.
 7. CR team writes or updates `assemble.py` to integrate new parts.
@@ -264,13 +264,13 @@ Before any build script modifies an existing FCStd, it MUST execute a pre-flight
 
 4. **If all match:** Proceed with rebuild.
 
-5. **If divergences exist:** The FCStd wins. Read the actual geometry, update params.yaml to match, then apply the requested change on top of the current FCStd state. Never overwrite user edits. Never ask. Respect the file.
+5. **If divergences exist:** The FCStd wins. Read the actual geometry, update params.yaml to match, then apply the requested change on top of the current FCStd state. Never overwrite user edits. Never ask which side to keep. Respect the file.
 
 6. **Check cross-part constraints** (from ASSEMBLY.md) after syncing all FCStd states to params.yaml. If constraints are violated, report the violation but do NOT auto-resolve. Two authoritative sources in conflict require human judgment.
 
 7. **Exception:** If the engineer explicitly says "rebuild from scratch" or "this file is broken, regenerate it," that is authorization to overwrite. Log the authorization with the same rigor as a change order.
 
-**Implementation:** A `preflight_check(fcstd_path, expected_params)` function in `common.py` that every build script calls before `FreeCAD.newDocument()`. Returns `True` (safe to rebuild) or raises with a diff report showing what diverged.
+**Implementation:** A `preflight_check(fcstd_path, expected_volume, expected_features)` function in `common.py` that every build script calls before `FreeCAD.newDocument()`. Returns `True` (safe to rebuild) or raises with a diff report showing what diverged.
 
 ```python
 # Pattern: Pre-flight check at script top
@@ -502,7 +502,7 @@ The exploratory build produces *data*: interference findings, clearance measurem
 | **The Loftsman** | Geometric reasoning. Reviews placement math, thread engagement geometry, surface definitions. Validates that parametric dependencies in ASSEMBLY.md correctly represent the geometric relationships. |
 | **The Topologist** | Boolean and seam validity. Runs the topology gate (Section 7.1): edge multiplicity, leftover faces, face-count growth, plain vs optimal bounding box. |
 | **The Software Engineer** | Test suite design and review. Ensures tests validate the right things. Flags ceremony. |
-| **The Designer** | Design critic for both physical products and documentation. Reviews params.yaml for functional validity and shape representativeness before geometry exists: "will these parameters produce parts that belong in a world-class product?" Reviews sketch and production geometry for the pride test: would this part look at home in a product catalog from a top design house? Reviews ASSEMBLY.md, change orders, and all prose for consistency. The Designer catches lazy placeholders, non-functional geometry, and design shortcuts (see functional validity tests, Section 7.1). Every update that touches documentation or physical design. |
+| **The Designer** | Design critic for both physical products and documentation. Reviews params.yaml for functional validity and shape representativeness before geometry exists: "will these parameters produce parts that belong in a world-class product?" Reviews sketch and production geometry for the pride test: would this part look at home in a product catalog from a top design house? Reviews ASSEMBLY.md, change orders, and all prose for consistency. The Designer catches lazy placeholders, non-functional geometry, and design shortcuts (see functional validity tests, Section 7.1). Spawned on every update that touches documentation or physical design. |
 | **The Systems Engineer** | Architecture-level review. Product tree structure, method coherence, scalability of the assembly approach. |
 
 ### 8.2 Wave Assignments
@@ -514,7 +514,7 @@ The exploratory build produces *data*: interference findings, clearance measurem
 - The Software Engineer: reviews/updates test suite
 
 **Wave 2 (review, after integration):**
-- The Designer: reviews params.yaml for functional validity and shape representativeness before geometry exists (Section 8.4a); reviews sketch/production geometry for pride test and functional validity; reviews interference check results (Section 7.4); reviews all documentation changes (ASSEMBLY.md, change orders, changelogs)
+- The Designer: reviews params.yaml for functional validity and shape representativeness before geometry exists (Section 8.4, item a); reviews sketch/production geometry for pride test and functional validity; reviews interference check results (Section 7.4); reviews all documentation changes (ASSEMBLY.md, change orders, changelogs)
 - The Systems Engineer: reviews product tree architecture, method-level concerns
 
 **Independent re-measure.** After cross-review, re-measure on the model of record with a script that shares no code with the build or tests, and include negative controls (probes away from the feature that must still hit).
@@ -676,6 +676,6 @@ These are the limits of this method. Do not pretend they don't exist.
 
 6. **Partial automated cross-part validation.** `validate_params()` enforces scalar-computable cross-part constraints (clearance ranges, pitch matching) at generation time. Non-scalar constraints (coaxiality, thread form compatibility, assembly sequence) are checked by LLM analysis and human review, not by code. Full automated enforcement of non-scalar constraints would require a constraint solver and formal schema that do not exist yet.
 
-7. **Functional validity is a judgment call, not fully automatable.** A reviewing persona must correctly identify non-functional geometry; there is no algorithm for "does this look like a real part." The defense-in-depth: (1) The Designer's params review catches placeholder descriptions before geometry exists (Section 8.4a), (2) The Designer's Design Critique catches non-representative shapes after the sketch assembly (Section 8.4c), (3) functional validity tests define "representative" per part type with specific criteria (Section 7.1), (4) human review at the step gate catches what the LLM missed. The standard: would this part look at home in a product from a top design house?
+7. **Functional validity is a judgment call, not fully automatable.** A reviewing persona must correctly identify non-functional geometry; there is no algorithm for "does this look like a real part." The defense-in-depth: (1) The Designer's params review catches placeholder descriptions before geometry exists (Section 8.4, item a), (2) The Designer's Design Critique catches non-representative shapes after the sketch assembly (Section 8.4, item c), (3) functional validity tests define "representative" per part type with specific criteria (Section 7.1), (4) human review at the step gate catches what the LLM missed. The standard: would this part look at home in a product from a top design house?
 
 8. **Bounding boxes over-report on B-spline solids.** `Shape.BoundBox` is a loose box on solids with B-spline faces. In one imported assembly 74 of 894 solids over-reported by more than 1 mm, worst 236.6 mm. Use `optimalBoundingBox` for datums and expect agreement of about 1e-3 mm, not 1e-6 (Section 5.2.1).

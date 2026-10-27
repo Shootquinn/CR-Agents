@@ -37,7 +37,7 @@ Claude Code arrives relatively unskilled compared to browser Claude. It cannot o
 
 ## The Team
 
-Ten personas anchored to biographical reference material form the standing roster. Each runs as a spawned sub-agent with its own clean context window, receiving only the material relevant to their review task. The biographical anchors are the mechanism: a persona grounded in a specific practitioner's published work and documented approach activates that practitioner's domain knowledge.
+Twelve personas anchored to biographical reference material form the standing roster. Each runs as a spawned sub-agent with its own clean context window, receiving only the material relevant to their review task. The biographical anchors are the mechanism: a persona grounded in a specific practitioner's published work and documented approach activates that practitioner's domain knowledge.
 
 | Persona | Role | Wave |
 |---------|------|------|
@@ -48,13 +48,15 @@ Ten personas anchored to biographical reference material form the standing roste
 | The Topologist | Topologist. B-rep topology, Euler operators, topological consistency verification. | 1 (technical) |
 | The Motor Designer | Motor designer. Electromagnetic design, magnetic circuits, winding, loss analysis. | 1 (technical) |
 | The Space Resources Engineer | Space resources engineer. ISRU domain accuracy, TRL assessment, evidence gates. | 1 (technical) |
-| The Editor | Editor. AI-ism detection and removal, sentence revision, prose tightening. | Editing (between W1 and W2) |
+| The Writer | Writer. Manuscript composition: arc, order, and prose. | Writing wave (1st pass) |
+| The Editor | Editor. AI-ism detection and removal, sentence revision, prose tightening. | Writing wave (2nd pass); Wave 1 in audit mode |
 | The Designer | Designer. Document design, echo-site tracking, compliance maps. Reviews every change. | 2 (review) |
 | The Systems Engineer | Systems engineer. Conceptual integrity, architecture coherence, revision integrity. | 2 (review) |
+| The Fact-Checker | Fact-checker. Source-claim verification, fabrication detection. | 2 (review) |
 
-Wave 1 agents run in parallel on technical work. Wave 2 agents run sequentially after integration. The Manager bookends the cycle.
+Wave 1 agents run in parallel on technical work. The writing wave follows integration. Wave 2 agents run sequentially after it. The Manager bookends the cycle.
 
-Five productive tensions are structural: The Software Engineer vs. The Systems Engineer, The Loftsman vs. The Engineer, The Loftsman vs. The Topologist, The Motor Designer vs. The Engineer, The Editor vs. The Designer.
+Nine productive tensions are structural: The Software Engineer vs. The Systems Engineer, The Loftsman vs. The Engineer, The Loftsman vs. The Topologist, The Motor Designer vs. The Engineer, The Engineer vs. The Writer, The Writer vs. The Editor, The Editor vs. The Designer, The Fact-Checker vs. The Designer, The Fact-Checker vs. The Software Engineer.
 
 **The Recruiter.** Spawned when a task requires expertise outside the standing roster. The Recruiter identifies a historical figure whose published work covers the capability gap and produces a persona specification for human approval.
 
