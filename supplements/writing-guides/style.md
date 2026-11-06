@@ -102,15 +102,15 @@ Each is taught as law and is not one. Professional prose breaks all of them unno
 - **First-person *I*.** Reserve it for flagging a conjecture or warming a dry account; otherwise generalize impersonally, as if pointing out what any intelligent person could see. Well-supported assertions don't need props like *it seems to me*.
 - **Ending a sentence with a preposition.** A superstition imported from Latin. Judge by sound.
 - **Splitting an infinitive.** Split it where that sounds natural and creates no ambiguity; the adverb then lands where it gets most notice.
-- **One-sentence paragraphs.** Use one to stress a point that would otherwise be buried, to mark a transition, or to rest a tiring reader. Make sure the sentence survives the attention.
+- **One-sentence paragraphs.** A one-sentence paragraph usually belongs at the end of the paragraph before it. It stands alone when it opens a section or introduces a list or table.
 
 ## Form as a resource
 
 Form is a resource for effect. Shape the piece so that a reader who is enjoying it keeps reading.
 
 - **Plot it.** Hook curiosity with a real problem, develop it so the tension holds, resolve it.
-- **Break the pattern to create emphasis.** Any change draws the eye: a short sentence among long ones, a one-sentence paragraph, white space. Whatever you want stressed, make different from its surroundings. Vary paragraph length for the same reason.
-- **Hunt the merely-adequate sentence,** the commonest defect in competent prose. Recast until one sings; that is what buys attention for the next sentence.
+- **Break the pattern to create emphasis.** A change draws the eye, such as a short sentence among long ones or white space. Whatever you want stressed, make different from its surroundings, and keep the sentence plain. Paragraph length follows the point.
+- **Hunt the merely-adequate sentence,** the commonest defect in competent prose. Recast until it reads cleanly in one pass; that is what buys attention for the next sentence.
 
 ## The read-aloud test
 

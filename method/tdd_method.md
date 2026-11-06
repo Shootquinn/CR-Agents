@@ -123,7 +123,7 @@ The right number is whatever comprehensively covers your deliverable's requireme
 After the document passes its test suite, a dedicated editing pass can improve prose quality without changing technical content. This addresses a specific LLM failure mode: text that passes all technical tests but reads like statistical average prose (correct but lifeless). Using the analogy to Agile software development, we have the tests green, now we need to go back and add the "elegance." 
 
 The revision pass operates under strict constraints:
-- **Subtract or replace whenever possible.** Replacements should be shorter than originals.
+- **Cut first.** Add a word only to save the reader a second read (a dropped verb, a pronoun with no antecedent, a figure without its noun). AI puffery rarely helps a sentence.
 - **Preserve all technical meaning.** Technical terms and precise jargon survive. Decorative language and performative candor/epistemics do not.
 - **Test suite remains the contract.** Edits cannot introduce new test failures. Run the suite again after revision.
 
@@ -134,7 +134,7 @@ Prompt 4:
 Do a review/editing pass on the document. Using an analogy to Agile software development, we have the tests green, now we need to go back and add the "elegance." 
 
 The revision/editing pass should operate under strict constraints:
-- **Subtract or replace whenever possible.** Replacements should be shorter than originals.
+- **Cut first.** Add a word only to save the reader a second read (a dropped verb, a pronoun with no antecedent, a figure without its noun). AI puffery rarely helps a sentence.
 - **Preserve all technical meaning.** Technical terms and precise jargon survive. Decorative language and performative candor/epistemics do not.
 - **Test suite remains the contract.** Edits cannot introduce new test failures. Run the suite again after revision.
 
